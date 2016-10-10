@@ -56,6 +56,7 @@ public class FXHighScoresScreenController {
         scoresScene.setOnKeyReleased(event -> {
             switch (event.getCode()) {
                 case ESCAPE:
+                    audioEngine.pauseCurrentlyPlayingAudios();
                     sceneHandler.popScene();
                     break;
             }

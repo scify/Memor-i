@@ -90,7 +90,8 @@ public class FileHandler {
 
         File scoresFile = new File(propertiesFile);
         try {
-            scoresFile.createNewFile();
+            if(!scoresFile.exists())
+                scoresFile.createNewFile();
             FileInputStream in = new FileInputStream(scoresFile);
             prop.load(in);
             highScore = prop.getProperty(String.valueOf(MainOptions.gameLevel));
@@ -107,7 +108,8 @@ public class FileHandler {
 
         File scoresFile = new File(propertiesFile);
         try {
-            scoresFile.createNewFile();
+            if(!scoresFile.exists())
+                scoresFile.createNewFile();
             FileInputStream in = new FileInputStream(scoresFile);
             prop.load(in);
             highScore = prop.getProperty(String.valueOf(level));
@@ -121,15 +123,22 @@ public class FileHandler {
     public void setHighScoreForLevel (String highScore) {
 
         Properties props = new Properties();
-
+        FileOutputStream out = null;
         File scoresFile = new File(propertiesFile);
         try {
-            scoresFile.createNewFile();
-            FileOutputStream out = new FileOutputStream(scoresFile);
-            props.setProperty(String.valueOf(MainOptions.gameLevel), highScore);
+            if(!scoresFile.exists())
+                scoresFile.createNewFile();
+            out = new FileOutputStream(scoresFile,true);
+            props.put(String.valueOf(MainOptions.gameLevel), highScore);
             props.store(out, null);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
