@@ -60,7 +60,7 @@ public class FileHandler {
                 tempMap.add(0, cardAttrs.getString("img"));
                 tempMap.add(1, cardAttrs.getString("sounds"));
                 tempMap.add(2, cardAttrs.getString("description_sound"));
-                map.put(cardObj.getString("cardType"), tempMap);
+                map.put(cardObj.getString("label"), tempMap);
             }
 
         } finally {

@@ -32,9 +32,9 @@ public class Card implements Tile{
      */
     private Button button;
     /**
-     * the type of the card. Cards with the same type are considered identical
+     * the label of the card
      */
-    private String tileType;
+    private String label;
     /**
      * file name of the image associated with the card
      */
@@ -89,25 +89,25 @@ public class Card implements Tile{
         return isFlipped;
     }
 
-    public Card(String id, String img, String soundFile, String description) {
+    public Card(String label, String img, String soundFile, String description) {
         imgName = img;
         button = new Button();
         sound = soundFile;
         descriptionSound = description;
-        button.setId(id);
+        button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
         button.setPrefHeight((MainOptions.mHeight/MainOptions.NUMBER_OF_ROWS ) - ((MainOptions.mHeight/MainOptions.NUMBER_OF_ROWS) * 0.1));
         button.setPrefWidth(MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1));
         // apply the appropriate style classes
         button.getStyleClass().addAll("cardButton", "closedCard");
-        tileType = id;
+        this.label = label;
         isWon = false;
         isFlipped = false;
     }
 
     @Override
     public String getTileType() {
-        return tileType;
+        return label;
     }
 
 
