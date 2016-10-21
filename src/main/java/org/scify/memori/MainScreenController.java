@@ -91,7 +91,7 @@ public class MainScreenController implements Initializable {
         //TODO: add welcome audio clip
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/welcome.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/welcome.mp3", false);
             }
         });
 
@@ -99,74 +99,74 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/headphones_adjustment.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/headphones_adjustment.mp3", false);
             }
         });
 
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/tutorial.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/tutorial.mp3", false);
             }
         });
 
 
         primaryScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level1.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level1.mp3", false);
             }
         });
 
         primaryScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level2.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level2.mp3", false);
             }
         });
 
         primaryScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level3.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level3.mp3", false);
             }
         });
 
         primaryScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level4.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level4.mp3", false);
             }
         });
 
         primaryScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level5.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level5.mp3", false);
             }
         });
 
         primaryScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level6.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level6.mp3", false);
             }
         });
 
         primaryScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level7.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level7.mp3", false);
             }
         });
 
         primaryScene.lookup("#myScores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/my_scores.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/my_scores.mp3", false);
             }
         });
 
         primaryScene.lookup("#exit").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/exit.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/exit.mp3", false);
             }
         });
 
         primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/sponsors.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/sponsors.mp3", false);
             }
         });
 

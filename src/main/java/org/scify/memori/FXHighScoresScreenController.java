@@ -153,7 +153,7 @@ public class FXHighScoresScreenController {
                         audioEngine.pauseAndPlaySound("game_effects/minute.wav", true);
                 }
                 if(minutes != 0 && seconds != 0)
-                    audioEngine.pauseAndPlaySound("game_effects/and.wav", true);
+                    audioEngine.pauseAndPlaySound("game_effects/and.mp3", true);
                 if (seconds != 0) {
                     audioEngine.playNumSound(seconds);
                     if(seconds > 1)
