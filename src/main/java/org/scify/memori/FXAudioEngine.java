@@ -188,7 +188,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playNumSound(int number) {
         pauseCurrentlyPlayingAudios();
-        playSound(numBasePath + String.valueOf(number) + ".wav", true);
+        playSound(numBasePath + String.valueOf(number) + ".mp3", true);
     }
 
     /**

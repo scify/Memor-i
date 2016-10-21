@@ -93,20 +93,20 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * Every time a level ends, we should construct the end level Sound which consists of:
      * 1) starting sound 2) the time in which the player finished the level 3) an ending sound
      */
-    private String[] endLevelStartingSounds = {"sound1.wav", "sound2.wav", "sound3.wav", "sound4.wav"};
-    private String[] endLevelEndingSounds = {"sound1.wav", "sound2.wav", "sound3.wav", "sound4.wav"};
+    private String[] endLevelStartingSounds = {"sound1.mp3", "sound2.mp3", "sound3.mp3", "sound4.mp3"};
+    private String[] endLevelEndingSounds = {"sound1.mp3", "sound2.mp3", "sound3.mp3", "sound4.mp3"};
 
     public FXRenderingEngine() {
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));
-            introductorySounds.put(1, "level1IntroSound.wav");
-            introductorySounds.put(2, "level2IntroSound.wav");
-            introductorySounds.put(3, "level3IntroSound.wav");
-            introductorySounds.put(4, "level4IntroSound.wav");
-            introductorySounds.put(5, "level5IntroSound.wav");
-            introductorySounds.put(6, "level6IntroSound.wav");
-            introductorySounds.put(7, "level7IntroSound.wav");
-            introductorySounds.put(8, "level8IntroSound.wav");
+            introductorySounds.put(1, "level1IntroSound.mp3");
+            introductorySounds.put(2, "level2IntroSound.mp3");
+            introductorySounds.put(3, "level3IntroSound.mp3");
+            introductorySounds.put(4, "level4IntroSound.mp3");
+            introductorySounds.put(5, "level5IntroSound.mp3");
+            introductorySounds.put(6, "level6IntroSound.mp3");
+            introductorySounds.put(7, "level7IntroSound.mp3");
+            introductorySounds.put(8, "level8IntroSound.mp3");
 
             storyLineIntroductorySoundEffects.put(1, "rain.wav");
             storyLineIntroductorySoundEffects.put(2, "animals1.wav");
@@ -117,15 +117,16 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             storyLineIntroductorySoundEffects.put(7, "animals1.wav");
             storyLineIntroductorySoundEffects.put(8, "animals1.wav");
 
-            storyLineSounds.put(1, "storyLine1.wav");
-            storyLineSounds.put(2, "storyLine2.wav");
-            storyLineSounds.put(3, "storyLine3.wav");
-            storyLineSounds.put(4, "storyLine4.wav");
-            storyLineSounds.put(5, "storyLine5.wav");
-            storyLineSounds.put(6, "storyLine6.wav");
-            storyLineSounds.put(7, "storyLine7.wav");
-            storyLineSounds.put(8, "storyLine8.wav");
-            storyLineSounds.put(9, "storyLine9.wav");
+
+            storyLineSounds.put(1, "storyLine1.mp3");
+            storyLineSounds.put(2, "storyLine2.mp3");
+            storyLineSounds.put(3, "storyLine3.mp3");
+            storyLineSounds.put(4, "storyLine4.mp3");
+            storyLineSounds.put(5, "storyLine5.mp3");
+            storyLineSounds.put(6, "storyLine6.mp3");
+            storyLineSounds.put(7, "storyLine7.mp3");
+            storyLineSounds.put(8, "storyLine8.mp3");
+            storyLineSounds.put(9, "storyLine9.mp3");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -373,10 +374,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "STORYLINE_AUDIO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            String storyLineIntroductorySoundEffect = storyLineIntroductorySoundEffects.get(MainOptions.storyLineLevel);
-                            if(storyLineIntroductorySoundEffect != null) {
-                                fxAudioEngine.playSound("game_effects/" + storyLineIntroductorySoundEffect, false);
-                            }
+//                            String storyLineIntroductorySoundEffect = storyLineIntroductorySoundEffects.get(MainOptions.storyLineLevel);
+//                            if(storyLineIntroductorySoundEffect != null) {
+//                                fxAudioEngine.playSound("game_effects/" + storyLineIntroductorySoundEffect, false);
+//                            }
                             fxAudioEngine.playSound("storyline_audios/" + storyLineSounds.get(MainOptions.storyLineLevel), currentGameEvent.blocking);
                             listIterator.remove();
                         }

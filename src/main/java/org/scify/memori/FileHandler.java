@@ -128,7 +128,7 @@ public class FileHandler {
         try {
             if(!scoresFile.exists())
                 scoresFile.createNewFile();
-            out = new FileOutputStream(scoresFile,true);
+            out = new FileOutputStream(scoresFile, true);
             props.put(String.valueOf(MainOptions.gameLevel), highScore);
             props.store(out, null);
         } catch (IOException e) {
