@@ -84,6 +84,7 @@ public class MainScreenController implements Initializable {
         primaryScene.getStylesheets().add("css/style.css");
         primaryStage.show();
         primaryStage.requestFocus();
+        primaryStage.sizeToScene();
         primaryStage.setFullScreen(true);
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
