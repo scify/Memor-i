@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+@font-face {
+    font-family: Ubuntu;
+    src: url('Ubuntu-B.ttf');
+}
+
 .logoContainer {
     -fx-padding: 5px;
     -fx-border-insets: 5px;
@@ -48,22 +53,21 @@
 
 .rootPane {
     -fx-pref-height: 100%;
+    -fx-background-color: linear-gradient(to right, #005CCC, #003A80); /* Standard syntax */
 }
 
 GridPane {
-    -fx-background-color: blue;
     -fx-pref-height: 95% !important;
 }
 
 StackPane {
-    -fx-background-color: blue;
     -fx-pref-width: 100%;
 }
 
 .optionButton {
     -fx-pref-width: 400px;
     -fx-pref-height: 50px;
-    -fx-font-family: monospace;
+    -fx-font-family: Ubuntu;
     -fx-font-size: 250%;
     -fx-padding: 4px;
     -fx-border-insets: 4px;
@@ -78,10 +82,10 @@ StackPane {
 }
 
 .optionButton:focused {
-    -fx-background-color: yellow;
+    -fx-background-color: #DDDD00;
     -fx-highlight-fill: -fx-accent;
     -fx-highlight-text-fill: white;
-    -fx-text-fill: blue;
+    -fx-text-fill: #004C86;
 }
 
 .optionButtonContainer {
@@ -96,7 +100,7 @@ StackPane {
 
 .sponsorLabel {
     -fx-pref-height: 40px;
-    -fx-font-family: monospace;
+    -fx-font-family: Ubuntu;
     -fx-font-size: 250%;
     -fx-padding: 2px;
     -fx-border-insets: 2px;
@@ -108,7 +112,7 @@ StackPane {
 .welcomeButton {
     -fx-pref-width: 600px;
     -fx-pref-height: 70px;
-    -fx-font-family: monospace;
+    -fx-font-family: Ubuntu;
     -fx-font-size: 300%;
     -fx-padding: 4px;
     -fx-border-insets: 4px;
