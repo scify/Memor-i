@@ -21,9 +21,9 @@
 }
 
 .logoContainer {
-    -fx-padding: 5px;
-    -fx-border-insets: 5px;
-    -fx-background-insets: 5px;
+    -fx-padding: 20px;
+    -fx-border-insets: 20px;
+    -fx-background-insets: 20px;
 }
 .cardButton {
     -fx-background-size: cover;
