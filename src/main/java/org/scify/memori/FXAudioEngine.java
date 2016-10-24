@@ -31,7 +31,7 @@ public class FXAudioEngine implements AudioEngine{
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
     private String soundBasePath = "/audios/";
-    private String movementSound = "beep.wav";
+    private String movementSound = "movement_sound.wav";
     private String successSound = "success.wav";
     private String invalidMovementSound = "bump.wav";
     private String failureSound = "error.wav";
@@ -188,6 +188,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playNumSound(int number) {
         pauseCurrentlyPlayingAudios();
+        System.out.println(numBasePath + number + ".mp3");
         playSound(numBasePath + String.valueOf(number) + ".mp3", true);
     }
 
@@ -196,9 +197,9 @@ public class FXAudioEngine implements AudioEngine{
      * @param number the number associated with the letter (e.g. 1 for A, 2 for B, etc. We do not care for capital letters or not).
      */
     public void playLetterSound(int number) {
-        System.out.println(letterBasePath + number + ".wav");
+        System.out.println(letterBasePath + number + ".mp3");
         pauseCurrentlyPlayingAudios();
-        playSound(letterBasePath + number + ".wav", true);
+        playSound(letterBasePath + number + ".mp3", true);
     }
 
     /**

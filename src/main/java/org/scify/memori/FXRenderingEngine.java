@@ -318,10 +318,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "HELP_INSTRUCTIONS_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("game_instructions/help_instructions_1.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.pauseAndPlaySound("game_instructions/help_instructions_2.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.pauseAndPlaySound("game_instructions/help_instructions_3.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.pauseAndPlaySound("game_instructions/help_instructions_4.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("game_instructions/help_instructions.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -374,10 +371,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "STORYLINE_AUDIO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-//                            String storyLineIntroductorySoundEffect = storyLineIntroductorySoundEffects.get(MainOptions.storyLineLevel);
-//                            if(storyLineIntroductorySoundEffect != null) {
-//                                fxAudioEngine.playSound("game_effects/" + storyLineIntroductorySoundEffect, false);
-//                            }
                             fxAudioEngine.playSound("storyline_audios/" + storyLineSounds.get(MainOptions.storyLineLevel), currentGameEvent.blocking);
                             listIterator.remove();
                         }
@@ -434,9 +427,9 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "TUTORIAL_0_UI":
                         //TODO: These sound effects should be combined into 1
                         fxAudioEngine.pauseAndPlaySound("game_instructions/count_on_you.mp3", currentGameEvent.blocking);
-                        fxAudioEngine.playSound("game_effects/walking.mp3", currentGameEvent.blocking);
-                        fxAudioEngine.playSound("game_instructions/we_are_here.mp3", currentGameEvent.blocking);
-                        fxAudioEngine.playSound("game_instructions/please_press_right.mp3", currentGameEvent.blocking);
+//                        fxAudioEngine.playSound("game_effects/walking.mp3", currentGameEvent.blocking);
+//                        fxAudioEngine.playSound("game_instructions/we_are_here.mp3", currentGameEvent.blocking);
+//                        fxAudioEngine.playSound("game_instructions/please_press_right.mp3", currentGameEvent.blocking);
                         listIterator.remove();
                         break;
                     case "GO_RIGHT_AGAIN":
@@ -449,7 +442,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             //TODO: These sound effects should be combined into 1
                             fxAudioEngine.pauseAndPlaySound("game_instructions/please_press_down.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.pauseAndPlaySound("game_instructions/when_ready_press_continue.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -457,7 +449,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             //TODO: These sound effects should be combined into 1
                             fxAudioEngine.playSound("game_instructions/doors_explanation.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.playSound("game_instructions/press_flip.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -502,9 +493,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "TUTORIAL_CORRECT_PAIR_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
                             fxAudioEngine.playSound("game_instructions/correct_pair_explanation.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.playSound("game_effects/door-knock.wav", currentGameEvent.blocking);
-                            fxAudioEngine.playSound("game_instructions/lets_find_another_pair.mp3", currentGameEvent.blocking);
-                            fxAudioEngine.playSound("game_instructions/go_to_another_position.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
