@@ -162,7 +162,7 @@ public class FXHighScoresScreenController {
                         audioEngine.pauseAndPlaySound("game_effects/second.wav", true);
                 }
             } else {
-                audioEngine.pauseAndPlaySound("no_score.wav", false);
+                audioEngine.pauseAndPlaySound("no_score.mp3", false);
             }
         }
     }
