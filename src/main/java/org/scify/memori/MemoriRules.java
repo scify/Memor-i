@@ -167,11 +167,16 @@ public class MemoriRules implements Rules {
 
                 gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7200, true));
 
-                if (MainOptions.TUTORIAL_MODE) {
-                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
-                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
+                if(MainOptions.gameLevel < 7) {
+                    if (MainOptions.TUTORIAL_MODE) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
+                    } else {
+                        gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, false));
+                    }
                 } else {
-                    gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, false));
+                    gsCurrentState.getEventQueue().add(new GameEvent("GAME_END", null, new Date().getTime() + 8600, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 8600, true));
                 }
                 //update high score
                 highScore.updateHighScore(watch);

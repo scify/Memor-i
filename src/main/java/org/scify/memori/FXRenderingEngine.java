@@ -355,6 +355,24 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
+                    case "GAME_END":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int idx = new Random().nextInt(endLevelStartingSounds.length);
+                            String randomSound = (endLevelEndingSounds[idx]);
+                            fxAudioEngine.pauseAndPlaySound("end_level_ending_sounds/game_end_sound.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "PRESS_EXIT":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int idx = new Random().nextInt(endLevelStartingSounds.length);
+                            String randomSound = (endLevelEndingSounds[idx]);
+                            fxAudioEngine.pauseAndPlaySound("game_instructions/replay_or_exit.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
                     case "TUTORIAL_INTRO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {

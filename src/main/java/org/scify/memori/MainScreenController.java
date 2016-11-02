@@ -230,6 +230,7 @@ public class MainScreenController implements Initializable {
             } else if(evt.getSource() == level7) {
                 MainOptions.gameLevel = 7;
             }
+
             MainOptions.NUMBER_OF_ROWS = (int) gameLevelToDimensions.get(MainOptions.gameLevel).getX();
             MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelToDimensions.get(MainOptions.gameLevel).getY();
             Thread thread = new Thread(new Runnable() {
@@ -272,8 +273,8 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void headphonesAdjustment(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            audioEngine.playBalancedSound(-1.0, "main_screen/left_headphone.wav", true);
-            audioEngine.playBalancedSound(1.0, "main_screen/right_headphone.wav", true);
+            audioEngine.playBalancedSound(-1.0, "main_screen/left_headphone.mp3", true);
+            audioEngine.playBalancedSound(1.0, "main_screen/right_headphone.mp3", true);
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }
