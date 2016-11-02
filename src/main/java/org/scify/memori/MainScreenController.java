@@ -17,12 +17,17 @@
 
 package org.scify.memori;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.awt.geom.Point2D;
 import java.net.URL;
@@ -86,6 +91,22 @@ public class MainScreenController implements Initializable {
         primaryStage.requestFocus();
         primaryStage.sizeToScene();
         primaryStage.setFullScreen(true);
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.out.println("Stage is closing");
+                System.exit(0);
+            }
+        });
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
+
+        primaryStage.getIcons().add(new Image("/img/memori.png"));
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
 
@@ -251,8 +272,8 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void headphonesAdjustment(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            audioEngine.playBalancedSound(-1.0, "main_screen/left_headphone.wav");
-            audioEngine.playBalancedSound(1.0, "main_screen/right_headphone.wav");
+            audioEngine.playBalancedSound(-1.0, "main_screen/left_headphone.wav", true);
+            audioEngine.playBalancedSound(1.0, "main_screen/right_headphone.wav", true);
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }
