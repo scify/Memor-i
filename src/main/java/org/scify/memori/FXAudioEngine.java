@@ -106,9 +106,11 @@ public class FXAudioEngine implements AudioEngine{
 
     /**
      * Plays an appropriate sound associated with an invalid movement
+     * @param balance the sound balance (left , right)
+     * @param isBlocking if the event should block the ui thread
      */
-    public void playInvalidMovementSound() {
-        playSound(invalidMovementSound);
+    public void playInvalidMovementSound(double balance, boolean isBlocking) {
+        playBalancedSound(balance, invalidMovementSound, isBlocking);
     }
 
     /**
@@ -135,19 +137,20 @@ public class FXAudioEngine implements AudioEngine{
      * @param balance the desired balance
      * @param soundFile the file name (path) of the audio clip
      */
-    public void playBalancedSound(double balance, String soundFile) {
+    public void playBalancedSound(double balance, String soundFile, boolean isBlocking) {
         pauseCurrentlyPlayingAudios();
         audioClip = new AudioClip(FXAudioEngine.class.getResource(soundBasePath + soundFile).toExternalForm());
         audioClip.play(1, balance, 1, balance, 1);
         playingAudios.add(audioClip);
-        while (audioClip.isPlaying()) {
-            try {
-                Thread.sleep(100L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if(isBlocking)
+            while (audioClip.isPlaying()) {
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        }
+            }
     }
 
     /**
