@@ -176,14 +176,23 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         //Load the tiles list from the Terrain
         Map<Point2D, Tile> initialTiles = terrain.getTiles();
         Iterator it = initialTiles.entrySet().iterator();
-        //Iterate through the tiles list to add them to the Layour object
+        //Iterate through the tiles list to add them to the Layout object
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
             Point2D point = (Point2D) pair.getKey();
+
             Card card = (Card) pair.getValue();
             //add the card to layout when the Thread deems appropriate
             Platform.runLater(()-> {
-                gridPane.add(card.getButton(), (int) point.getX(), (int) point.getY());
+
+                try {
+                    gridPane.add(card.getButton(), (int) point.getX(), (int) point.getY());
+                } catch (Exception e) {
+                    System.out.println("FAILED x: " + point.getX());
+                    System.out.println("FAILED y: " + point.getY());
+                    System.out.println("FAILED: " + card.getButton().getId());
+                    e.printStackTrace();
+                }
             });
             //Set up the event handler for the current card
             card.getButton().setOnKeyPressed(this);
@@ -277,7 +286,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             coords = (Point2D) currentGameEvent.parameters;
                             currCard = (Card) currentState.getTerrain().getTile((int) coords.getX(), (int) coords.getY());
                             Platform.runLater(() -> {
-                                currCard.flipUI();
+                                currCard.flipUI(0);
+                            });
+                            listIterator.remove();
+                        }
+                        break;
+                    case "flip_second":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            coords = (Point2D) currentGameEvent.parameters;
+                            currCard = (Card) currentState.getTerrain().getTile((int) coords.getX(), (int) coords.getY());
+                            Platform.runLater(() -> {
+                                currCard.flipUI(1);
                             });
                             listIterator.remove();
                         }

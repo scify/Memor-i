@@ -17,6 +17,8 @@
 
 package org.scify.memori;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 
@@ -58,6 +60,7 @@ public class MemoriTerrain implements Terrain {
                 cardIndex++;
             }
         }
+        System.out.println("sdfsdf");
     }
 
     /**
@@ -70,25 +73,51 @@ public class MemoriTerrain implements Terrain {
         List<Card> unShuffledCards = new ArrayList<>();
 
         //cardsMap will contain the values of the json object as key-value pairs
-        Map<String, ArrayList<String>> cardsMap;
+        ArrayList<JSONObject> cardsList;
         //Preparing the JSON parser class
         FileHandler parser = new FileHandler();
         //read the cards from the JSON file
-        cardsMap = parser.readCardsFromJSONFile();
+        cardsList = parser.readCardsFromJSONFile();
+        Iterator it = cardsList.iterator();
+        while(it.hasNext()) {
 
-        for (Map.Entry<String, ArrayList<String>> entry : cardsMap.entrySet()) {
+                JSONObject cardObj = (JSONObject) it.next();
             for (int cardsNum = 0; cardsNum < cardVarieties; cardsNum++) {
-                ArrayList<String> cardAttrs = entry.getValue();
-                //cardSounds is a comma separated string of sound files
-                String cardSound = cardAttrs.get(1);
-                String tileDescription = cardAttrs.get(2);
-                //we need to transform it into an array and poll one sound
+                Card newCard = new Card(cardObj.getString("label"), getStringArray((JSONArray) cardObj.get("images")), cardObj.getString("sounds"), cardObj.getString("description_sound"));
 
-                Card newCard = new Card(entry.getKey(), cardAttrs.get(0), cardSound, tileDescription);
                 unShuffledCards.add(newCard);
             }
         }
+//        for (Map.Entry<String, JSONObject> entry : cardsMap.entrySet()) {
+//            for (int cardsNum = 0; cardsNum < cardVarieties; cardsNum++) {
+//                JSONObject card = entry.getValue();
+//                //cardSounds is a comma separated string of sound files
+//                String cardSound = card.get(0).getString("sounds");
+//                String tileDescription =  card.getString("description_sound");
+//                //we need to transform it into an array and poll one sound
+//
+//                Card newCard = new Card(entry.getKey(), (String[]) card.get("images"), cardSound, tileDescription);
+//                unShuffledCards.add(newCard);
+//            }
+//        }
         return unShuffledCards;
+    }
+
+    /**
+     * Parses a {@link JSONArray} elements to a String array
+     * @param jsonArray the JSON formatted array ( eg ["1", "2"] )
+     * @return a String array containing the elements of the JSON array
+     */
+    public static String[] getStringArray(JSONArray jsonArray){
+        String[] stringArray = null;
+        int length = jsonArray.length();
+        if(jsonArray!=null){
+            stringArray = new String[length];
+            for(int i=0;i<length;i++){
+                stringArray[i]= jsonArray.optString(i);
+            }
+        }
+        return stringArray;
     }
 
     /**

@@ -45,9 +45,9 @@ public class FileHandler {
         this.propertiesFile = userDir + File.separator + "high_scores.properties";
     }
 
-    public Map<String, ArrayList<String>> readCardsFromJSONFile() {
+    public ArrayList<JSONObject> readCardsFromJSONFile() {
         //  each DB "row" will be represented as a Map of String (id) to a Map of Strings (the card attributes, like sound and image)
-        Map<String, ArrayList<String>> map = new HashMap<>();
+        ArrayList<JSONObject> cards = new ArrayList<>();
         Scanner scanner = null;
         try {
             scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream("json_DB/cards.json")));
@@ -57,26 +57,38 @@ public class FileHandler {
             JSONArray rows = rootObject.getJSONArray("cards"); // Get all JSONArray rows
             // shuffle the rows (we want the cards to be in a random order)
             rows = shuffleJsonArray(rows);
-            ArrayList<String> tempMap;
+            ArrayList<JSONObject> tempMap;
+            Iterator it = rows.iterator();
             /**
              * The number of cards we need depends on the level (number of rows and columns)
              * divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
              */
             int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS) / MainOptions.NUMBER_OF_OPEN_CARDS;
-            for(int i = 0; i < numOfCards; i++) { // Loop over each each row
-                JSONObject cardObj = rows.getJSONObject(i); // Get row object
-                tempMap = new ArrayList<>();
-                JSONObject cardAttrs = cardObj.getJSONObject("attrs");
-                tempMap.add(0, cardAttrs.getString("img"));
-                tempMap.add(1, cardAttrs.getString("sounds"));
-                tempMap.add(2, cardAttrs.getString("description_sound"));
-                map.put(cardObj.getString("label"), tempMap);
+//            for(int i = 0; i < numOfCards; i++) { // Loop over each each row
+//                JSONObject cardObj = rows.getJSONObject(i); // Get row object
+//                tempMap = new ArrayList<>();
+//                JSONObject cardAttrs = cardObj.getJSONObject("attrs");
+//                tempMap.add(0, (JSONObject) cardAttrs.get("images"));
+//                tempMap.add(1, (JSONObject) cardAttrs.getString("sounds"));
+//                tempMap.add(2, (JSONObject) cardAttrs.getString("description_sound"));
+//                map.put(cardObj.getString("label"), tempMap);
+//            }
+
+            int cardIndex = 0;
+            while(it.hasNext()) {
+                if(cardIndex < numOfCards) {
+                    JSONObject currCard = (JSONObject) it.next();
+                    cards.add(currCard);
+                } else {
+                    break;
+                }
+                cardIndex ++;
             }
 
         } finally {
             scanner.close();
         }
-        return map;
+        return cards;
     }
 
     public static JSONArray shuffleJsonArray (JSONArray array) throws JSONException {

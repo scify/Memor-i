@@ -38,7 +38,7 @@ public class Card implements Tile{
     /**
      * file name of the image associated with the card
      */
-    private String imgName;
+    private String[] images;
     /**
      * whether the Card has been flipped
      */
@@ -89,8 +89,8 @@ public class Card implements Tile{
         return isFlipped;
     }
 
-    public Card(String label, String img, String soundFile, String description) {
-        imgName = img;
+    public Card(String label, String[] images, String soundFile, String description) {
+        this.images = images;
         button = new Button();
         sound = soundFile;
         descriptionSound = description;
@@ -118,10 +118,14 @@ public class Card implements Tile{
 
     /**
      * function to set the UI of the flipped card (change icons)
+     * @param imgIndex the index of the image
      */
-    public void flipUI() {
-        String imgFile = "/img/" + imgName;
-        button.setStyle("-fx-background-image: url(" + imgFile +")");
+    public void flipUI(int imgIndex) {
+        // only if this image exists
+        if(imgIndex < images.length) {
+            String imgFile = "/img/" + images[imgIndex];
+            button.setStyle("-fx-background-image: url(" + imgFile + ")");
+        }
     }
     /**
      * function to set the UI of the flipped back card (change icons)
