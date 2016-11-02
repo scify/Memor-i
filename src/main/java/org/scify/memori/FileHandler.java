@@ -33,7 +33,17 @@ public class FileHandler {
     /**
      * The file that represents the DB
      */
-    private String propertiesFile = "high_scores.properties";
+    private String propertiesFile;
+
+    public FileHandler() {
+        String userDir;
+        if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
+            userDir = System.getenv("AppData");
+        } else {
+            userDir = System.getProperty("user.dir");
+        }
+        this.propertiesFile = userDir + File.separator + "high_scores.properties";
+    }
 
     public Map<String, ArrayList<String>> readCardsFromJSONFile() {
         //  each DB "row" will be represented as a Map of String (id) to a Map of Strings (the card attributes, like sound and image)
