@@ -15,6 +15,13 @@
             </image>
         </ImageView>
     </HBox>
+    <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/Powered_by_SciFY.png" />
+            </image>
+        </ImageView>
+    </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer">
         <Button contentDisplay="CENTER" styleClass="welcomeButton" text="Welcome to Memor-i!" fx:id="welcome"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="Ρύθμιση ακουστικών" fx:id="headphonesAdjustment" onKeyPressed="#headphonesAdjustment"/>
