@@ -96,8 +96,9 @@ public class Card implements Tile{
         descriptionSound = description;
         button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
-        button.setPrefHeight((MainOptions.mHeight/MainOptions.NUMBER_OF_ROWS ) - ((MainOptions.mHeight/MainOptions.NUMBER_OF_ROWS) * 0.1));
-        button.setPrefWidth(MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1));
+        double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
+        this.button.setPrefHeight(width * 0.66);
+        this.button.setPrefWidth(width);
         // apply the appropriate style classes
         button.getStyleClass().addAll("cardButton", "closedCard");
         this.label = label;
