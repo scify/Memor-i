@@ -31,7 +31,7 @@ public class FXAudioEngine implements AudioEngine{
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
     private String soundBasePath = "/audios/";
-    private String movementSound = "movement_sound.wav";
+    private String movementSound = "movement_sound.mp3";
     private String successSound = "success.wav";
     private String invalidMovementSound = "bump.wav";
     private String failureSound = "error.wav";
