@@ -1,31 +1,274 @@
 {
-  "cards" : [
-    {"label" : "cow", "attrs": {"img": "animals/cow.jpg", "sounds": "animals/cow.wav", "description_sound": "tile_descriptions/cow.mp3"}},
-    {"label" : "horse", "attrs": {"img": "animals/horse.jpg", "sounds": "animals/horse.wav", "description_sound": "tile_descriptions/horse.mp3"}},
-    {"label" : "cat", "attrs": {"img": "animals/cat.jpg", "sounds": "animals/cat.wav", "description_sound": "tile_descriptions/cat.mp3"}},
-    {"label" : "rooster", "attrs": {"img": "animals/rooster.jpg", "sounds": "animals/rooster.wav", "description_sound": "tile_descriptions/rooster.mp3"}},
-    {"label" : "sheep", "attrs": {"img": "animals/sheep.jpg", "sounds": "animals/sheep.wav", "description_sound": "tile_descriptions/sheep.mp3"}},
-    {"label" : "pig", "attrs": {"img": "animals/pig.jpg", "sounds": "animals/pig.wav", "description_sound": "tile_descriptions/pig.mp3"}},
-    {"label" : "dog_1", "attrs": {"img": "animals/dog.gif", "sounds": "animals/bark.wav", "description_sound": "tile_descriptions/dog.mp3"}},
-    {"label" : "donkey", "attrs": {"img": "animals/donkey.jpg", "sounds": "animals/donkey.wav", "description_sound": "tile_descriptions/donkey.mp3"}},
-    {"label" : "duck", "attrs": {"img": "animals/duck.jpg", "sounds": "animals/duck.wav", "description_sound": "tile_descriptions/duck.mp3"}},
-    {"label" : "bee", "attrs": {"img": "animals/bee.jpg", "sounds": "animals/bee.wav", "description_sound": "tile_descriptions/bee.mp3"}},
-    {"label" : "dove", "attrs": {"img": "animals/dove.jpg", "sounds": "animals/dove.wav", "description_sound": "tile_descriptions/dove.mp3"}},
-    {"label" : "turkey", "attrs": {"img": "animals/turkey.jpg", "sounds": "animals/turkey.wav", "description_sound": "tile_descriptions/turkey.mp3"}},
-    {"label" : "sparrow", "attrs": {"img": "animals/sparrow.jpg", "sounds": "animals/sparrow.wav", "description_sound": "tile_descriptions/sparrow.mp3"}},
-    {"label" : "frog", "attrs": {"img": "animals/frog.jpg", "sounds": "animals/frog.wav", "description_sound": "tile_descriptions/frog.mp3"}},
-    {"label" : "elephant", "attrs": {"img": "animals/elephant.jpg", "sounds": "animals/elephant.wav", "description_sound": "tile_descriptions/elephant.mp3"}},
-    {"label" : "cuckoo", "attrs": {"img": "animals/cuckoo.jpg", "sounds": "animals/cuckoo.wav", "description_sound": "tile_descriptions/cuckoo.mp3"}},
-    {"label" : "guinea-pig", "attrs": {"img": "animals/guinea-pig.jpg", "sounds": "animals/guinea-pig.wav", "description_sound": "tile_descriptions/guinea-pig.mp3"}},
-    {"label" : "mosquito", "attrs": {"img": "animals/mosquito.jpg", "sounds": "animals/mosquito.wav", "description_sound": "tile_descriptions/mosquito.mp3"}},
-    {"label" : "mouse", "attrs": {"img": "animals/mouse.jpg", "sounds": "animals/mouse.wav", "description_sound": "tile_descriptions/mouse.mp3"}},
-    {"label" : "raven", "attrs": {"img": "animals/raven.jpg", "sounds": "animals/raven.wav", "description_sound": "tile_descriptions/raven.mp3"}},
-    {"label" : "nightingale", "attrs": {"img": "animals/nightingale.jpg", "sounds": "animals/nightingale.wav", "description_sound": "tile_descriptions/nightingale.mp3"}},
-    {"label" : "lion", "attrs": {"img": "animals/lion.jpg", "sounds": "animals/lion.wav", "description_sound": "tile_descriptions/lion.mp3"}},
-    {"label" : "seagull", "attrs": {"img": "animals/seagull.jpg", "sounds": "animals/seagull.wav", "description_sound": "tile_descriptions/seagull.mp3"}},
-    {"label" : "seal", "attrs": {"img": "animals/seal.jpg", "sounds": "animals/seal.wav", "description_sound": "tile_descriptions/seal.mp3"}},
-    {"label" : "cicada", "attrs": {"img": "animals/cicada.jpg", "sounds": "animals/cicada.wav", "description_sound": "tile_descriptions/cicada.mp3"}},
-    {"label" : "wolf", "attrs": {"img": "animals/wolf.jpg", "sounds": "animals/wolf.wav", "description_sound": "tile_descriptions/wolf.mp3"}},
-    {"label" : "monkey", "attrs": {"img": "animals/monkey.jpg", "sounds": "animals/monkey.wav", "description_sound": "tile_descriptions/monkey.mp3"}}
+  "cards": [
+    {
+      "label": "cow",
+        "images": [
+          "animals/cow1.jpg",
+          "animals/cow2.png"
+        ],
+        "sounds": "animals/cow.wav",
+        "description_sound": "tile_descriptions/cow.mp3"
+
+    },
+    {
+      "label": "horse",
+        "images": [
+          "animals/horse1.jpg",
+          "animals/horse2.png"
+        ],
+        "sounds": "animals/horse.wav",
+        "description_sound": "tile_descriptions/horse.mp3"
+
+    },
+    {
+      "label": "cat",
+        "images": [
+          "animals/cat1.jpg",
+          "animals/cat2.png"
+        ],
+        "sounds": "animals/cat.wav",
+        "description_sound": "tile_descriptions/cat.mp3"
+
+    },
+    {
+      "label": "rooster",
+        "images": [
+          "animals/rooster1.jpg",
+          "animals/rooster2.png"
+        ],
+        "sounds": "animals/rooster.wav",
+        "description_sound": "tile_descriptions/rooster.mp3"
+
+    },
+    {
+      "label": "sheep",
+        "images": [
+          "animals/sheep1.jpg",
+          "animals/sheep2.png"
+        ],
+        "sounds": "animals/sheep.wav",
+        "description_sound": "tile_descriptions/sheep.mp3"
+
+    },
+    {
+      "label": "pig",
+        "images": [
+          "animals/pig1.jpg",
+          "animals/pig2.png"
+        ],
+        "sounds": "animals/pig.wav",
+        "description_sound": "tile_descriptions/pig.mp3"
+
+    },
+    {
+      "label": "dog_1",
+        "images": [
+          "animals/dog1.gif",
+          "animals/dog2.png"
+        ],
+        "sounds": "animals/bark.wav",
+        "description_sound": "tile_descriptions/dog.mp3"
+
+    },
+    {
+      "label": "donkey",
+        "images": [
+          "animals/donkey1.jpg",
+          "animals/donkey2.png"
+        ],
+        "sounds": "animals/donkey.wav",
+        "description_sound": "tile_descriptions/donkey.mp3"
+
+    },
+    {
+      "label": "duck",
+        "images": [
+          "animals/duck1.jpg",
+          "animals/duck2.png"
+        ],
+        "sounds": "animals/duck.wav",
+        "description_sound": "tile_descriptions/duck.mp3"
+
+    },
+    {
+      "label": "bee",
+        "images": [
+          "animals/bee1.jpg",
+          "animals/bee2.png"
+        ],
+        "sounds": "animals/bee.wav",
+        "description_sound": "tile_descriptions/bee.mp3"
+
+    },
+    {
+      "label": "dove",
+        "images": [
+          "animals/dove1.jpg",
+          "animals/dove2.png"
+        ],
+        "sounds": "animals/dove.wav",
+        "description_sound": "tile_descriptions/dove.mp3"
+
+    },
+    {
+      "label": "turkey",
+        "images": [
+          "animals/turkey1.jpg",
+          "animals/turkey2.png"
+        ],
+        "sounds": "animals/turkey.wav",
+        "description_sound": "tile_descriptions/turkey.mp3"
+
+    },
+    {
+      "label": "sparrow",
+        "images": [
+          "animals/sparrow1.jpg",
+          "animals/sparrow2.png"
+        ],
+        "sounds": "animals/sparrow.wav",
+        "description_sound": "tile_descriptions/sparrow.mp3"
+
+    },
+    {
+      "label": "frog",
+        "images": [
+          "animals/frog1.jpg",
+          "animals/frog2.png"
+        ],
+        "sounds": "animals/frog.wav",
+        "description_sound": "tile_descriptions/frog.mp3"
+
+    },
+    {
+      "label": "elephant",
+        "images": [
+          "animals/elephant1.jpg",
+          "animals/elephant2.png"
+        ],
+        "sounds": "animals/elephant.wav",
+        "description_sound": "tile_descriptions/elephant.mp3"
+
+    },
+    {
+      "label": "cuckoo",
+        "images": [
+          "animals/cuckoo1.jpg",
+          "animals/cuckoo2.png"
+        ],
+        "sounds": "animals/cuckoo.wav",
+        "description_sound": "tile_descriptions/cuckoo.mp3"
+
+    },
+    {
+      "label": "guinea-pig",
+        "images": [
+          "animals/guinea-pig1.jpg",
+          "animals/guinea-pig2.png"
+        ],
+        "sounds": "animals/guinea-pig.wav",
+        "description_sound": "tile_descriptions/guinea-pig.mp3"
+
+    },
+    {
+      "label": "mosquito",
+        "images": [
+          "animals/mosquito1.jpg",
+          "animals/mosquito2.png"
+        ],
+        "sounds": "animals/mosquito.wav",
+        "description_sound": "tile_descriptions/mosquito.mp3"
+
+    },
+    {
+      "label": "mouse",
+        "images": [
+          "animals/mouse1.jpg",
+          "animals/mouse2.png"
+        ],
+        "sounds": "animals/mouse.wav",
+        "description_sound": "tile_descriptions/mouse.mp3"
+
+    },
+    {
+      "label": "raven",
+        "images": [
+          "animals/raven1.jpg",
+          "animals/raven2.png"
+        ],
+        "sounds": "animals/raven.wav",
+        "description_sound": "tile_descriptions/raven.mp3"
+
+    },
+    {
+      "label": "nightingale",
+        "images": [
+          "animals/nightingale1.jpg",
+          "animals/nightingale2.png"
+        ],
+        "sounds": "animals/nightingale.wav",
+        "description_sound": "tile_descriptions/nightingale.mp3"
+
+    },
+    {
+      "label": "lion",
+        "images": [
+          "animals/lion1.jpg",
+          "animals/lion2.png"
+        ],
+        "sounds": "animals/lion.wav",
+        "description_sound": "tile_descriptions/lion.mp3"
+
+    },
+    {
+      "label": "seagull",
+        "images": [
+          "animals/seagull1.jpg",
+          "animals/seagull2.png"
+        ],
+        "sounds": "animals/seagull.wav",
+        "description_sound": "tile_descriptions/seagull.mp3"
+
+    },
+    {
+      "label": "seal",
+        "images": [
+          "animals/seal1.jpg",
+          "animals/seal2.png"
+        ],
+        "sounds": "animals/seal.wav",
+        "description_sound": "tile_descriptions/seal.mp3"
+
+    },
+    {
+      "label": "cicada",
+        "images": [
+          "animals/cicada1.jpg",
+          "animals/cicada2.png"
+        ],
+        "sounds": "animals/cicada.wav",
+        "description_sound": "tile_descriptions/cicada.mp3"
+
+    },
+    {
+      "label": "wolf",
+        "images": [
+          "animals/wolf1.jpg",
+          "animals/wolf2.png"
+        ],
+        "sounds": "animals/wolf.wav",
+        "description_sound": "tile_descriptions/wolf.mp3"
+
+    },
+    {
+      "label": "monkey",
+        "images": [
+          "animals/monkey1.jpg",
+          "animals/monkey2.png"
+        ],
+        "sounds": "animals/monkey.wav",
+        "description_sound": "tile_descriptions/monkey.mp3"
+
+    }
   ]
 }
