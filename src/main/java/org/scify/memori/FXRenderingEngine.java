@@ -90,6 +90,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private Map<Integer, String> storyLineSounds = new HashMap<>();
 
     /**
+     * Fun factor sounds occur every 3 levels
+     */
+    protected List<String> funFactorSounds = new ArrayList<>();
+
+    /**
      * Every time a level ends, we should construct the end level Sound which consists of:
      * 1) starting sound 2) the time in which the player finished the level 3) an ending sound
      */
@@ -127,6 +132,17 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             storyLineSounds.put(7, "storyLine7.mp3");
             storyLineSounds.put(8, "storyLine8.mp3");
             storyLineSounds.put(9, "storyLine9.mp3");
+
+            funFactorSounds.add("fun_factor_sounds/1.mp3");
+            funFactorSounds.add("fun_factor_sounds/2.mp3");
+            funFactorSounds.add("fun_factor_sounds/3.mp3");
+            funFactorSounds.add("fun_factor_sounds/4.mp3");
+            funFactorSounds.add("fun_factor_sounds/5.mp3");
+            funFactorSounds.add("fun_factor_sounds/6.mp3");
+            funFactorSounds.add("fun_factor_sounds/7.mp3");
+            funFactorSounds.add("fun_factor_sounds/8.mp3");
+            funFactorSounds.add("fun_factor_sounds/9.mp3");
+            funFactorSounds.add("fun_factor_sounds/10.mp3");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -372,6 +388,15 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             int idx = new Random().nextInt(endLevelStartingSounds.length);
                             String randomSound = (endLevelEndingSounds[idx]);
                             fxAudioEngine.pauseAndPlaySound("end_level_ending_sounds/" + randomSound, currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "FUN_FACTOR_UI":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int randInt = new Random().nextInt(funFactorSounds.size());
+                            String randomSound = (funFactorSounds.get(randInt));
+                            fxAudioEngine.pauseAndPlaySound(randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

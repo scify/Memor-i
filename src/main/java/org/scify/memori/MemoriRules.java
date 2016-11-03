@@ -110,10 +110,18 @@ public class MemoriRules implements Rules {
                     gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO_UI", null, 0, false));
                 }
             }
+
             if(MainOptions.gameLevel == 4) {
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS"));
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_UI", null, 0, false));
+                }
+            } else {
+                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
+                    gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
+                    if(MainOptions.storyLineLevel % 2 == 1) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 1000, true));
+                    }
                 }
             }
         }
@@ -328,13 +336,13 @@ public class MemoriRules implements Rules {
             }
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
-                gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 4000, true));
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 3000, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 3500, true));
                 //if in tutorial mode, push explaining events
                 if(MainOptions.TUTORIAL_MODE) {
                     if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR"));
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR_UI", null, new Date().getTime() + 6000, true));
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR_UI", null, new Date().getTime() + 5000, true));
                     }
                 }
                 // add tile to open tiles
@@ -356,21 +364,21 @@ public class MemoriRules implements Rules {
                         Point2D position = iter.next();
                         gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 3500, false));
                     }
-                    gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 5100, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 4100, true));
 
 //                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4000, false));
 //                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4300, false));
                     if(MainOptions.TUTORIAL_MODE) {
                         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_WRONG_PAIR")) {
                             gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR"));
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR_UI", null, new Date().getTime() + 5200, true));
+                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR_UI", null, new Date().getTime() + 4200, true));
                         }
                     }
-                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 6000, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 5000, true));
                     if(MainOptions.TUTORIAL_MODE) {
                         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_DOORS_CLOSED")) {
                             gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED"));
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED_UI", null, new Date().getTime() + 7000, true));
+                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED_UI", null, new Date().getTime() + 6000, true));
                         }
                     }
                 } else {
