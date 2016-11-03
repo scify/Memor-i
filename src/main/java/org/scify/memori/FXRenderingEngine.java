@@ -307,6 +307,17 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
+                    case "TURN_ANIMATION":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            coords = (Point2D) currentGameEvent.parameters;
+                            currCard = (Card) currentState.getTerrain().getTile((int) coords.getX(), (int) coords.getY());
+                            Platform.runLater(() -> {
+                                currCard.turnCard();
+                            });
+                            listIterator.remove();
+                        }
+                        break;
                     case "flip_second":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {

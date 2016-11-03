@@ -105,9 +105,17 @@ public class MemoriRules implements Rules {
             if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "STORYLINE_AUDIO")) {
                 gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO"));
                 gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO_UI", null, 0, true));
+                if(!(MainOptions.gameLevel == 4)) {
+                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
+                        if(MainOptions.storyLineLevel % 2 == 1) {
+                            gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 0, true));
+                        }
+                    }
+                }
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "LEVEL_INTRO_AUDIO")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO"));
-                    gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO_UI", null, 0, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO_UI", null, 1000, true));
                 }
             }
 
@@ -115,13 +123,6 @@ public class MemoriRules implements Rules {
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS"));
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_UI", null, 0, false));
-                }
-            } else {
-                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
-                    gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
-                    if(MainOptions.storyLineLevel % 2 == 1) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 1000, true));
-                    }
                 }
             }
         }
@@ -321,10 +322,11 @@ public class MemoriRules implements Rules {
             // flip card
             flipTile(currTile);
             // push flip feedback event (delayed: false, blocking: no)
-            gsCurrentState.getEventQueue().add(new GameEvent("flip", uaAction.getCoords()));
-            gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 2000, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
+            gsCurrentState.getEventQueue().add(new GameEvent("flip", uaAction.getCoords(), new Date().getTime() + 1000, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 3000, false));
             gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 1200, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 2200, false));
             if(MainOptions.TUTORIAL_MODE){
                 if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
                     //add FLIP_EXPLANATION event to queue
@@ -362,7 +364,7 @@ public class MemoriRules implements Rules {
                     memoriTerrain.resetOpenTiles();
                     for (Iterator<Point2D> iter = openTilesPoints.iterator(); iter.hasNext(); ) {
                         Point2D position = iter.next();
-                        gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 3500, false));
+                        gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 4500, false));
                     }
                     gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 4500, true));
 

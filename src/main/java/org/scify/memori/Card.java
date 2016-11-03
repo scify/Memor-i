@@ -17,7 +17,12 @@
 
 package org.scify.memori;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import org.scify.memori.MainOptions;
 import org.scify.memori.interfaces.Tile;
 
@@ -104,6 +109,22 @@ public class Card implements Tile{
         this.label = label;
         isWon = false;
         isFlipped = false;
+    }
+
+    public void turnCard() {
+        RotateTransition rotator = createRotator(this.getButton());
+        rotator.play();
+    }
+
+    private RotateTransition createRotator(Node card) {
+        RotateTransition rotator = new RotateTransition(Duration.millis(1000), card);
+        rotator.setAxis(Rotate.Y_AXIS);
+        rotator.setFromAngle(0);
+        rotator.setToAngle(360);
+        rotator.setInterpolator(Interpolator.EASE_BOTH);
+        rotator.setCycleCount(1);
+
+        return rotator;
     }
 
     @Override
