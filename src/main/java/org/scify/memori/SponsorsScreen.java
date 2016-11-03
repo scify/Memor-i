@@ -34,9 +34,10 @@ import static org.scify.memori.MainOptions.mWidth;
 public class SponsorsScreen implements HighScoresScreen {
 
     protected SceneHandler sceneHandler;
-
+    private FXAudioEngine audioEngine;
     public SponsorsScreen(SceneHandler shSceneHandler, Stage mainWindow) {
         this.sceneHandler = shSceneHandler;
+        audioEngine = new FXAudioEngine();
         sceneHandler.setMainWindow(mainWindow);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors.fxml"));
         Parent root = null;
@@ -45,14 +46,14 @@ public class SponsorsScreen implements HighScoresScreen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        audioEngine.pauseAndPlaySound("sponsors_message.mp3", false);
         Scene sponsorsScene = new Scene(root, mWidth, mHeight);
         sceneHandler.pushScene(sponsorsScene);
 
         sponsorsScene.setOnKeyReleased(event -> {
             switch (event.getCode()) {
                 case ESCAPE:
-                    sceneHandler.popScene();
+                    exitScreen();
                     break;
             }
         });
@@ -61,5 +62,10 @@ public class SponsorsScreen implements HighScoresScreen {
     @Override
     public void initialize() {
 
+    }
+
+    protected void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        sceneHandler.popScene();
     }
 }

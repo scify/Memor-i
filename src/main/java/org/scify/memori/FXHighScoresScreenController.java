@@ -50,63 +50,65 @@ public class FXHighScoresScreenController {
     public void setParameters(SceneHandler sHandler, Scene scoresScene) {
         //initialize the audio engine object
         audioEngine = new FXAudioEngine();
+
         highScoreHandler = new HighScoreHandler();
         sceneHandler = sHandler;
         sceneHandler.pushScene(scoresScene);
         scoresScene.setOnKeyReleased(event -> {
             switch (event.getCode()) {
                 case ESCAPE:
-                    audioEngine.pauseCurrentlyPlayingAudios();
-                    sceneHandler.popScene();
+                    exitScreen();
                     break;
             }
         });
 
+
+
         scoresScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level1.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level1.mp3", false);
             }
         });
 
         scoresScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level2.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level2.mp3", false);
             }
         });
 
         scoresScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level3.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level3.mp3", false);
             }
         });
 
         scoresScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level4.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level4.mp3", false);
             }
         });
 
         scoresScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level5.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level5.mp3", false);
             }
         });
 
         scoresScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level6.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level6.mp3", false);
             }
         });
 
         scoresScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("main_screen/level7.wav", false);
+                audioEngine.pauseAndPlaySound("main_screen/level7.mp3", false);
             }
         });
 
         scoresScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("back.wav", false);
+                audioEngine.pauseAndPlaySound("back.mp3", false);
             }
         });
     }
@@ -148,18 +150,18 @@ public class FXHighScoresScreenController {
                     audioEngine.playNumSound(minutes);
                     System.out.println("minutes: " + minutes);
                     if(minutes > 1)
-                        audioEngine.pauseAndPlaySound("game_effects/minutes.wav", true);
+                        audioEngine.pauseAndPlaySound("game_effects/minutes.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("game_effects/minute.wav", true);
+                        audioEngine.pauseAndPlaySound("game_effects/minute.mp3", true);
                 }
                 if(minutes != 0 && seconds != 0)
                     audioEngine.pauseAndPlaySound("game_effects/and.mp3", true);
                 if (seconds != 0) {
                     audioEngine.playNumSound(seconds);
                     if(seconds > 1)
-                        audioEngine.pauseAndPlaySound("game_effects/seconds.wav", true);
+                        audioEngine.pauseAndPlaySound("game_effects/seconds.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("game_effects/second.wav", true);
+                        audioEngine.pauseAndPlaySound("game_effects/second.mp3", true);
                 }
             } else {
                 audioEngine.pauseAndPlaySound("no_score.mp3", false);
@@ -174,7 +176,12 @@ public class FXHighScoresScreenController {
     @FXML
     protected void backToMainScreen(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            sceneHandler.popScene();
+            exitScreen();
         }
+    }
+
+    protected void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        sceneHandler.popScene();
     }
 }
