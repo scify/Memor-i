@@ -106,7 +106,7 @@ public class MainScreenController implements Initializable {
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
-        primaryStage.getIcons().add(new Image("/img/memori.png"));
+        primaryStage.getIcons().add(new Image("/img/logo_memor-i_white letters.png"));
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
 
