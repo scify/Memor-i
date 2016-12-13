@@ -467,35 +467,35 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "MINUTE":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("lang_dependent/minute.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/minute.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "MINUTES":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("lang_dependent/minutes.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/minutes.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "AND":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("lang_dependent/and.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/and.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "SECOND":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("lang_dependent/second.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/second.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "SECONDS":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound("lang_dependent/seconds.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/seconds.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

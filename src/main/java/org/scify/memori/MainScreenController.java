@@ -112,7 +112,7 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/welcome.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/welcome.mp3", false);
             }
         });
 
@@ -120,74 +120,74 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/headphones_adjustment.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/headphones_adjustment.mp3", false);
             }
         });
 
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/tutorial.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/tutorial.mp3", false);
             }
         });
 
 
         primaryScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level1.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level1.mp3", false);
             }
         });
 
         primaryScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level2.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level2.mp3", false);
             }
         });
 
         primaryScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level3.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level3.mp3", false);
             }
         });
 
         primaryScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level4.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level4.mp3", false);
             }
         });
 
         primaryScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level5.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level5.mp3", false);
             }
         });
 
         primaryScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level6.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level6.mp3", false);
             }
         });
 
         primaryScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level7.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level7.mp3", false);
             }
         });
 
         primaryScene.lookup("#myScores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/my_scores.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/my_scores.mp3", false);
             }
         });
 
         primaryScene.lookup("#exit").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/exit.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/exit.mp3", false);
             }
         });
 
         primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/sponsors.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/sponsors.mp3", false);
             }
         });
 
@@ -272,8 +272,8 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void headphonesAdjustment(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            audioEngine.playBalancedSound(-1.0, "lang_dependent/main_screen/left_headphone.mp3", true);
-            audioEngine.playBalancedSound(1.0, "lang_dependent/main_screen/right_headphone.mp3", true);
+            audioEngine.playBalancedSound(-1.0, "lang_dependent/miscellaneous/left_headphone.mp3", true);
+            audioEngine.playBalancedSound(1.0, "lang_dependent/miscellaneous/right_headphone.mp3", true);
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }

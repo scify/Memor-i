@@ -66,49 +66,49 @@ public class FXHighScoresScreenController {
 
         scoresScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level1.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level1.mp3", false);
             }
         });
 
         scoresScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level2.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level2.mp3", false);
             }
         });
 
         scoresScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level3.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level3.mp3", false);
             }
         });
 
         scoresScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level4.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level4.mp3", false);
             }
         });
 
         scoresScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level5.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level5.mp3", false);
             }
         });
 
         scoresScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level6.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level6.mp3", false);
             }
         });
 
         scoresScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/main_screen/level7.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/level7.mp3", false);
             }
         });
 
         scoresScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("lang_dependent/back.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/back.mp3", false);
             }
         });
     }
@@ -150,21 +150,21 @@ public class FXHighScoresScreenController {
                     audioEngine.playNumSound(minutes);
                     System.out.println("minutes: " + minutes);
                     if(minutes > 1)
-                        audioEngine.pauseAndPlaySound("lang_dependent/minutes.mp3", true);
+                        audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/minutes.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("lang_dependent/minute.mp3", true);
+                        audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/minute.mp3", true);
                 }
                 if(minutes != 0 && seconds != 0)
-                    audioEngine.pauseAndPlaySound("lang_dependent/and.mp3", true);
+                    audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/and.mp3", true);
                 if (seconds != 0) {
                     audioEngine.playNumSound(seconds);
                     if(seconds > 1)
-                        audioEngine.pauseAndPlaySound("lang_dependent/seconds.mp3", true);
+                        audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/seconds.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("lang_dependent/second.mp3", true);
+                        audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/second.mp3", true);
                 }
             } else {
-                audioEngine.pauseAndPlaySound("lang_dependent/no_score.mp3", false);
+                audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/no_score.mp3", false);
             }
         }
     }
