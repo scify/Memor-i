@@ -3,7 +3,8 @@
 
 #The following command clears the config.properties file (To clear any saved high scores)
 echo -n "" > src/main/resources/high_scores.properties
-
+#The following command clears the config.properties file (To clear any saved high scores)
+echo -n "" > src/main/resources/project.properties
 #Maven related tasks
 
 mvn clean
