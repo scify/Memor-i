@@ -76,7 +76,7 @@ public class FXAudioEngine implements AudioEngine{
                 fileHandler.getUserDir() + "project.properties",
                 "APP_LANG_DEFAULT"
         ) + File.separator;
-
+        System.err.println(fileHandler.getUserDir() + "project.properties");
         // APP_LANG property will change upon language change
         this.langDirectory = fileHandler.getPropertyByName(
                 fileHandler.getUserDir() + "project.properties",
