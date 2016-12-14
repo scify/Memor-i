@@ -46,7 +46,7 @@ public class SponsorsScreen implements HighScoresScreen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        audioEngine.pauseAndPlaySound("lang_dependent/miscellaneous/sponsors_message.mp3", false);
+        audioEngine.pauseAndPlaySound("miscellaneous/sponsors_message.mp3", false);
         Scene sponsorsScene = new Scene(root, mWidth, mHeight);
         sceneHandler.pushScene(sponsorsScene);
 

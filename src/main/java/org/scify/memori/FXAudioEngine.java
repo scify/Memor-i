@@ -22,6 +22,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.scify.memori.interfaces.AudioEngine;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,17 +33,26 @@ public class FXAudioEngine implements AudioEngine{
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
     private String soundBasePath = "/audios/";
-    private String movementSound = "lang_independent/movement_sound.mp3";
-    private String successSound = "lang_independent/success.wav";
-    private String invalidMovementSound = "lang_independent/bump.wav";
+    private String movementSound = "miscellaneous/movement_sound.mp3";
+    private String successSound = "miscellaneous/success.wav";
+    private String invalidMovementSound = "miscellaneous/bump.wav";
 //    private String failureSound = "error.wav";
-    private String emptySound = "lang_independent/visited_card.wav";
-    private String numBasePath = "lang_dependent/numbers/";
-    private String letterBasePath = "lang_dependent/letters/";
+    private String emptySound = "miscellaneous/visited_card.wav";
+    private String numBasePath = "numbers/";
+    private String letterBasePath = "letters/";
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
 
     private HashMap<Integer, String> rowHelpSounds = new HashMap<>();
     private HashMap<Integer, String> columnHelpSounds = new HashMap<>();
+
+    /**
+     * the directory of the current language
+     */
+    private String langDirectory;
+    /**
+     * the directory of the default language
+     */
+    private String defaultLangDirectory;
 
     public FXAudioEngine() {
         columnHelpSounds.put(0, "one.wav");
@@ -53,6 +64,24 @@ public class FXAudioEngine implements AudioEngine{
         rowHelpSounds.put(1, "B.wav");
         rowHelpSounds.put(2, "C.wav");
         rowHelpSounds.put(3, "D.wav");
+
+        FileHandler fileHandler = new FileHandler();
+        // if the game loads for the first time, we need to set the default language
+        fileHandler.setPropertyByName(
+                fileHandler.getUserDir() + "project.properties",
+                "APP_LANG_DEFAULT", "gr"
+        );
+
+        this.defaultLangDirectory = fileHandler.getPropertyByName(
+                fileHandler.getUserDir() + "project.properties",
+                "APP_LANG_DEFAULT"
+        ) + File.separator;
+
+        // APP_LANG property will change upon language change
+        this.langDirectory = fileHandler.getPropertyByName(
+                fileHandler.getUserDir() + "project.properties",
+                "APP_LANG"
+        ) + File.separator;
 
     }
 
@@ -74,16 +103,13 @@ public class FXAudioEngine implements AudioEngine{
     public void playMovementSound(double balance, double rate) {
         pauseSound();
         if(movementSoundMedia == null) {
-            movementSoundMedia = new Media(FXAudioEngine.class.getResource(soundBasePath + movementSound).toExternalForm());
+            System.err.println("construct new movement sound player");
+            movementSoundMedia = new Media(FXAudioEngine.class.getResource(getCorrectPathForFile(movementSound)).toExternalForm());
             movementSoundPlayer = new MediaPlayer(movementSoundMedia);
         }
         movementSoundPlayer.setBalance(balance);
         movementSoundPlayer.setRate(rate);
-        movementSoundPlayer.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                movementSoundPlayer.stop();
-            }
-        });
+        movementSoundPlayer.setOnEndOfMedia(() -> movementSoundPlayer.stop());
         movementSoundPlayer.play();
     }
 
@@ -139,7 +165,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playBalancedSound(double balance, String soundFile, boolean isBlocking) {
         pauseCurrentlyPlayingAudios();
-        audioClip = new AudioClip(FXAudioEngine.class.getResource(soundBasePath + soundFile).toExternalForm());
+        audioClip = new AudioClip(FXAudioEngine.class.getResource(getCorrectPathForFile(soundFile)).toExternalForm());
         audioClip.play(1, balance, 1, balance, 1);
         playingAudios.add(audioClip);
         if(isBlocking)
@@ -154,12 +180,34 @@ public class FXAudioEngine implements AudioEngine{
     }
 
     /**
+     * This function looks for the given file in the current language
+     * If not found, loads the default language
+     * If not found, then it is a language-independent file
+     * @param soundFilePath the resource-relative path of the file
+     * @return the correct file path
+     */
+    private String getCorrectPathForFile(String soundFilePath) {
+        String soundPath;
+        // default sound path is as if the file is language-dependent. Searching for current language
+        soundPath = soundBasePath + this.langDirectory + soundFilePath;
+
+        URL soundFile = FXAudioEngine.class.getResource(soundPath);
+        if(soundFile == null) {
+            // if no file exists, try to load default language
+            System.err.println("Loading default language for: " + soundFilePath);
+            soundPath = soundBasePath + this.defaultLangDirectory + soundFilePath;
+        }
+        return soundPath;
+    }
+
+    /**
      * Plays a sound given a sound file path
-     * @param soundFile the file name (path) of the audio clip
+     * @param soundFilePath the file name (path) of the audio clip
      * @param isBlocking whether the player should block the calling {@link Thread} while the sound is playing
      */
-    public void playSound(String soundFile, boolean isBlocking) {
-        audioClip = new AudioClip(FXAudioEngine.class.getResource(soundBasePath + soundFile).toExternalForm());
+    public void playSound(String soundFilePath, boolean isBlocking) {
+
+        audioClip = new AudioClip(FXAudioEngine.class.getResource(getCorrectPathForFile(soundFilePath)).toExternalForm());
         audioClip.play();
         playingAudios.add(audioClip);
         if (isBlocking) {
@@ -191,8 +239,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playNumSound(int number) {
         pauseCurrentlyPlayingAudios();
-        System.out.println(numBasePath + number + ".mp3");
-        playSound(numBasePath + String.valueOf(number) + ".mp3", true);
+        playSound(getCorrectPathForFile(numBasePath + String.valueOf(number) + ".mp3"), true);
     }
 
     /**
@@ -200,9 +247,8 @@ public class FXAudioEngine implements AudioEngine{
      * @param number the number associated with the letter (e.g. 1 for A, 2 for B, etc. We do not care for capital letters or not).
      */
     public void playLetterSound(int number) {
-        System.out.println(letterBasePath + number + ".mp3");
         pauseCurrentlyPlayingAudios();
-        playSound(letterBasePath + number + ".mp3", true);
+        playSound(getCorrectPathForFile(letterBasePath + number + ".mp3"), true);
     }
 
     /**
