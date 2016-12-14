@@ -36,7 +36,11 @@ these plugins will be automativcally downloaded and installed upon compilation.
 After compiling, in order for the standalone .jar file to be built, run these 2 commands:
 
 ```
-mvn assembly:single 
+mvn clean
+
+mvn package
+
+mvn assembly:single
 
 mvn dependency:copy-dependencies
 ```
@@ -45,6 +49,14 @@ These tasks can also be accomplished more easily just by running
 ```
 ./build_project.sh
 ```
+Create a project.properties file at the root directory of the project and add the following:
+
+```
+APP_LANG_DEFAULT=gr
+APP_LANG=no
+```
+
+You can add whatever name of language you want (given it exists in the resources/audios directory)
 
 which is a UNIX executable file located at the root of the project.
 
