@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.helper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.scify.memori.MainOptions;
 
 import java.io.*;
 import java.util.*;

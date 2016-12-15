@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.scify.memori.MainScreen</mainClass>
+                            <mainClass>org.scify.memori.screens.MainScreen</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

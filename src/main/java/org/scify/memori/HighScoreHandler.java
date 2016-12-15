@@ -17,6 +17,8 @@
 
 package org.scify.memori;
 
+import org.scify.memori.helper.FileHandler;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.screens;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
+import org.scify.memori.FXAudioEngine;
+import org.scify.memori.HighScoreHandler;
+import org.scify.memori.SceneHandler;
 
 import static javafx.scene.input.KeyCode.SPACE;
 

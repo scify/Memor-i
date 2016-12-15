@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.screens;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,6 +28,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.scify.memori.*;
 
 import java.awt.geom.Point2D;
 import java.net.URL;

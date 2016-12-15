@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.screens;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.scify.memori.FXAudioEngine;
+import org.scify.memori.SceneHandler;
 import org.scify.memori.interfaces.HighScoresScreen;
 
 import java.io.IOException;
@@ -31,29 +33,41 @@ import static org.scify.memori.MainOptions.mWidth;
 /**
  * JavaFX Screen constructor page
  */
-public class FXHighScoresScreen implements HighScoresScreen {
+public class SponsorsScreen implements HighScoresScreen {
 
     protected SceneHandler sceneHandler;
-
-    public FXHighScoresScreen(SceneHandler shSceneHandler, Stage mainWindow) {
+    private FXAudioEngine audioEngine;
+    public SponsorsScreen(SceneHandler shSceneHandler, Stage mainWindow) {
         this.sceneHandler = shSceneHandler;
+        audioEngine = new FXAudioEngine();
         sceneHandler.setMainWindow(mainWindow);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/scores.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors.fxml"));
         Parent root = null;
         try {
             root = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        audioEngine.pauseAndPlaySound("miscellaneous/sponsors_message.mp3", false);
+        Scene sponsorsScene = new Scene(root, mWidth, mHeight);
+        sceneHandler.pushScene(sponsorsScene);
 
-        Scene scoresScene = new Scene(root, mWidth, mHeight);
-
-        FXHighScoresScreenController controller = fxmlLoader.getController();
-        controller.setParameters(sceneHandler, scoresScene);
+        sponsorsScene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    exitScreen();
+                    break;
+            }
+        });
     }
 
     @Override
     public void initialize() {
 
+    }
+
+    protected void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        sceneHandler.popScene();
     }
 }

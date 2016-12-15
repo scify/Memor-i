@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.screens;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,12 +24,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.scify.memori.MainOptions;
+import org.scify.memori.helper.UTF8Control;
 
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class MainScreen extends Application {
-    private StackPane stackPane;
     private double mWidth = Screen.getPrimary().getBounds().getWidth();
     private double mHeight = Screen.getPrimary().getBounds().getHeight();
     private Rectangle graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -41,20 +44,21 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // DEBUG LINES
-        System.err.println("SELF:" + this.toString());
+        Locale locale = new Locale("el", "GR");
+
         //Load fxml file (layout xml) for first screen
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"));
-        Parent root = fxmlLoader.load();
-        stackPane = ((StackPane) root);
-        primaryStage.setTitle("Memor-i");
-        MainScreenController controller = fxmlLoader.getController();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
+                ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
+        Parent root = loader.load();
+        MainScreenController controller = loader.getController();
+
         // set as width and height the screen width and height
         MainOptions.mWidth = graphicsEnvironment.getWidth() - 10;
         MainOptions.mHeight = graphicsEnvironment.getHeight() - 10;
         // construct the scene (the content of the stage)
         Scene primaryScene = new Scene(root, mWidth, mHeight);
-
+        primaryStage.setTitle("Memor-i");
         controller.setParameters(primaryStage, primaryScene);
 
     }

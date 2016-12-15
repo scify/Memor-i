@@ -19,6 +19,7 @@ package org.scify.memori;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.scify.memori.helper.FileHandler;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 

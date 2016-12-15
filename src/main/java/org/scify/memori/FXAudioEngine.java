@@ -20,9 +20,10 @@ package org.scify.memori;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.scify.memori.helper.PreferencesHandler;
 import org.scify.memori.interfaces.AudioEngine;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,28 +66,39 @@ public class FXAudioEngine implements AudioEngine{
         rowHelpSounds.put(2, "C.wav");
         rowHelpSounds.put(3, "D.wav");
 
-        FileHandler fileHandler = new FileHandler();
+        PreferencesHandler preferencesHandler = new PreferencesHandler();
+        //get default language
+        String defaultAppLang = (String) preferencesHandler.getPreferenceByName("DEFAULT_APP_LANG");
+        //if no default language set yet, set the default language
+        if(defaultAppLang == null)
+            preferencesHandler.setPreference("DEFAULT_APP_LANG", "gr");
+        this.defaultLangDirectory = defaultAppLang;
+        this.langDirectory = "no";
+
+        //get the property value and print it out
+        //TODO:here
+
         // if the game loads for the first time, we need to set the default language
-        fileHandler.setPropertyByName(
-                fileHandler.getUserDir() + "project.properties",
-                "APP_LANG_DEFAULT", "gr"
-        );
-
-        fileHandler.setPropertyByName(
-                fileHandler.getUserDir() + "project.properties",
-                "APP_LANG", "no"
-        );
-
-        this.defaultLangDirectory = fileHandler.getPropertyByName(
-                fileHandler.getUserDir() + "project.properties",
-                "APP_LANG_DEFAULT"
-        ) + File.separator;
-        System.err.println(fileHandler.getUserDir() + "project.properties");
-        // APP_LANG property will change upon language change
-        this.langDirectory = fileHandler.getPropertyByName(
-                fileHandler.getUserDir() + "project.properties",
-                "APP_LANG"
-        ) + File.separator;
+//        fileHandler.setPropertyByName(
+//                projectPropertiesPath,
+//                "APP_LANG_DEFAULT", "gr"
+//        );
+//
+//        fileHandler.setPropertyByName(
+//                projectPropertiesPath,
+//                "APP_LANG", "no"
+//        );
+//
+//        this.defaultLangDirectory = fileHandler.getPropertyByName(
+//                projectPropertiesPath,
+//                "APP_LANG_DEFAULT"
+//        ) + File.separator;
+//        System.err.println(fileHandler.getUserDir() + "project.properties");
+//        // APP_LANG property will change upon language change
+//        this.langDirectory = fileHandler.getPropertyByName(
+//                projectPropertiesPath,
+//                "APP_LANG"
+//        ) + File.separator;
 
     }
 
@@ -194,13 +206,13 @@ public class FXAudioEngine implements AudioEngine{
     private String getCorrectPathForFile(String soundFilePath) {
         String soundPath;
         // default sound path is as if the file is language-dependent. Searching for current language
-        soundPath = soundBasePath + this.langDirectory + soundFilePath;
+        soundPath = soundBasePath + this.langDirectory + File.separator + soundFilePath;
 
         URL soundFile = FXAudioEngine.class.getResource(soundPath);
         if(soundFile == null) {
             // if no file exists, try to load default language
             System.err.println("Loading default language for: " + soundFilePath);
-            soundPath = soundBasePath + this.defaultLangDirectory + soundFilePath;
+            soundPath = soundBasePath + this.defaultLangDirectory + File.separator + soundFilePath;
         }
         return soundPath;
     }
