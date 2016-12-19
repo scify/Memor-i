@@ -20,10 +20,10 @@ package org.scify.memori;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import org.scify.memori.helper.PreferencesHandler;
+import org.scify.memori.helper.FileHandler;
 import org.scify.memori.interfaces.AudioEngine;
 
-import java.io.*;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,39 +66,9 @@ public class FXAudioEngine implements AudioEngine{
         rowHelpSounds.put(2, "C.wav");
         rowHelpSounds.put(3, "D.wav");
 
-        PreferencesHandler preferencesHandler = new PreferencesHandler();
-        //get default language
-        String defaultAppLang = (String) preferencesHandler.getPreferenceByName("DEFAULT_APP_LANG");
-        //if no default language set yet, set the default language
-        if(defaultAppLang == null)
-            preferencesHandler.setPreference("DEFAULT_APP_LANG", "gr");
-        this.defaultLangDirectory = defaultAppLang;
-        this.langDirectory = "no";
-
-        //get the property value and print it out
-        //TODO:here
-
-        // if the game loads for the first time, we need to set the default language
-//        fileHandler.setPropertyByName(
-//                projectPropertiesPath,
-//                "APP_LANG_DEFAULT", "gr"
-//        );
-//
-//        fileHandler.setPropertyByName(
-//                projectPropertiesPath,
-//                "APP_LANG", "no"
-//        );
-//
-//        this.defaultLangDirectory = fileHandler.getPropertyByName(
-//                projectPropertiesPath,
-//                "APP_LANG_DEFAULT"
-//        ) + File.separator;
-//        System.err.println(fileHandler.getUserDir() + "project.properties");
-//        // APP_LANG property will change upon language change
-//        this.langDirectory = fileHandler.getPropertyByName(
-//                projectPropertiesPath,
-//                "APP_LANG"
-//        ) + File.separator;
+        FileHandler fileHandler = new FileHandler();
+        this.defaultLangDirectory = fileHandler.getProjectProperty("APP_LANG_DEFAULT");
+        this.langDirectory = fileHandler.getProjectProperty("APP_LANG");
 
     }
 

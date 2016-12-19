@@ -25,9 +25,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.scify.memori.MainOptions;
+import org.scify.memori.helper.FileHandler;
 import org.scify.memori.helper.UTF8Control;
 
 import java.awt.*;
+import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -44,7 +46,8 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Locale locale = new Locale("el", "GR");
+        FileHandler fileHandler = new FileHandler();
+        Locale locale = new Locale(fileHandler.getProjectProperty("APP_LANG_DEFAULT"));
 
         //Load fxml file (layout xml) for first screen
 

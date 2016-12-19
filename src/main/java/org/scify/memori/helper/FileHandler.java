@@ -190,6 +190,18 @@ public class FileHandler {
         }
     }
 
+
+    /**
+     * Given a property key, gets a value from resources/project.properties file
+     * @param propertyKey the property key
+     * @return the property value
+     */
+    public String getProjectProperty(String propertyKey) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        classLoader.getResource("project.properties").getPath();
+        return this.getPropertyByName(classLoader.getResource("project.properties").getPath(), propertyKey);
+    }
+
     /**
      * Gets the default user directory for the current architecture
      */
