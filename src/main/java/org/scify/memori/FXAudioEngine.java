@@ -33,14 +33,13 @@ public class FXAudioEngine implements AudioEngine{
     private AudioClip audioClip;
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
-    private String soundBasePath = "/audios/";
-    private String movementSound = "miscellaneous/movement_sound.mp3";
-    private String successSound = "miscellaneous/success.wav";
-    private String invalidMovementSound = "miscellaneous/bump.wav";
-//    private String failureSound = "error.wav";
-    private String emptySound = "miscellaneous/visited_card.wav";
-    private String numBasePath = "numbers/";
-    private String letterBasePath = "letters/";
+    private String soundBasePath = File.separator + "audios" + File.separator;
+    private String movementSound = "miscellaneous" + File.separator + "movement_sound.mp3";
+    private String successSound = "miscellaneous" + File.separator + "success.wav";
+    private String invalidMovementSound = "miscellaneous" + File.separator + "bump.mp3";
+    private String emptySound = "miscellaneous" + File.separator + "door-knock.wav";
+    private String numBasePath = "numbers" + File.separator;
+    private String letterBasePath = "letters" + File.separator;
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
 
     private HashMap<Integer, String> rowHelpSounds = new HashMap<>();
@@ -194,8 +193,13 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playSound(String soundFilePath, boolean isBlocking) {
 
-        audioClip = new AudioClip(FXAudioEngine.class.getResource(getCorrectPathForFile(soundFilePath)).toExternalForm());
-        audioClip.play();
+        try {
+            audioClip = new AudioClip(FXAudioEngine.class.getResource(getCorrectPathForFile(soundFilePath)).toExternalForm());
+            audioClip.play();
+        } catch (Exception e) {
+            System.err.println("error loading sound for: " + soundFilePath);
+            return;
+        }
         playingAudios.add(audioClip);
         if (isBlocking) {
             // Wait until completion
