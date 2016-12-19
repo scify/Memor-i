@@ -280,7 +280,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             coords = (Point2D) currentGameEvent.parameters;
                             currCard = (Card) currentState.getTerrain().getTile((int) coords.getX(), (int) coords.getY());
 
-                            fxAudioEngine.playCardSound(currCard.getSound(), currentGameEvent.blocking);
+                            fxAudioEngine.playCardSound(currCard.getRandomSound(), currentGameEvent.blocking);
                             listIterator.remove();
 
                         }

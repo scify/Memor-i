@@ -157,4 +157,17 @@ public class MemoriGameState implements GameState {
         return terrain.areAllTilesWon();
     }
 
+    public boolean isGameFinished() {
+        return gameFinished;
+    }
+
+    public void setGameFinished(boolean gameFinished) {
+
+        this.gameFinished = gameFinished;
+    }
+
+    public void setLoadNextLevel(boolean loadNextLevel) {
+        this.loadNextLevel = loadNextLevel;
+    }
+
 }

@@ -78,29 +78,20 @@ public class MemoriTerrain implements Terrain {
         //Preparing the JSON parser class
         FileHandler parser = new FileHandler();
         //read the cards from the JSON file
-        cardsList = parser.readCardsFromJSONFile();
+        cardsList = parser.getCardsFromJSONFile();
         Iterator it = cardsList.iterator();
         while(it.hasNext()) {
-
-                JSONObject cardObj = (JSONObject) it.next();
-            for (int cardsNum = 0; cardsNum < cardVarieties; cardsNum++) {
-                Card newCard = new Card(cardObj.getString("label"), getStringArray((JSONArray) cardObj.get("images")), cardObj.getString("sounds"), cardObj.getString("description_sound"));
-
-                unShuffledCards.add(newCard);
-            }
+            JSONObject currObj = (JSONObject) it.next();
+            Card newCard = new CategorizedCard(
+                    (String) currObj.get("label"),
+                    getStringArray((JSONArray) currObj.get("images")),
+                    getStringArray((JSONArray) currObj.get("sounds")),
+                    (String)currObj.get("category"),
+                    (String)currObj.get("equivalenceCardSetHashCode"),
+                    (String)currObj.get("description_sound")
+            );
+            unShuffledCards.add(newCard);
         }
-//        for (Map.Entry<String, JSONObject> entry : cardsMap.entrySet()) {
-//            for (int cardsNum = 0; cardsNum < cardVarieties; cardsNum++) {
-//                JSONObject card = entry.getValue();
-//                //cardSounds is a comma separated string of sound files
-//                String cardSound = card.get(0).getString("sounds");
-//                String tileDescription =  card.getString("description_sound");
-//                //we need to transform it into an array and poll one sound
-//
-//                Card newCard = new Card(entry.getKey(), (String[]) card.get("images"), cardSound, tileDescription);
-//                unShuffledCards.add(newCard);
-//            }
-//        }
         return unShuffledCards;
     }
 
@@ -202,5 +193,9 @@ public class MemoriTerrain implements Terrain {
      */
     public void resetOpenTiles() {
         openTiles = new ArrayList<>();
+    }
+
+    public List<Tile> getOpenTiles() {
+        return openTiles;
     }
 }

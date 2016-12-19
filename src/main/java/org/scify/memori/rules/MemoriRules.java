@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.rules;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import org.scify.memori.*;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
@@ -83,10 +84,6 @@ public class MemoriRules implements Rules {
             //if ready to finish event already in events queue
             handleLevelFinishGameEvents(uaAction, gsCurrentState);
         }
-
-        //if in tutorial, handle the tutorial game events
-        if(MainOptions.TUTORIAL_MODE && uaAction != null)
-            tutorialRulesSet(gsCurrentState, uaAction);
 
         return gsCurrentState;
     }
@@ -158,12 +155,12 @@ public class MemoriRules implements Rules {
                 if(uaAction.getActionType().equals("enter")) {
                     //the game should finish and load a next level
                     gsCurrentState.replayLevel = true;
-                    gsCurrentState.gameFinished = true;
+                    gsCurrentState.setGameFinished(true);
                 }
                 if(uaAction.getActionType().equals("flip")) {
                     //the game should finish and load a next level
-                    gsCurrentState.loadNextLevel = true;
-                    gsCurrentState.gameFinished = true;
+                    gsCurrentState.setLoadNextLevel(true);
+                    gsCurrentState.setGameFinished(true);
                 }
             }
         } else {
@@ -225,7 +222,7 @@ public class MemoriRules implements Rules {
                     createHelpGameEvent(uaAction, gsCurrentState);
             } else if(uaAction.getActionType().equals("escape")) {
                 //exit current game
-                gsCurrentState.gameFinished = true;
+                gsCurrentState.setGameFinished(true);
             }
         } else {
             // if invalid movement, return only an invalid game event
@@ -390,106 +387,20 @@ public class MemoriRules implements Rules {
         }
     }
 
-    /**
-     * When in tutorial mode, handles the tutorial game events
-     * @param gsCurrentState the current game state
-     * @param uaAction the user action object
-     */
-    private void tutorialRulesSet(MemoriGameState gsCurrentState, UserAction uaAction) {
-
-        // if tutorial_0 event does not exist
-        //If user clicked space
-        // add tutorial_0 event to queue
-        // add tutorial_0 UI event to queue
-        // else if tutorial_0 event exists
-        //if tutorial_1 event does not exist
-        //if user clicked RIGHT
-        //add tutorial_1 event to queue
-        //add tutorial_1 UI event to queue
-        //else  if user did not click RIGHT
-        //add UI event indicating that the user should click RIGHT
-        //else if tutorial_1 event exists
-        //if tutorial_2 event does not exist
-        //if user clicked LEFT
-        //add tutorial_2 event to queue
-        //add tutorial_2 UI event to queue
-        //else if user did not click LEFT
-        //add UI event indicating that the user should click RIGHT
-        //else if tutorial_2 event exists
-        //if tutorial_3 event does not exist
-        //if user clicked FLIP
-        //add tutorial_3 event to queue
-        //add tutorial_3 UI event to queue
-        //if tutorial_3 event exists
-        // if tutorial_0 event does not exist
-        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0")) {
-            //If user clicked space
-            if (uaAction.getActionType().equals("flip")) {
-                // add tutorial_0 event to queue
-                gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_0"));
-                // add tutorial_0 UI event to queue
-                gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_0_UI", null, 0, true));
-            }
-            // else if tutorial_0 event exists
-        } else {
-            //if tutorial_1 event does not exist
-            if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_1")) {
-                //if user clicked RIGHT
-                if (uaAction.getDirection() == KeyCode.RIGHT) {
-                    //add tutorial_1 event to queue
-                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_1_STEP_1"));
-                    //add tutorial_1 UI event to queue
-                    gsCurrentState.getEventQueue().add(new GameEvent("GO_RIGHT_AGAIN", null, new Date().getTime() + 200, true));
-                } //else  if user did not click RIGHT
-                else {
-                    gsCurrentState.getEventQueue().add(new GameEvent("NOT_RIGHT_UI", null, new Date().getTime() + 200, false));
-                }
-                //else if tutorial_1 event exists
-            } else {
-                if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
-                    //if user clicked RIGHT
-                    if (uaAction.getDirection() == KeyCode.RIGHT) {
-                        //add tutorial_1 event to queue
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_1_STEP_2"));
-                    } //else  if user did not click RIGHT
-                    else {
-                        gsCurrentState.getEventQueue().add(new GameEvent("NOT_RIGHT_UI", null, new Date().getTime() + 200, false));
-                    }
-                    //else if tutorial_1 event exists
-                } else {
-                    //if tutorial_2 event does not exist
-                    if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT")) {
-                        // if the invalid movement event was handled by the rendering engine
-                        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT_UI")) {
-                            if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_2")) {
-                                //if user clicked LEFT
-                                if (uaAction.getDirection() == KeyCode.LEFT) {
-                                    // add tutorial_2 UI event to queue
-                                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_2_UI", null, new Date().getTime() + 500, true));
-                                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_2"));
-
-                                } else {
-                                    //add UI event indicating that the user should click LEFT
-                                    gsCurrentState.getEventQueue().add(new GameEvent("NOT_LEFT_UI", null, new Date().getTime() + 200, false));
-                                }
-                            } else {
-                                //if tutorial_3 event does not exist
-                                if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "DOORS_EXPLANATION")) {
-                                    //if user clicked ENTER
-                                    if (uaAction.getActionType().equals("enter")) {
-                                        //add tutorial_3 event to queue
-                                        gsCurrentState.getEventQueue().add(new GameEvent("DOORS_EXPLANATION"));
-                                        // add tutorial_3 UI event to queue
-                                        gsCurrentState.getEventQueue().add(new GameEvent("DOORS_EXPLANATION_UI", null, new Date().getTime() + 200, true));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
+    protected String cardNameSound(MemoriTerrain memoriTerrain, Tile currTile) {
+        CategorizedCard tileToCard = (CategorizedCard)currTile;
+        if(tileToCard.getCategory().equals("item")) {
+            return tileToCard.getLabel();
+        }
+        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
+            Tile element = iter.next();
+            CategorizedCard elementToCard = (CategorizedCard)element;
+            // if the current card is not equal with the given card
+            if(elementToCard.getCategory().equals("item")) {
+                return elementToCard.getLabel();
             }
         }
+        return null;
     }
 
     /**
@@ -498,7 +409,7 @@ public class MemoriRules implements Rules {
      * @param eventType the type of the event
      * @return true if the event exists in the events list
      */
-    private boolean eventsQueueContainsEvent(Queue<GameEvent> eventQueue, String eventType) {
+    protected boolean eventsQueueContainsEvent(Queue<GameEvent> eventQueue, String eventType) {
         Iterator<GameEvent> iter = eventQueue.iterator();
         GameEvent currentGameEvent;
         while (iter.hasNext()) {
@@ -523,7 +434,7 @@ public class MemoriRules implements Rules {
      * @param memoriTerrain the terrain containing the open tiles tuple
      */
     private void setAllOpenTilesWon(MemoriTerrain memoriTerrain) {
-        for (Tile openTile : memoriTerrain.openTiles) {
+        for (Tile openTile : memoriTerrain.getOpenTiles()) {
             openTile.setWon();
         }
     }
@@ -534,30 +445,44 @@ public class MemoriRules implements Rules {
      * @param currTile the current tile
      * @return true if one of the open tiles is different from the current tile
      */
-    private boolean atLeastOneOtherTileIsDifferent(MemoriTerrain memoriTerrain, Tile currTile) {
+    protected boolean atLeastOneOtherTileIsDifferent(MemoriTerrain memoriTerrain, Tile currTile) {
+        CategorizedCard tileToCard = (CategorizedCard)currTile;
         boolean answer = false;
-        for (Iterator<Tile> iter = memoriTerrain.openTiles.iterator(); iter.hasNext(); ) {
+        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
             Tile element = iter.next();
-            if(!Objects.equals(element.getTileType(), currTile.getTileType()))
+            CategorizedCard elementToCard = (CategorizedCard)element;
+            // if the current card is not equal with the given card
+            if(!cardsAreEqual(elementToCard, tileToCard))
                 answer = true;
         }
         return answer;
     }
 
     /**
+     * Checks if 2 given {@link CategorizedCard}s are equal (must be of different categories but be in the same equivalence card set)
+     * @param card1 the first {@link CategorizedCard}
+     * @param card2 the second {@link CategorizedCard}
+     * @return true if the 2 given cards are equal
+     */
+    protected boolean cardsAreEqual(CategorizedCard card1, CategorizedCard card2) {
+        System.out.println("category1: " + card1.getCategory());
+        System.out.println("category2: " + card2.getCategory());
+        System.out.println("hash1: " + card1.getEquivalenceCardSetHashCode());
+        System.out.println("hash2: " + card2.getEquivalenceCardSetHashCode());
+        return !(card1.getCategory().equals(card2.getCategory())) && card1.getEquivalenceCardSetHashCode().equals(card2.getEquivalenceCardSetHashCode());
+    }
+
+    /**
      * Checks if the current tile is the last of the n-tuple
      * @param memoriTerrain the terrain holding all the tiles
      * @param currTile the current tile
-     * @return true is the current tile is the last of the n-tuple
+     * @return true if the current tile is the last of the n-tuple
      */
-    private boolean tileIsLastOfTuple(MemoriTerrain memoriTerrain, Tile currTile) {
+    protected boolean tileIsLastOfTuple(MemoriTerrain memoriTerrain, Tile currTile) {
         boolean answer = false;
-        for (Iterator<Tile> iter = memoriTerrain.openTiles.iterator(); iter.hasNext(); ) {
-            Tile element = iter.next();
-            if(Objects.equals(element.getTileType(), currTile.getTileType()))
-                if(memoriTerrain.openTiles.size() == MainOptions.NUMBER_OF_OPEN_CARDS - 1)
-                    answer = true;
-        }
+        // if all cards in the open cards tuple are equal and we have reached the end of the tuple (2-cards, 3-cards etc)
+        if(!atLeastOneOtherTileIsDifferent(memoriTerrain, currTile) && (memoriTerrain.getOpenTiles().size() == MainOptions.NUMBER_OF_OPEN_CARDS - 1))
+            answer = true;
         return answer;
     }
 
@@ -568,7 +493,7 @@ public class MemoriRules implements Rules {
     @Override
     public boolean isGameFinished(GameState gsCurrent) {
         MemoriGameState memoriGameState = (MemoriGameState)gsCurrent;
-        return memoriGameState.gameFinished;
+        return memoriGameState.isGameFinished();
     }
 
     protected boolean isTileFlipped(Tile tile) {
@@ -587,10 +512,10 @@ public class MemoriRules implements Rules {
      */
     public List<Point2D> resetAllOpenTiles(MemoriTerrain memoriTerrain) {
         List<Point2D> openTilesPoints = new ArrayList<>();
-        memoriTerrain.openTiles.forEach(Tile::flip);
-        for (Iterator<Tile> iter = memoriTerrain.openTiles.iterator(); iter.hasNext(); ) {
+        memoriTerrain.getOpenTiles().forEach(Tile::flip);
+        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
             Tile element = iter.next();
-            Iterator it = memoriTerrain.tiles.entrySet().iterator();
+            Iterator it = memoriTerrain.getTiles().entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 if(element == pair.getValue()) {
