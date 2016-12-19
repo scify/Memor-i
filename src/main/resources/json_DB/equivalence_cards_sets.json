@@ -1,0 +1,788 @@
+{
+  "equivalence_card_sets": [
+    [
+      {
+        "label": "cow",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cow.wav"
+        ],
+        "images": [
+          "card_images/cow1.jpg",
+          "card_images/cow2.png"
+        ],
+        "description_sound": "tile_descriptions/cow.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cow",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cow.wav"
+        ],
+        "images": [
+          "card_images/cow1.jpg",
+          "card_images/cow2.png"
+        ],
+        "description_sound": "tile_descriptions/cow.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "horse",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/horse.wav"
+        ],
+        "images": [
+          "card_images/horse1.jpg",
+          "card_images/horse2.png"
+        ],
+        "description_sound": "tile_descriptions/horse.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "horse",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/horse.wav"
+        ],
+        "images": [
+          "card_images/horse1.jpg",
+          "card_images/horse2.png"
+        ],
+        "description_sound": "tile_descriptions/horse.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cat",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cat.wav"
+        ],
+        "images": [
+          "card_images/cat1.jpg",
+          "card_images/cat2.png"
+        ],
+        "description_sound": "tile_descriptions/cat.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cat",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cat.wav"
+        ],
+        "images": [
+          "card_images/cat1.jpg",
+          "card_images/cat2.png"
+        ],
+        "description_sound": "tile_descriptions/cat.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "rooster",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/rooster.wav"
+        ],
+        "images": [
+          "card_images/rooster1.jpg",
+          "card_images/rooster2.png"
+        ],
+        "description_sound": "tile_descriptions/rooster.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "rooster",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/rooster.wav"
+        ],
+        "images": [
+          "card_images/rooster1.jpg",
+          "card_images/rooster2.png"
+        ],
+        "description_sound": "tile_descriptions/rooster.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "sheep",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/sheep.wav"
+        ],
+        "images": [
+          "card_images/sheep1.jpg",
+          "card_images/sheep2.png"
+        ],
+        "description_sound": "tile_descriptions/sheep.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "sheep",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/sheep.wav"
+        ],
+        "images": [
+          "card_images/sheep1.jpg",
+          "card_images/sheep2.png"
+        ],
+        "description_sound": "tile_descriptions/sheep.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "pig",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/pig.wav"
+        ],
+        "images": [
+          "card_images/pig1.jpg",
+          "card_images/pig2.png"
+        ],
+        "description_sound": "tile_descriptions/pig.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "pig",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/pig.wav"
+        ],
+        "images": [
+          "card_images/pig1.jpg",
+          "card_images/pig2.png"
+        ],
+        "description_sound": "tile_descriptions/pig.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "dog",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/bark.wav"
+        ],
+        "images": [
+          "card_images/dog_2.jpg",
+          "card_images/dog2.png"
+        ],
+        "description_sound": "tile_descriptions/dog.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "dog",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/bark.wav"
+        ],
+        "images": [
+          "card_images/dog_2.jpg",
+          "card_images/dog2.png"
+        ],
+        "description_sound": "tile_descriptions/dog.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "donkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/donkey.wav"
+        ],
+        "images": [
+          "card_images/donkey1.jpg",
+          "card_images/donkey2.png"
+        ],
+        "description_sound": "tile_descriptions/donkey.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "donkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/donkey.wav"
+        ],
+        "images": [
+          "card_images/donkey1.jpg",
+          "card_images/donkey2.png"
+        ],
+        "description_sound": "tile_descriptions/donkey.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "duck",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/duck.wav"
+        ],
+        "images": [
+          "card_images/duck1.jpg",
+          "card_images/duck2.png"
+        ],
+        "description_sound": "tile_descriptions/duck.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "duck",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/duck.wav"
+        ],
+        "images": [
+          "card_images/duck1.jpg",
+          "card_images/duck2.png"
+        ],
+        "description_sound": "tile_descriptions/duck.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "bee",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/bee.wav"
+        ],
+        "images": [
+          "card_images/bee1.jpg",
+          "card_images/bee2.png"
+        ],
+        "description_sound": "tile_descriptions/bee.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "bee",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/bee.wav"
+        ],
+        "images": [
+          "card_images/bee1.jpg",
+          "card_images/bee2.png"
+        ],
+        "description_sound": "tile_descriptions/bee.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "dove",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/dove.wav"
+        ],
+        "images": [
+          "card_images/dove1.jpg",
+          "card_images/dove2.png"
+        ],
+        "description_sound": "tile_descriptions/dove.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "dove",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/dove.wav"
+        ],
+        "images": [
+          "card_images/dove1.jpg",
+          "card_images/dove2.png"
+        ],
+        "description_sound": "tile_descriptions/dove.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "turkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/turkey.wav"
+        ],
+        "images": [
+          "card_images/turkey1.jpg",
+          "card_images/turkey2.png"
+        ],
+        "description_sound": "tile_descriptions/turkey.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "turkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/turkey.wav"
+        ],
+        "images": [
+          "card_images/turkey1.jpg",
+          "card_images/turkey2.png"
+        ],
+        "description_sound": "tile_descriptions/turkey.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "sparrow",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/sparrow.wav"
+        ],
+        "images": [
+          "card_images/sparrow1.jpg",
+          "card_images/sparrow2.png"
+        ],
+        "description_sound": "tile_descriptions/sparrow.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "sparrow",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/sparrow.wav"
+        ],
+        "images": [
+          "card_images/sparrow1.jpg",
+          "card_images/sparrow2.png"
+        ],
+        "description_sound": "tile_descriptions/sparrow.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "frog",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/frog.wav"
+        ],
+        "images": [
+          "card_images/frog1.jpg",
+          "card_images/frog2.png"
+        ],
+        "description_sound": "tile_descriptions/frog.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "frog",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/sparrow.wav"
+        ],
+        "images": [
+          "card_images/frog1.jpg",
+          "card_images/frog2.png"
+        ],
+        "description_sound": "tile_descriptions/frog.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "elephant",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/elephant.wav"
+        ],
+        "images": [
+          "card_images/elephant1.jpg",
+          "card_images/elephant2.png"
+        ],
+        "description_sound": "tile_descriptions/elephant.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "elephant",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/elephant.wav"
+        ],
+        "images": [
+          "card_images/elephant1.jpg",
+          "card_images/elephant2.png"
+        ],
+        "description_sound": "tile_descriptions/elephant.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cuckoo",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cuckoo.wav"
+        ],
+        "images": [
+          "card_images/cuckoo1.jpg",
+          "card_images/cuckoo2.png"
+        ],
+        "description_sound": "tile_descriptions/cuckoo.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cuckoo",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cuckoo.wav"
+        ],
+        "images": [
+          "card_images/cuckoo1.jpg",
+          "card_images/cuckoo2.png"
+        ],
+        "description_sound": "tile_descriptions/cuckoo.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "guinea-pig",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/guinea-pig.wav"
+        ],
+        "images": [
+          "card_images/guinea-pig1.jpg",
+          "card_images/guinea-pig2.png"
+        ],
+        "description_sound": "tile_descriptions/guinea-pig.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "guinea-pig",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/guinea-pig.wav"
+        ],
+        "images": [
+          "card_images/guinea-pig1.jpg",
+          "card_images/guinea-pig2.png"
+        ],
+        "description_sound": "tile_descriptions/guinea-pig.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "mosquito",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/mosquito.wav"
+        ],
+        "images": [
+          "card_images/mosquito1.jpg",
+          "card_images/mosquito2.png"
+        ],
+        "description_sound": "tile_descriptions/mosquito.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "mosquito",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/mosquito.wav"
+        ],
+        "images": [
+          "card_images/mosquito1.jpg",
+          "card_images/mosquito2.png"
+        ],
+        "description_sound": "tile_descriptions/mosquito.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "mouse",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/mouse.wav"
+        ],
+        "images": [
+          "card_images/mouse1.jpg",
+          "card_images/mouse2.png"
+        ],
+        "description_sound": "tile_descriptions/mouse.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "mouse",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/mouse.wav"
+        ],
+        "images": [
+          "card_images/mouse1.jpg",
+          "card_images/mouse2.png"
+        ],
+        "description_sound": "tile_descriptions/mouse.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "raven",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/raven.wav"
+        ],
+        "images": [
+          "card_images/raven1.jpg",
+          "card_images/raven2.png"
+        ],
+        "description_sound": "tile_descriptions/raven.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "raven",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/raven.wav"
+        ],
+        "images": [
+          "card_images/raven1.jpg",
+          "card_images/raven2.png"
+        ],
+        "description_sound": "tile_descriptions/raven.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "nightingale",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/nightingale.wav"
+        ],
+        "images": [
+          "card_images/nightingale1.jpg",
+          "card_images/nightingale2.png"
+        ],
+        "description_sound": "tile_descriptions/nightingale.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "nightingale",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/nightingale.wav"
+        ],
+        "images": [
+          "card_images/nightingale1.jpg",
+          "card_images/nightingale2.png"
+        ],
+        "description_sound": "tile_descriptions/nightingale.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "lion",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/lion.wav"
+        ],
+        "images": [
+          "card_images/lion1.jpg",
+          "card_images/lion2.png"
+        ],
+        "description_sound": "tile_descriptions/lion.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "lion",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/lion.wav"
+        ],
+        "images": [
+          "card_images/lion1.jpg",
+          "card_images/lion2.png"
+        ],
+        "description_sound": "tile_descriptions/lion.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "seagull",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/seagull.wav"
+        ],
+        "images": [
+          "card_images/seagull1.jpg",
+          "card_images/seagull2.png"
+        ],
+        "description_sound": "tile_descriptions/seagull.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "seagull",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/seagull.wav"
+        ],
+        "images": [
+          "card_images/seagull1.jpg",
+          "card_images/seagull2.png"
+        ],
+        "description_sound": "tile_descriptions/seagull.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "seal",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/seal.wav"
+        ],
+        "images": [
+          "card_images/seal1.jpg",
+          "card_images/seal2.png"
+        ],
+        "description_sound": "tile_descriptions/seal.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "seal",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/seal.wav"
+        ],
+        "images": [
+          "card_images/seal1.jpg",
+          "card_images/seal2.png"
+        ],
+        "description_sound": "tile_descriptions/seal.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cicada",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cicada.wav"
+        ],
+        "images": [
+          "card_images/cicada1.jpg",
+          "card_images/cicada2.png"
+        ],
+        "description_sound": "tile_descriptions/cicada.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cicada",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/cicada.wav"
+        ],
+        "images": [
+          "card_images/cicada1.jpg",
+          "card_images/cicada2.png"
+        ],
+        "description_sound": "tile_descriptions/cicada.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "wolf",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/wolf.wav"
+        ],
+        "images": [
+          "card_images/wolf1.jpg",
+          "card_images/wolf2.png"
+        ],
+        "description_sound": "tile_descriptions/wolf.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "wolf",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/wolf.wav"
+        ],
+        "images": [
+          "card_images/wolf1.jpg",
+          "card_images/wolf2.png"
+        ],
+        "description_sound": "tile_descriptions/wolf.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "monkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "card_sounds/monkey.wav"
+        ],
+        "images": [
+          "card_images/monkey1.jpg",
+          "card_images/monkey2.png"
+        ],
+        "description_sound": "tile_descriptions/monkey.mp3",
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "monkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "card_sounds/monkey.wav"
+        ],
+        "images": [
+          "card_images/monkey1.jpg",
+          "card_images/monkey2.png"
+        ],
+        "description_sound": "tile_descriptions/monkey.mp3",
+        "equivalenceCardSetHashCode":""
+      }
+    ]
+  ]
+}

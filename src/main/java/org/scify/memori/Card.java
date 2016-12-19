@@ -37,7 +37,7 @@ public class Card implements Tile{
      */
     private Button button;
     /**
-     * the label of the card
+     * the type of the card. Cards with the same type are considered identical
      */
     private String label;
     /**
@@ -55,11 +55,12 @@ public class Card implements Tile{
     /**
      * file name of the sound associated with the card
      */
-    private String sound;
+    private String[] sounds;
     /**
-     * file name of the card description sound
+     * file name of the card name sound
      */
-    private String descriptionSound;
+    private String cardNameSound;
+
     /**
      *
      * @return the Node (Button) that is laid on the layout
@@ -94,21 +95,26 @@ public class Card implements Tile{
         return isFlipped;
     }
 
-    public Card(String label, String[] images, String soundFile, String description) {
+    public String getLabel() {
+        return label;
+    }
+
+    public Card(String label, String[] images, String[] sounds, String cardNameSound) {
         this.images = images;
-        button = new Button();
-        sound = soundFile;
-        descriptionSound = description;
-        button.setId(label);
+        this.button = new Button();
+        this.sounds = sounds;
+        this.cardNameSound = cardNameSound;
+        this.button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
         double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
         this.button.setPrefHeight(width * 0.66);
         this.button.setPrefWidth(width);
         // apply the appropriate style classes
-        button.getStyleClass().addAll("cardButton", "closedCard");
+        this.button.getStyleClass().addAll("cardButton", "closedCard");
         this.label = label;
-        isWon = false;
-        isFlipped = false;
+        this.isWon = false;
+        this.isFlipped = false;
+        flipBackUI();
     }
 
     public void turnCard() {
@@ -158,14 +164,20 @@ public class Card implements Tile{
     }
 
     /**
-     * Get the sound of the card
+     * Get a random sound from the card sounds
      * @return the sound file name associated with the card
      */
-    public String getSound() {
-        return sound;
+    public String getRandomSound() {
+        if(sounds.length != 0)
+            return sounds[random_int(0, sounds.length)];
+        return null;
     }
 
     public String getDescriptionSound() {
-        return descriptionSound;
+        return cardNameSound;
+    }
+
+    private int random_int(int Min, int Max) {
+        return (int) (Math.random()*(Max-Min))+Min;
     }
 }

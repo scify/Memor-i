@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import org.scify.memori.MainOptions;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -46,51 +48,158 @@ public class FileHandler {
         this.propertiesFile = userDir + File.separator + "high_scores.properties";
     }
 
-    public ArrayList<JSONObject> readCardsFromJSONFile() {
-        //  each DB "row" will be represented as a Map of String (id) to a Map of Strings (the card attributes, like sound and image)
-        ArrayList<JSONObject> cards = new ArrayList<>();
+    public ArrayList<JSONObject> getCardsFromJSONFile() {
+
+        ArrayList<JSONObject> cardsList = new ArrayList<>();
+        // cardsListTemp will hold the read cards from the current equivalence card set.
+        // If we find a duplicate card, we discard the equivalence card set and start again.
+        // else, we copy the cardsListTemp to the cardsList.
         Scanner scanner = null;
         try {
-            scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream("json_DB/cards.json")));
+            scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream("json_DB/equivalence_cards_sets.json")));
             String jsonStr = scanner.useDelimiter("\\A").next();
 
             JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
-            JSONArray rows = rootObject.getJSONArray("cards"); // Get all JSONArray rows
-            // shuffle the rows (we want the cards to be in a random order)
-            rows = shuffleJsonArray(rows);
-            ArrayList<JSONObject> tempMap;
-            Iterator it = rows.iterator();
-            /**
-             * The number of cards we need depends on the level (number of rows and columns)
-             * divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
-             */
-            int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS) / MainOptions.NUMBER_OF_OPEN_CARDS;
-//            for(int i = 0; i < numOfCards; i++) { // Loop over each each row
-//                JSONObject cardObj = rows.getJSONObject(i); // Get row object
-//                tempMap = new ArrayList<>();
-//                JSONObject cardAttrs = cardObj.getJSONObject("attrs");
-//                tempMap.add(0, (JSONObject) cardAttrs.get("images"));
-//                tempMap.add(1, (JSONObject) cardAttrs.getString("sounds"));
-//                tempMap.add(2, (JSONObject) cardAttrs.getString("description_sound"));
-//                map.put(cardObj.getString("label"), tempMap);
-//            }
+            JSONArray cardSets = getEquivalenceCardSets(rootObject);
 
-            int cardIndex = 0;
-            while(it.hasNext()) {
-                if(cardIndex < numOfCards) {
-                    JSONObject currCard = (JSONObject) it.next();
-                    cards.add(currCard);
-                } else {
-                    break;
-                }
-                cardIndex ++;
-            }
+            cardSets = assignHashCodesToCardsSets(cardSets);
+            /*
+              The number of cards we need depends on the level (number of rows and columns)
+              divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
+             */
+            int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
+            System.out.println("num of cards needed: " + numOfCards);
+
+            cardsList = extractCardsFromSets(cardSets, numOfCards);
 
         } finally {
             scanner.close();
         }
-        return cards;
+        return cardsList;
     }
+
+    /**
+     * Given a set of equivalence sets, get the shuffled set.
+     * @param rootObject the set of equivalence sets
+     * @return the shuffled set
+     */
+    public JSONArray getEquivalenceCardSets(JSONObject rootObject) {
+        JSONArray cardSets = rootObject.getJSONArray("equivalence_card_sets"); // Get all JSONArray rows
+        // shuffle the rows (we want the cards to be in a random order)
+        cardSets = shuffleJsonArray(cardSets);
+        return cardSets;
+    }
+
+    /**
+     * given a JSONArray of card objects, assign a unique hash code (for the equivalence set) to each card.
+     * @param cardSets the set of cards
+     * @return the set of cards with the hash codes
+     */
+    private JSONArray assignHashCodesToCardsSets(JSONArray cardSets) {
+        Iterator it = cardSets.iterator();
+        while(it.hasNext()) {
+            String equivalenceCardSetHashCode = randomString();
+            JSONArray currSet = (JSONArray) it.next();
+            Iterator itCards = currSet.iterator();
+            while(itCards.hasNext()) {
+                JSONObject currCard = (JSONObject) itCards.next();
+                if(currCard.get("equivalenceCardSetHashCode").equals(""))
+                    currCard.put("equivalenceCardSetHashCode", equivalenceCardSetHashCode);
+            }
+        }
+        return cardSets;
+    }
+
+    private ArrayList<JSONObject> extractCardsFromSets(JSONArray cardSets, int numOfCards) {
+        ArrayList<JSONObject> cardsListTemp;
+        ArrayList<JSONObject> cardsList = new ArrayList<>();
+        int randomNumber;
+        int cardCount = 0;
+        while (cardCount < numOfCards) {
+            cardsListTemp = new ArrayList<>();
+            // produce a random number for the card sets (we want to select a random card set)
+            randomNumber = random_int(0, cardSets.length());
+            // select a random equivalence card set
+            JSONArray randomCardSet = cardSets.getJSONArray(randomNumber);
+            // equivalenceCardSetHashCode describes the current card set
+            // shuffle the selected card set so that we pick random cards
+            randomCardSet = shuffleJsonArray(randomCardSet);
+            Iterator it = randomCardSet.iterator();
+            // categories will hold every category that has been already read so we only add one card from each category
+            ArrayList categories = new ArrayList();
+            while(it.hasNext()) {
+                JSONObject currCard = (JSONObject) it.next();
+                // if the current category has not been read before and the current card has not been already added
+                if(!categories.contains(currCard.get("category"))) {
+                    // if the current card is set to be unique
+                    if(currCard.get("unique").equals(true)) {
+                        // if not unique (ie already exists)
+                        if(cardsList.contains(currCard)) {
+                            // reset the temporary cards list
+                            cardsListTemp = new ArrayList<>();
+                            //we need to break the loop so that we change equivalence card set
+                            break;
+                        }
+                    }
+                    // add card
+                    cardsListTemp.add(currCard);
+                    // mark category as read
+                    categories.add(currCard.get("category"));
+
+                }
+
+            }
+            cardsList.addAll(cardsListTemp);
+            cardCount += cardsListTemp.size();
+        }
+        return cardsList;
+    }
+
+//    public ArrayList<JSONObject> readCardsFromJSONFile() {
+//        //  each DB "row" will be represented as a Map of String (id) to a Map of Strings (the card attributes, like sound and image)
+//        ArrayList<JSONObject> cards = new ArrayList<>();
+//        Scanner scanner = null;
+//        try {
+//            scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream("json_DB/cards.json")));
+//            String jsonStr = scanner.useDelimiter("\\A").next();
+//
+//            JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
+//            JSONArray rows = rootObject.getJSONArray("cards"); // Get all JSONArray rows
+//            // shuffle the rows (we want the cards to be in a random order)
+//            rows = shuffleJsonArray(rows);
+//            ArrayList<JSONObject> tempMap;
+//            Iterator it = rows.iterator();
+//            /**
+//             * The number of cards we need depends on the level (number of rows and columns)
+//             * divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
+//             */
+//            int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS) / MainOptions.NUMBER_OF_OPEN_CARDS;
+////            for(int i = 0; i < numOfCards; i++) { // Loop over each each row
+////                JSONObject cardObj = rows.getJSONObject(i); // Get row object
+////                tempMap = new ArrayList<>();
+////                JSONObject cardAttrs = cardObj.getJSONObject("attrs");
+////                tempMap.add(0, (JSONObject) cardAttrs.get("images"));
+////                tempMap.add(1, (JSONObject) cardAttrs.getString("sounds"));
+////                tempMap.add(2, (JSONObject) cardAttrs.getString("description_sound"));
+////                map.put(cardObj.getString("label"), tempMap);
+////            }
+//
+//            int cardIndex = 0;
+//            while(it.hasNext()) {
+//                if(cardIndex < numOfCards) {
+//                    JSONObject currCard = (JSONObject) it.next();
+//                    cards.add(currCard);
+//                } else {
+//                    break;
+//                }
+//                cardIndex ++;
+//            }
+//
+//        } finally {
+//            scanner.close();
+//        }
+//        return cards;
+//    }
 
     public static JSONArray shuffleJsonArray (JSONArray array) throws JSONException {
         // Implementing Fisher–Yates shuffle
@@ -230,5 +339,24 @@ public class FileHandler {
             userDir = System.getProperty("user.dir");
         }
         return userDir + File.separator;
+    }
+
+    /**
+     * Produce a random integer in [Min - Max) set
+     * @param Min the minimum number
+     * @param Max the maximum number
+     * @return a random integer in [Min - Max)
+     */
+    private int random_int(int Min, int Max) {
+        return (int) (Math.random()*(Max-Min))+Min;
+    }
+
+    /**
+     * Produces a random String.
+     * @return a random String object
+     */
+    private String randomString() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
     }
 }
