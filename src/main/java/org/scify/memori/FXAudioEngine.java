@@ -33,13 +33,13 @@ public class FXAudioEngine implements AudioEngine{
     private AudioClip audioClip;
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
-    private String soundBasePath = File.separator + "audios" + File.separator;
-    private String movementSound = "miscellaneous" + File.separator + "movement_sound.mp3";
-    private String successSound = "miscellaneous" + File.separator + "success.wav";
-    private String invalidMovementSound = "miscellaneous" + File.separator + "bump.mp3";
-    private String emptySound = "miscellaneous" + File.separator + "door-knock.wav";
-    private String numBasePath = "numbers" + File.separator;
-    private String letterBasePath = "letters" + File.separator;
+    private String soundBasePath = "/audios/";
+    private String movementSound = "miscellaneous/movement_sound.mp3";
+    private String successSound = "miscellaneous/success.wav";
+    private String invalidMovementSound = "miscellaneous/bump.mp3";
+    private String emptySound = "miscellaneous/door-knock.wav";
+    private String numBasePath = "numbers/";
+    private String letterBasePath = "letters/";
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
 
     private HashMap<Integer, String> rowHelpSounds = new HashMap<>();
@@ -68,6 +68,7 @@ public class FXAudioEngine implements AudioEngine{
         FileHandler fileHandler = new FileHandler();
         this.defaultLangDirectory = fileHandler.getProjectProperty("APP_LANG");
         this.langDirectory = fileHandler.getProjectProperty("APP_LANG");
+        System.err.println("this.defaultLangDirectory: " + this.defaultLangDirectory);
 
     }
 
@@ -175,14 +176,15 @@ public class FXAudioEngine implements AudioEngine{
     private String getCorrectPathForFile(String soundFilePath) {
         String soundPath;
         // default sound path is as if the file is language-dependent. Searching for current language
-        soundPath = soundBasePath + this.langDirectory + File.separator + soundFilePath;
+        soundPath = soundBasePath + this.langDirectory + "/" + soundFilePath;
 
         URL soundFile = FXAudioEngine.class.getResource(soundPath);
         if(soundFile == null) {
             // if no file exists, try to load default language
             System.err.println("Loading default language for: " + soundFilePath);
-            soundPath = soundBasePath + this.defaultLangDirectory + File.separator + soundFilePath;
+            soundPath = soundBasePath + this.defaultLangDirectory + "/" + soundFilePath;
         }
+        System.err.println(soundPath);
         return soundPath;
     }
 
