@@ -49,15 +49,6 @@ These tasks can also be accomplished more easily just by running
 ```
 ./build_project.sh
 ```
-Create a project.properties file at the root directory of the project and add the following:
-
-```
-APP_LANG_DEFAULT=gr
-APP_LANG=no
-```
-
-You can add whatever name of language you want (given it exists in the resources/audios directory)
-
 which is a UNIX executable file located at the root of the project.
 
 ## Built With
