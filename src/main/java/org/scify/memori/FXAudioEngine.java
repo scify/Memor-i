@@ -66,7 +66,7 @@ public class FXAudioEngine implements AudioEngine{
         rowHelpSounds.put(3, "D.wav");
 
         FileHandler fileHandler = new FileHandler();
-        this.defaultLangDirectory = fileHandler.getProjectProperty("APP_LANG_DEFAULT");
+        this.defaultLangDirectory = fileHandler.getProjectProperty("APP_LANG");
         this.langDirectory = fileHandler.getProjectProperty("APP_LANG");
 
     }
