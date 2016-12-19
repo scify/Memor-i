@@ -1,0 +1,274 @@
+{
+  "cards": [
+    {
+      "label": "cow",
+        "images": [
+          "card_images/cow1.jpg",
+          "card_images/cow2.png"
+        ],
+        "sounds": "card_sounds/cow.wav",
+        "description_sound": "tile_descriptions/cow.mp3"
+
+    },
+    {
+      "label": "horse",
+        "images": [
+          "card_images/horse1.jpg",
+          "card_images/horse2.png"
+        ],
+        "sounds": "card_sounds/horse.wav",
+        "description_sound": "tile_descriptions/horse.mp3"
+
+    },
+    {
+      "label": "cat",
+        "images": [
+          "card_images/cat1.jpg",
+          "card_images/cat2.png"
+        ],
+        "sounds": "card_sounds/cat.wav",
+        "description_sound": "tile_descriptions/cat.mp3"
+
+    },
+    {
+      "label": "rooster",
+        "images": [
+          "card_images/rooster1.jpg",
+          "card_images/rooster2.png"
+        ],
+        "sounds": "card_sounds/rooster.wav",
+        "description_sound": "tile_descriptions/rooster.mp3"
+
+    },
+    {
+      "label": "sheep",
+        "images": [
+          "card_images/sheep1.jpg",
+          "card_images/sheep2.png"
+        ],
+        "sounds": "card_sounds/sheep.wav",
+        "description_sound": "tile_descriptions/sheep.mp3"
+
+    },
+    {
+      "label": "pig",
+        "images": [
+          "card_images/pig1.jpg",
+          "card_images/pig2.png"
+        ],
+        "sounds": "card_sounds/pig.wav",
+        "description_sound": "tile_descriptions/pig.mp3"
+
+    },
+    {
+      "label": "dog_1",
+        "images": [
+          "card_images/dog1.gif",
+          "card_images/dog2.png"
+        ],
+        "sounds": "card_sounds/bark.wav",
+        "description_sound": "tile_descriptions/dog.mp3"
+
+    },
+    {
+      "label": "donkey",
+        "images": [
+          "card_images/donkey1.jpg",
+          "card_images/donkey2.png"
+        ],
+        "sounds": "card_sounds/donkey.wav",
+        "description_sound": "tile_descriptions/donkey.mp3"
+
+    },
+    {
+      "label": "duck",
+        "images": [
+          "card_images/duck1.jpg",
+          "card_images/duck2.png"
+        ],
+        "sounds": "card_sounds/duck.wav",
+        "description_sound": "tile_descriptions/duck.mp3"
+
+    },
+    {
+      "label": "bee",
+        "images": [
+          "card_images/bee1.jpg",
+          "card_images/bee2.png"
+        ],
+        "sounds": "card_sounds/bee.wav",
+        "description_sound": "tile_descriptions/bee.mp3"
+
+    },
+    {
+      "label": "dove",
+        "images": [
+          "card_images/dove1.jpg",
+          "card_images/dove2.png"
+        ],
+        "sounds": "card_sounds/dove.wav",
+        "description_sound": "tile_descriptions/dove.mp3"
+
+    },
+    {
+      "label": "turkey",
+        "images": [
+          "card_images/turkey1.jpg",
+          "card_images/turkey2.png"
+        ],
+        "sounds": "card_sounds/turkey.wav",
+        "description_sound": "tile_descriptions/turkey.mp3"
+
+    },
+    {
+      "label": "sparrow",
+        "images": [
+          "card_images/sparrow1.jpg",
+          "card_images/sparrow2.png"
+        ],
+        "sounds": "card_sounds/sparrow.wav",
+        "description_sound": "tile_descriptions/sparrow.mp3"
+
+    },
+    {
+      "label": "frog",
+        "images": [
+          "card_images/frog1.jpg",
+          "card_images/frog2.png"
+        ],
+        "sounds": "card_sounds/frog.wav",
+        "description_sound": "tile_descriptions/frog.mp3"
+
+    },
+    {
+      "label": "elephant",
+        "images": [
+          "card_images/elephant1.jpg",
+          "card_images/elephant2.png"
+        ],
+        "sounds": "card_sounds/elephant.wav",
+        "description_sound": "tile_descriptions/elephant.mp3"
+
+    },
+    {
+      "label": "cuckoo",
+        "images": [
+          "card_images/cuckoo1.jpg",
+          "card_images/cuckoo2.png"
+        ],
+        "sounds": "card_sounds/cuckoo.wav",
+        "description_sound": "tile_descriptions/cuckoo.mp3"
+
+    },
+    {
+      "label": "guinea-pig",
+        "images": [
+          "card_images/guinea-pig1.jpg",
+          "card_images/guinea-pig2.png"
+        ],
+        "sounds": "card_sounds/guinea-pig.wav",
+        "description_sound": "tile_descriptions/guinea-pig.mp3"
+
+    },
+    {
+      "label": "mosquito",
+        "images": [
+          "card_images/mosquito1.jpg",
+          "card_images/mosquito2.png"
+        ],
+        "sounds": "card_sounds/mosquito.wav",
+        "description_sound": "tile_descriptions/mosquito.mp3"
+
+    },
+    {
+      "label": "mouse",
+        "images": [
+          "card_images/mouse1.jpg",
+          "card_images/mouse2.png"
+        ],
+        "sounds": "card_sounds/mouse.wav",
+        "description_sound": "tile_descriptions/mouse.mp3"
+
+    },
+    {
+      "label": "raven",
+        "images": [
+          "card_images/raven1.jpg",
+          "card_images/raven2.png"
+        ],
+        "sounds": "card_sounds/raven.wav",
+        "description_sound": "tile_descriptions/raven.mp3"
+
+    },
+    {
+      "label": "nightingale",
+        "images": [
+          "card_images/nightingale1.jpg",
+          "card_images/nightingale2.png"
+        ],
+        "sounds": "card_sounds/nightingale.wav",
+        "description_sound": "tile_descriptions/nightingale.mp3"
+
+    },
+    {
+      "label": "lion",
+        "images": [
+          "card_images/lion1.jpg",
+          "card_images/lion2.png"
+        ],
+        "sounds": "card_sounds/lion.wav",
+        "description_sound": "tile_descriptions/lion.mp3"
+
+    },
+    {
+      "label": "seagull",
+        "images": [
+          "card_images/seagull1.jpg",
+          "card_images/seagull2.png"
+        ],
+        "sounds": "card_sounds/seagull.wav",
+        "description_sound": "tile_descriptions/seagull.mp3"
+
+    },
+    {
+      "label": "seal",
+        "images": [
+          "card_images/seal1.jpg",
+          "card_images/seal2.png"
+        ],
+        "sounds": "card_sounds/seal.wav",
+        "description_sound": "tile_descriptions/seal.mp3"
+
+    },
+    {
+      "label": "cicada",
+        "images": [
+          "card_images/cicada1.jpg",
+          "card_images/cicada2.png"
+        ],
+        "sounds": "card_sounds/cicada.wav",
+        "description_sound": "tile_descriptions/cicada.mp3"
+
+    },
+    {
+      "label": "wolf",
+        "images": [
+          "card_images/wolf1.jpg",
+          "card_images/wolf2.png"
+        ],
+        "sounds": "card_sounds/wolf.wav",
+        "description_sound": "tile_descriptions/wolf.mp3"
+
+    },
+    {
+      "label": "monkey",
+        "images": [
+          "card_images/monkey1.jpg",
+          "card_images/monkey2.png"
+        ],
+        "sounds": "card_sounds/monkey.wav",
+        "description_sound": "tile_descriptions/monkey.mp3"
+
+    }
+  ]
+}
