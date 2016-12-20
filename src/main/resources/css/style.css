@@ -37,7 +37,7 @@
 }
 
 .closedCard {
-    -fx-background-image: url("/img/door.jpg");
+    /*-fx-background-image: url("/img/door.jpg");*/
     -fx-background-size: 92% 92%;
 }
 

@@ -63,8 +63,13 @@ public class MainScreenController implements Initializable {
     private Button level7;
 
     private Map<Integer, Point2D> gameLevelToDimensions = new HashMap<>();
+    private FileHandler fileHandler;
+    protected String miscellaneousSoundsBasePath;
+    
 
     public MainScreenController() {
+        fileHandler = new FileHandler();
+        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
         System.err.println("Constructor running...");
     }
 
@@ -116,7 +121,7 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/welcome.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
 
@@ -124,74 +129,74 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/headphones_adjustment.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
             }
         });
 
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/tutorial.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
             }
         });
 
 
         primaryScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level1.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level1.mp3", false);
             }
         });
 
         primaryScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level2.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level2.mp3", false);
             }
         });
 
         primaryScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level3.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level3.mp3", false);
             }
         });
 
         primaryScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level4.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level4.mp3", false);
             }
         });
 
         primaryScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level5.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level5.mp3", false);
             }
         });
 
         primaryScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level6.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level6.mp3", false);
             }
         });
 
         primaryScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level7.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level7.mp3", false);
             }
         });
 
         primaryScene.lookup("#myScores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/my_scores.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "my_scores.mp3", false);
             }
         });
 
         primaryScene.lookup("#exit").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/exit.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "exit.mp3", false);
             }
         });
 
         primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/sponsors.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
             }
         });
 
@@ -266,7 +271,7 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void goToSponsorsPage(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            SponsorsScreen highScoresScreen = new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
+            SponsorsScreen sponsorsScreen = new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }
@@ -276,8 +281,8 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void headphonesAdjustment(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            audioEngine.playBalancedSound(-1.0, "miscellaneous/left_headphone.mp3", true);
-            audioEngine.playBalancedSound(1.0, "miscellaneous/right_headphone.mp3", true);
+            audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
+            audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }

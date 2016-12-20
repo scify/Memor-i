@@ -123,6 +123,7 @@ public class Card implements Tile{
         this.button.setPrefWidth(width);
         // apply the appropriate style classes
         this.button.getStyleClass().addAll("cardButton", "closedCard");
+        
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;

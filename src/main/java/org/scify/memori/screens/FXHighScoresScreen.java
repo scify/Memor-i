@@ -46,7 +46,7 @@ public class FXHighScoresScreen implements HighScoresScreen {
         FileHandler fileHandler = new FileHandler();
         Locale locale = new Locale(fileHandler.getProjectProperty("APP_LANG"));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scores.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;
         try {

@@ -23,6 +23,7 @@ import javafx.scene.input.KeyEvent;
 import org.scify.memori.FXAudioEngine;
 import org.scify.memori.HighScoreHandler;
 import org.scify.memori.SceneHandler;
+import org.scify.memori.helper.FileHandler;
 
 import static javafx.scene.input.KeyCode.SPACE;
 
@@ -50,7 +51,12 @@ public class FXHighScoresScreenController {
     @FXML
     private Button level7;
 
+    private FileHandler fileHandler;
+    protected String miscellaneousSoundsBasePath;
+    
     public void setParameters(SceneHandler sHandler, Scene scoresScene) {
+        fileHandler = new FileHandler();
+        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = new FXAudioEngine();
 
@@ -69,49 +75,49 @@ public class FXHighScoresScreenController {
 
         scoresScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level1.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level1.mp3", false);
             }
         });
 
         scoresScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level2.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level2.mp3", false);
             }
         });
 
         scoresScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level3.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level3.mp3", false);
             }
         });
 
         scoresScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level4.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level4.mp3", false);
             }
         });
 
         scoresScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level5.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level5.mp3", false);
             }
         });
 
         scoresScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level6.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level6.mp3", false);
             }
         });
 
         scoresScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/level7.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level7.mp3", false);
             }
         });
 
         scoresScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound("miscellaneous/back.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "back.mp3", false);
             }
         });
     }
@@ -153,21 +159,21 @@ public class FXHighScoresScreenController {
                     audioEngine.playNumSound(minutes);
                     System.out.println("minutes: " + minutes);
                     if(minutes > 1)
-                        audioEngine.pauseAndPlaySound("miscellaneous/minutes.mp3", true);
+                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minutes.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("miscellaneous/minute.mp3", true);
+                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minute.mp3", true);
                 }
                 if(minutes != 0 && seconds != 0)
-                    audioEngine.pauseAndPlaySound("miscellaneous/and.mp3", true);
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "and.mp3", true);
                 if (seconds != 0) {
                     audioEngine.playNumSound(seconds);
                     if(seconds > 1)
-                        audioEngine.pauseAndPlaySound("miscellaneous/seconds.mp3", true);
+                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "seconds.mp3", true);
                     else
-                        audioEngine.pauseAndPlaySound("miscellaneous/second.mp3", true);
+                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "second.mp3", true);
                 }
             } else {
-                audioEngine.pauseAndPlaySound("miscellaneous/no_score.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_score.mp3", false);
             }
         }
     }
