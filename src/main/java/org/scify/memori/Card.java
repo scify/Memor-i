@@ -60,7 +60,7 @@ public class Card implements Tile{
     /**
      * file name of the card name sound
      */
-    private String cardNameSound;
+    private String cardDescriptionSound;
 
     protected String cardImageBasePath;
 
@@ -108,14 +108,14 @@ public class Card implements Tile{
         return label;
     }
 
-    public Card(String label, String[] images, String[] sounds, String cardNameSound) {
+    public Card(String label, String[] images, String[] sounds, String cardDescriptionSound) {
 
         FileHandler fileHandler = new FileHandler();
 
         this.images = images;
         this.button = new Button();
         this.sounds = sounds;
-        this.cardNameSound = cardNameSound;
+        this.cardDescriptionSound = cardDescriptionSound;
         this.button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
         double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
@@ -191,7 +191,7 @@ public class Card implements Tile{
     }
 
     public String getDescriptionSound() {
-        return cardDescriptionSoundBasePath + cardNameSound;
+        return cardDescriptionSoundBasePath + cardDescriptionSound;
     }
 
     private int random_int(int Min, int Max) {
