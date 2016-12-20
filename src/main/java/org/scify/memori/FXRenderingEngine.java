@@ -31,6 +31,7 @@ import javafx.stage.Screen;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 

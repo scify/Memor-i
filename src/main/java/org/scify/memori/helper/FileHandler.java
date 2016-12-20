@@ -50,7 +50,7 @@ public class FileHandler {
 
     public ArrayList<JSONObject> getCardsFromJSONFile() {
 
-        ArrayList<JSONObject> cardsList = new ArrayList<>();
+        ArrayList<JSONObject> cardsList;
         // cardsListTemp will hold the read cards from the current equivalence card set.
         // If we find a duplicate card, we discard the equivalence card set and start again.
         // else, we copy the cardsListTemp to the cardsList.
@@ -110,9 +110,15 @@ public class FileHandler {
         return cardSets;
     }
 
+    /**
+     * Extract a specific number of  {@link JSONObject}, Given a set of Json Objects
+     * @param cardSets the set of Json objects
+     * @param numOfCards the number of objects to be extracted
+     * @return a subset of the initial set
+     */
     private ArrayList<JSONObject> extractCardsFromSets(JSONArray cardSets, int numOfCards) {
         ArrayList<JSONObject> cardsListTemp;
-        ArrayList<JSONObject> cardsList = new ArrayList<>();
+        ArrayList<JSONObject> extractedCards = new ArrayList<>();
         int randomNumber;
         int cardCount = 0;
         while (cardCount < numOfCards) {
@@ -134,7 +140,7 @@ public class FileHandler {
                     // if the current card is set to be unique
                     if(currCard.get("unique").equals(true)) {
                         // if not unique (ie already exists)
-                        if(cardsList.contains(currCard)) {
+                        if(extractedCards.contains(currCard)) {
                             // reset the temporary cards list
                             cardsListTemp = new ArrayList<>();
                             //we need to break the loop so that we change equivalence card set
@@ -149,10 +155,10 @@ public class FileHandler {
                 }
 
             }
-            cardsList.addAll(cardsListTemp);
+            extractedCards.addAll(cardsListTemp);
             cardCount += cardsListTemp.size();
         }
-        return cardsList;
+        return extractedCards;
     }
 
 //    public ArrayList<JSONObject> readCardsFromJSONFile() {
@@ -201,6 +207,12 @@ public class FileHandler {
 //        return cards;
 //    }
 
+    /**
+     * Shuffles the contents of a {@link JSONArray}. Mutates the initial array.
+     * @param array the initial array
+     * @return the shuffled array
+     * @throws JSONException if trying to access an element out of bounds, for example.
+     */
     public static JSONArray shuffleJsonArray (JSONArray array) throws JSONException {
         // Implementing Fisher–Yates shuffle
         Random rnd = new Random();

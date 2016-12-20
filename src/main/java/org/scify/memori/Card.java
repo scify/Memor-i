@@ -23,8 +23,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.scify.memori.MainOptions;
+import org.scify.memori.helper.FileHandler;
 import org.scify.memori.interfaces.Tile;
+
 
 /**
  * Implements the {@link Tile} representation in the game.
@@ -60,6 +61,14 @@ public class Card implements Tile{
      * file name of the card name sound
      */
     private String cardNameSound;
+
+    protected String cardImageBasePath;
+
+    protected String cardSoundsBasePath;
+
+    protected String cardDescriptionSoundBasePath;
+
+    protected String imagesBasePath;
 
     /**
      *
@@ -100,6 +109,9 @@ public class Card implements Tile{
     }
 
     public Card(String label, String[] images, String[] sounds, String cardNameSound) {
+
+        FileHandler fileHandler = new FileHandler();
+
         this.images = images;
         this.button = new Button();
         this.sounds = sounds;
@@ -114,6 +126,11 @@ public class Card implements Tile{
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;
+        this.cardImageBasePath = fileHandler.getProjectProperty("CARD_IMAGE_BASE_PATH");
+        this.cardSoundsBasePath = fileHandler.getProjectProperty("CARD_SOUND_BASE_PATH");
+        this.cardDescriptionSoundBasePath = fileHandler.getProjectProperty("CARD_NAME_SOUND_BASE_PATH");
+        this.imagesBasePath = fileHandler.getProjectProperty("IMAGES_BASE_PATH");
+
         flipBackUI();
     }
 
@@ -151,7 +168,7 @@ public class Card implements Tile{
     public void flipUI(int imgIndex) {
         // only if this image exists
         if(imgIndex < images.length) {
-            String imgFile = "/img/" + images[imgIndex];
+            String imgFile = this.imagesBasePath + this.cardImageBasePath + images[imgIndex];
             button.setStyle("-fx-background-image: url(" + imgFile + ")");
         }
     }
@@ -159,7 +176,7 @@ public class Card implements Tile{
      * function to set the UI of the flipped back card (change icons)
      */
     public void flipBackUI () {
-        String imgFile = "/img/door.jpg";
+        String imgFile = this.imagesBasePath + "door.jpg";
         button.setStyle("-fx-background-image: url(" + imgFile +")");
     }
 
@@ -169,12 +186,12 @@ public class Card implements Tile{
      */
     public String getRandomSound() {
         if(sounds.length != 0)
-            return sounds[random_int(0, sounds.length)];
+            return cardSoundsBasePath + sounds[random_int(0, sounds.length)];
         return null;
     }
 
     public String getDescriptionSound() {
-        return cardNameSound;
+        return cardDescriptionSoundBasePath + cardNameSound;
     }
 
     private int random_int(int Min, int Max) {

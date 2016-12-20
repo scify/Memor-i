@@ -23,7 +23,6 @@ import javafx.scene.media.MediaPlayer;
 import org.scify.memori.helper.FileHandler;
 import org.scify.memori.interfaces.AudioEngine;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,13 +32,13 @@ public class FXAudioEngine implements AudioEngine{
     private AudioClip audioClip;
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
-    private String soundBasePath = "/audios/";
+    private String soundBasePath;
     private String movementSound = "miscellaneous/movement_sound.mp3";
     private String successSound = "miscellaneous/success.wav";
     private String invalidMovementSound = "miscellaneous/bump.mp3";
     private String emptySound = "miscellaneous/door-knock.wav";
-    private String numBasePath = "numbers/";
-    private String letterBasePath = "letters/";
+    private String numBasePath;
+    private String letterBasePath;
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
 
     private HashMap<Integer, String> rowHelpSounds = new HashMap<>();
@@ -68,6 +67,9 @@ public class FXAudioEngine implements AudioEngine{
         FileHandler fileHandler = new FileHandler();
         this.defaultLangDirectory = fileHandler.getProjectProperty("APP_LANG");
         this.langDirectory = fileHandler.getProjectProperty("APP_LANG");
+        this.soundBasePath = fileHandler.getProjectProperty("SOUND_BASE_PATH");
+        this.numBasePath = fileHandler.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
+        this.letterBasePath = fileHandler.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
         System.err.println("this.defaultLangDirectory: " + this.defaultLangDirectory);
 
     }
