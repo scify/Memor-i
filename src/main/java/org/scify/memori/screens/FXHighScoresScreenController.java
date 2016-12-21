@@ -20,10 +20,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
-import org.scify.memori.FXAudioEngine;
-import org.scify.memori.HighScoreHandler;
+import org.scify.memori.fx.FXAudioEngine;
+import org.scify.memori.HighScoresHandlerImpl;
 import org.scify.memori.SceneHandler;
-import org.scify.memori.helper.FileHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
 import static javafx.scene.input.KeyCode.SPACE;
@@ -33,7 +32,7 @@ public class FXHighScoresScreenController {
     /**
      * An Audio Engine object, able to play sounds
      */
-    private HighScoreHandler highScoreHandler;
+    private HighScoresHandlerImpl highScoreHandler;
     private FXAudioEngine audioEngine;
     protected SceneHandler sceneHandler;
 
@@ -52,18 +51,16 @@ public class FXHighScoresScreenController {
     @FXML
     private Button level7;
 
-    private FileHandler fileHandler;
     private MemoriConfiguration configuration;
     protected String miscellaneousSoundsBasePath;
     
     public void setParameters(SceneHandler sHandler, Scene scoresScene) {
-        fileHandler = new FileHandler();
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = new FXAudioEngine();
 
-        highScoreHandler = new HighScoreHandler();
+        highScoreHandler = new HighScoresHandlerImpl();
         sceneHandler = sHandler;
         sceneHandler.pushScene(scoresScene);
         scoresScene.setOnKeyReleased(event -> {

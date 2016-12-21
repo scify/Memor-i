@@ -21,7 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.scify.memori.FXAudioEngine;
+import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.SceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.HighScoresScreen;

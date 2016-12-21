@@ -29,6 +29,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.scify.memori.*;
+import org.scify.memori.fx.FXAudioEngine;
+import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.helper.MemoriConfiguration;
 
 import java.awt.geom.Point2D;

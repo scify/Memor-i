@@ -69,8 +69,7 @@ public class MainScreen extends Application {
     }
 
     public static void addPath(String s) throws Exception {
-        File f = new File(s);
-        URL u = f.toURL();
+        URL u = new File(s).toURI().toURL();
         URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         Class urlClass = URLClassLoader.class;
         Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});

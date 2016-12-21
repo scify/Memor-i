@@ -17,9 +17,8 @@
 
 package org.scify.memori;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.scify.memori.helper.FileHandler;
+import org.scify.memori.card.Card;
+import org.scify.memori.card.CardDelegator;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 
@@ -70,46 +69,14 @@ public class MemoriTerrain implements Terrain {
      * @return A {@link List} of {@link Card}s that will participate in the game
      */
     private List<Card> produceDeckOfCards(int cardVarieties) {
-
-        List<Card> unShuffledCards = new ArrayList<>();
-
         //cardsMap will contain the values of the json object as key-value pairs
-        ArrayList<JSONObject> cardsList;
+        List<Card> cardsList;
         //Preparing the JSON parser class
-        FileHandler parser = new FileHandler();
+        CardDelegator cardDelegator = new CardDelegator();
         //read the cards from the JSON file
-        cardsList = parser.getCardsFromJSONFile();
-        Iterator it = cardsList.iterator();
-        while(it.hasNext()) {
-            JSONObject currObj = (JSONObject) it.next();
-            Card newCard = new CategorizedCard(
-                    (String) currObj.get("label"),
-                    getStringArray((JSONArray) currObj.get("images")),
-                    getStringArray((JSONArray) currObj.get("sounds")),
-                    (String)currObj.get("category"),
-                    (String)currObj.get("equivalenceCardSetHashCode"),
-                    (String)currObj.get("description_sound")
-            );
-            unShuffledCards.add(newCard);
-        }
-        return unShuffledCards;
-    }
+        cardsList = cardDelegator.getCards();
 
-    /**
-     * Parses a {@link JSONArray} elements to a String array
-     * @param jsonArray the JSON formatted array ( eg ["1", "2"] )
-     * @return a String array containing the elements of the JSON array
-     */
-    public static String[] getStringArray(JSONArray jsonArray){
-        String[] stringArray = null;
-        int length = jsonArray.length();
-        if(jsonArray!=null){
-            stringArray = new String[length];
-            for(int i=0;i<length;i++){
-                stringArray[i]= jsonArray.optString(i);
-            }
-        }
-        return stringArray;
+        return cardsList;
     }
 
     /**
