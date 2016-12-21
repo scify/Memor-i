@@ -33,10 +33,6 @@ public class FXAudioEngine implements AudioEngine{
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
     private String soundBasePath;
-    private String movementSound = "miscellaneous/movement_sound.mp3";
-    private String successSound = "miscellaneous/success.wav";
-    private String invalidMovementSound = "miscellaneous/bump.mp3";
-    private String emptySound = "miscellaneous/door-knock.wav";
     private String numBasePath;
     private String letterBasePath;
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
@@ -94,7 +90,7 @@ public class FXAudioEngine implements AudioEngine{
         pauseSound();
         if(movementSoundMedia == null) {
             System.err.println("construct new movement sound player");
-            movementSoundMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, movementSound)).toExternalForm());
+            movementSoundMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
             movementSoundPlayer = new MediaPlayer(movementSoundMedia);
         }
         movementSoundPlayer.setBalance(balance);
@@ -117,7 +113,7 @@ public class FXAudioEngine implements AudioEngine{
      * Plays an appropriate sound associated with a successful Game Event
      */
     public void playSuccessSound() {
-        playSound(successSound, true);
+        playSound("miscellaneous/success.wav", true);
     }
 
     /**
@@ -126,7 +122,7 @@ public class FXAudioEngine implements AudioEngine{
      * @param isBlocking if the event should block the ui thread
      */
     public void playInvalidMovementSound(double balance, boolean isBlocking) {
-        playBalancedSound(balance, invalidMovementSound, isBlocking);
+        playBalancedSound(balance, "miscellaneous/bump.mp3", isBlocking);
     }
 
     /**
@@ -135,13 +131,6 @@ public class FXAudioEngine implements AudioEngine{
 //    public void playFailureSound() {
 //        pauseAndPlaySound(failureSound, false);
 //    }
-
-    /**
-     * Plays an appropriate sound associated with an "empty" Game Event (if the user clicks on an already won Card)
-     */
-    public void playEmptySound() {
-        playSound(emptySound);
-    }
 
     @Override
     public void playSound(String soundFile) {
