@@ -24,10 +24,14 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.scify.memori.MainOptions;
-import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
 
 import java.awt.*;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -44,9 +48,9 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FileHandler fileHandler = new FileHandler();
-        Locale locale = new Locale(fileHandler.getProjectProperty("APP_LANG"));
-
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        addPath(configuration.getUserDir() + "memori_data");
         //Load fxml file (layout xml) for first screen
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
@@ -61,7 +65,17 @@ public class MainScreen extends Application {
         Scene primaryScene = new Scene(root, mWidth, mHeight);
         primaryStage.setTitle("Memor-i");
         controller.setParameters(primaryStage, primaryScene);
+        System.err.println(configuration.getUserDir() + "data_packs");
+    }
 
+    public static void addPath(String s) throws Exception {
+        File f = new File(s);
+        URL u = f.toURL();
+        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class urlClass = URLClassLoader.class;
+        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+        method.setAccessible(true);
+        method.invoke(urlClassLoader, new Object[]{u});
     }
 
 }

@@ -20,10 +20,12 @@ package org.scify.memori.helper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.scify.memori.FXAudioEngine;
 import org.scify.memori.MainOptions;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -38,6 +40,9 @@ public class FileHandler {
      */
     private String propertiesFile;
 
+    private String dataBasePath;
+    private String dataBasePathDefault;
+
     public FileHandler() {
         String userDir;
         if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
@@ -45,7 +50,10 @@ public class FileHandler {
         } else {
             userDir = System.getProperty("user.dir");
         }
+        MemoriConfiguration configuration = new MemoriConfiguration();
         this.propertiesFile = userDir + File.separator + "high_scores.properties";
+        this.dataBasePath = "/" + configuration.getProjectProperty("DATA_PACKAGE") + "/";
+        this.dataBasePathDefault = "/" + configuration.getProjectProperty("DATA_PACKAGE_DEFAULT") + "/";
     }
 
     public ArrayList<JSONObject> getCardsFromJSONFile() {
@@ -56,7 +64,8 @@ public class FileHandler {
         // else, we copy the cardsListTemp to the cardsList.
         Scanner scanner = null;
         try {
-            scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream("json_DB/equivalence_cards_sets.json")));
+            MemoriConfiguration configuration = new MemoriConfiguration();
+            scanner = new Scanner( new InputStreamReader(getClass().getClassLoader().getResourceAsStream(configuration.getProjectProperty("DATA_PACKAGE") + "/json_DB/equivalence_cards_sets.json")));
             String jsonStr = scanner.useDelimiter("\\A").next();
 
             JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
@@ -283,22 +292,6 @@ public class FileHandler {
         return null;
     }
 
-    /**
-     * Get a variable from project.properties file (given an input stream)
-     * @param propertyName the name of the property
-     * @return the value of the given property
-     */
-    public String getPropertyByName(InputStream propertyFileStream, String propertyName) {
-        Properties props = new Properties();
-        try {
-            props.load(propertyFileStream);
-            return props.getProperty(String.valueOf(propertyName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     /**
      * Sets a property identified by it's name, to a given value
@@ -328,31 +321,6 @@ public class FileHandler {
         }
     }
 
-
-    /**
-     * Given a property key, gets a value from resources/project.properties file
-     * @param propertyKey the property key
-     * @return the property value
-     */
-    public String getProjectProperty(String propertyKey) {
-        InputStream inputStream = getClass().getResourceAsStream("/project.properties");
-        String propertyValue = this.getPropertyByName(inputStream, propertyKey);
-        return propertyValue;
-    }
-
-    /**
-     * Gets the default user directory for the current architecture
-     */
-    public String getUserDir() {
-        String userDir;
-        if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
-            userDir = System.getenv("AppData");
-        } else {
-            userDir = System.getProperty("user.dir");
-        }
-        return userDir + File.separator;
-    }
-
     /**
      * Produce a random integer in [Min - Max) set
      * @param Min the minimum number
@@ -370,5 +338,16 @@ public class FileHandler {
     private String randomString() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32);
+    }
+
+    public String getCorrectPathForFile(String filePath, String fileName) {
+        String file = this.dataBasePath + filePath + fileName;
+        URL fileURL = FXAudioEngine.class.getResource(file);
+        if(fileURL == null) {
+            System.err.println("Loading: " + file);
+            file = this.dataBasePathDefault + filePath + fileName;
+        }
+        System.err.println("Eventually loaded: " + file);
+        return file;
     }
 }

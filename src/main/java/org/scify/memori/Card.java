@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Tile;
 
 
@@ -70,6 +71,9 @@ public class Card implements Tile{
 
     protected String imagesBasePath;
 
+    protected FileHandler fileHandler;
+
+
     /**
      *
      * @return the Node (Button) that is laid on the layout
@@ -110,8 +114,8 @@ public class Card implements Tile{
 
     public Card(String label, String[] images, String[] sounds, String cardDescriptionSound) {
 
-        FileHandler fileHandler = new FileHandler();
-
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        this.fileHandler = new FileHandler();
         this.images = images;
         this.button = new Button();
         this.sounds = sounds;
@@ -127,10 +131,10 @@ public class Card implements Tile{
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;
-        this.cardImageBasePath = fileHandler.getProjectProperty("CARD_IMAGE_BASE_PATH");
-        this.cardSoundsBasePath = fileHandler.getProjectProperty("CARD_SOUND_BASE_PATH");
-        this.cardDescriptionSoundBasePath = fileHandler.getProjectProperty("CARD_NAME_SOUND_BASE_PATH");
-        this.imagesBasePath = fileHandler.getProjectProperty("IMAGES_BASE_PATH");
+        this.imagesBasePath =  configuration.getProjectProperty("IMAGES_BASE_PATH");
+        this.cardImageBasePath = configuration.getProjectProperty("CARD_IMAGE_BASE_PATH");
+        this.cardSoundsBasePath = configuration.getProjectProperty("CARD_SOUND_BASE_PATH");
+        this.cardDescriptionSoundBasePath = configuration.getProjectProperty("CARD_NAME_SOUND_BASE_PATH");
 
         flipBackUI();
     }
@@ -169,7 +173,7 @@ public class Card implements Tile{
     public void flipUI(int imgIndex) {
         // only if this image exists
         if(imgIndex < images.length) {
-            String imgFile = this.imagesBasePath + this.cardImageBasePath + images[imgIndex];
+            String imgFile = this.fileHandler.getCorrectPathForFile(this.imagesBasePath + this.cardImageBasePath, images[imgIndex]);
             button.setStyle("-fx-background-image: url(" + imgFile + ")");
         }
     }
@@ -177,7 +181,7 @@ public class Card implements Tile{
      * function to set the UI of the flipped back card (change icons)
      */
     public void flipBackUI () {
-        String imgFile = this.imagesBasePath + "door.jpg";
+        String imgFile = this.fileHandler.getCorrectPathForFile(this.imagesBasePath, "door.jpg");
         button.setStyle("-fx-background-image: url(" + imgFile +")");
     }
 

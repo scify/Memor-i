@@ -29,6 +29,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
@@ -117,18 +118,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private String[] endLevelStartingSounds = {"sound1.mp3", "sound2.mp3", "sound3.mp3", "sound4.mp3"};
     private String[] endLevelEndingSounds = {"sound1.mp3", "sound2.mp3", "sound3.mp3", "sound4.mp3"};
 
-    FileHandler fileHandler;
+    MemoriConfiguration configuration;
 
     public FXRenderingEngine() {
-        fileHandler = new FileHandler();
+        configuration = new MemoriConfiguration();
 
-        this.storyLineSoundsBasePath = fileHandler.getProjectProperty("STORYLINE_SOUNDS");
-        this.levelIntroSoundsBasePath = fileHandler.getProjectProperty("LEVEL_INTRO_SOUNDS");
-        this.gameInstructionSoundsBasePath = fileHandler.getProjectProperty("GAME_INSTRUCTION_SOUNDS");
-        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
-        this.funFactorSoundsBasePath = fileHandler.getProjectProperty("FUN_FACTOR_SOUNDS");
-        this.endLevelStartingSoundsBasePath = fileHandler.getProjectProperty("END_LEVEL_STARTING_SOUNDS");
-        this.endLevelEndingSoundsBasePath = fileHandler.getProjectProperty("END_LEVEL_ENDING_SOUNDS");
+        this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
+        this.levelIntroSoundsBasePath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
+        this.gameInstructionSoundsBasePath = configuration.getProjectProperty("GAME_INSTRUCTION_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.funFactorSoundsBasePath = configuration.getProjectProperty("FUN_FACTOR_SOUNDS");
+        this.endLevelStartingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_STARTING_SOUNDS");
+        this.endLevelEndingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_ENDING_SOUNDS");
         
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));

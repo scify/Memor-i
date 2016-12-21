@@ -23,7 +23,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.scify.memori.FXAudioEngine;
 import org.scify.memori.SceneHandler;
-import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.HighScoresScreen;
 
 import java.io.IOException;
@@ -38,12 +38,12 @@ public class SponsorsScreen implements HighScoresScreen {
 
     protected SceneHandler sceneHandler;
     private FXAudioEngine audioEngine;
-    private FileHandler fileHandler;
+    private MemoriConfiguration configuration;
     protected String miscellaneousSoundsBasePath;
     
     public SponsorsScreen(SceneHandler shSceneHandler, Stage mainWindow) {
-        fileHandler = new FileHandler();
-        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         this.sceneHandler = shSceneHandler;
         audioEngine = new FXAudioEngine();
         sceneHandler.setMainWindow(mainWindow);

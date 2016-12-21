@@ -22,7 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.scify.memori.SceneHandler;
-import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.HighScoresScreen;
 
@@ -43,8 +43,8 @@ public class FXHighScoresScreen implements HighScoresScreen {
     public FXHighScoresScreen(SceneHandler shSceneHandler, Stage mainWindow) {
         this.sceneHandler = shSceneHandler;
         sceneHandler.setMainWindow(mainWindow);
-        FileHandler fileHandler = new FileHandler();
-        Locale locale = new Locale(fileHandler.getProjectProperty("APP_LANG"));
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scores.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));

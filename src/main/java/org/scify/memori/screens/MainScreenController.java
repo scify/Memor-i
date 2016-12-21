@@ -29,7 +29,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.scify.memori.*;
-import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 
 import java.awt.geom.Point2D;
 import java.net.URL;
@@ -63,13 +63,13 @@ public class MainScreenController implements Initializable {
     private Button level7;
 
     private Map<Integer, Point2D> gameLevelToDimensions = new HashMap<>();
-    private FileHandler fileHandler;
+    MemoriConfiguration configuration;
     protected String miscellaneousSoundsBasePath;
     
 
     public MainScreenController() {
-        fileHandler = new FileHandler();
-        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         System.err.println("Constructor running...");
     }
 
@@ -108,14 +108,14 @@ public class MainScreenController implements Initializable {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-        FileHandler fileHandler = new FileHandler();
+
 
         primaryStage.setX(bounds.getMinX());
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
-        primaryStage.getIcons().add(new Image(fileHandler.getProjectProperty("IMAGES_BASE_PATH") + "logo_memor-i_white letters.png"));
+        primaryStage.getIcons().add(new Image(configuration.getProjectProperty("IMAGES_BASE_PATH") + "logo_memor-i_white letters.png"));
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
 

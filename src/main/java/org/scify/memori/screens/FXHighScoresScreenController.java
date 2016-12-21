@@ -24,6 +24,7 @@ import org.scify.memori.FXAudioEngine;
 import org.scify.memori.HighScoreHandler;
 import org.scify.memori.SceneHandler;
 import org.scify.memori.helper.FileHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 
 import static javafx.scene.input.KeyCode.SPACE;
 
@@ -52,11 +53,13 @@ public class FXHighScoresScreenController {
     private Button level7;
 
     private FileHandler fileHandler;
+    private MemoriConfiguration configuration;
     protected String miscellaneousSoundsBasePath;
     
     public void setParameters(SceneHandler sHandler, Scene scoresScene) {
         fileHandler = new FileHandler();
-        this.miscellaneousSoundsBasePath = fileHandler.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = new FXAudioEngine();
 
