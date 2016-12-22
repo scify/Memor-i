@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.scify.memori;
+package org.scify.memori.helper;
 
 import java.util.concurrent.TimeUnit;
 

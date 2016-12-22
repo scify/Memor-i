@@ -18,6 +18,7 @@
 package org.scify.memori;
 
 import org.scify.memori.helper.PropertyHandlerImpl;
+import org.scify.memori.helper.TimeWatch;
 import org.scify.memori.interfaces.HighScoresHandler;
 import org.scify.memori.interfaces.PropertyHandler;
 
