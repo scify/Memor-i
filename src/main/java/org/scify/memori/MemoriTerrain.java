@@ -18,7 +18,7 @@
 package org.scify.memori;
 
 import org.scify.memori.card.Card;
-import org.scify.memori.card.CardDelegator;
+import org.scify.memori.card.MemoriCardDelegator;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 
@@ -49,8 +49,7 @@ public class MemoriTerrain implements Terrain {
     public MemoriTerrain() {
         tiles = new HashMap<>();
         openTiles = new ArrayList<>();
-        List<Card> unshuffledCards = produceDeckOfCards(MainOptions.NUMBER_OF_OPEN_CARDS);
-        List<Card> shuffledCards = shuffleDeck(unshuffledCards);
+        List<Card> shuffledCards = produceDeckOfCards(MainOptions.NUMBER_OF_OPEN_CARDS);
 
         int cardIndex = 0;
 
@@ -72,23 +71,14 @@ public class MemoriTerrain implements Terrain {
         //cardsMap will contain the values of the json object as key-value pairs
         List<Card> cardsList;
         //Preparing the JSON parser class
-        CardDelegator cardDelegator = new CardDelegator();
+        MemoriCardDelegator cardDelegator = new MemoriCardDelegator();
         //read the cards from the JSON file
-        cardsList = cardDelegator.getCards();
+        cardsList = cardDelegator.getMemoriCards();
 
         return cardsList;
     }
 
-    /**
-     * Shuffles the given {@link List} of {@link Card}s.
-     * @param deckCards the list of cards
-     * @return the shuffled list of cards
-     */
-    public List<Card> shuffleDeck(List<Card> deckCards) {
-        long seed = System.nanoTime();
-        Collections.shuffle(deckCards, new Random(seed));
-        return deckCards;
-    }
+
 
     @Override
     public int getWidth() {

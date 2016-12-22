@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.scify.memori.helper.JSONFileHandler;
 import org.scify.memori.MainOptions;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.CardDBHandler;
 
 import java.io.InputStreamReader;
@@ -11,19 +12,51 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class CardDBHandlerJSON implements CardDBHandler {
 
     public JSONFileHandler jsonFileHandler;
+    private String dbFile;
 
     public CardDBHandlerJSON() {
         jsonFileHandler = new JSONFileHandler();
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        dbFile = configuration.getProjectProperty("DATA_PACKAGE") + "/json_DB/equivalence_cards_sets.json";
     }
 
     @Override
-    public ArrayList<Object> getCardsFromDBFile(String dbFile) {
-        ArrayList<Object> jsonCards = new ArrayList<>();
+    public List<Card> getCardsFromDB(int numOfCards) {
+        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
+
+        ArrayList<Object> setObjects = extractObjectsFromJSONArray(initialObjectsSet, numOfCards);
+        JSONFileHandler jsonFileHandler = new JSONFileHandler();
+        List<Card> cardSet = new ArrayList<>();
+        Iterator it = setObjects.iterator();
+        while(it.hasNext()) {
+            JSONObject currObj = (JSONObject) it.next();
+            Card newCard = new CategorizedCard(
+                    (String) currObj.get("label"),
+                    jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("images")),
+                    jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("sounds")),
+                    (String)currObj.get("category"),
+                    (String)currObj.get("equivalenceCardSetHashCode"),
+                    (String)currObj.get("description_sound")
+            );
+            cardSet.add(newCard);
+        }
+        return cardSet;
+    }
+
+    /**
+     * Given a json file, read the root object (identified by the second parameter)
+     * @param dbFile the db file path
+     * @param objectId the id identifying the desired object
+     * @return
+     */
+    public JSONArray getObjectFromJSONFile(String dbFile, String objectId) {
+        JSONArray objectSets;
         Scanner scanner = null;
         try {
 
@@ -31,21 +64,14 @@ public class CardDBHandlerJSON implements CardDBHandler {
             String jsonStr = scanner.useDelimiter("\\A").next();
 
             JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
-            JSONArray cardSets = jsonFileHandler.getJSONArrayFromObject(rootObject, "equivalence_card_sets");
-            cardSets = assignHashCodesToCardsSets(cardSets);
-            /*
-              The number of cards we need depends on the level (number of rows and columns)
-              divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
-             */
-            int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
-            System.out.println("num of cards needed: " + numOfCards);
-
-            jsonCards = extractCardsFromSets(cardSets, numOfCards);
+            objectSets = jsonFileHandler.getJSONArrayFromObject(rootObject, objectId);
+            objectSets = assignHashCodesToCardsSets(objectSets);
 
         } finally {
+            assert scanner != null;
             scanner.close();
         }
-        return jsonCards;
+        return objectSets;
     }
 
 
@@ -55,7 +81,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
      * @param numOfCards the number of objects to be extracted
      * @return a subset of the initial set
      */
-    private ArrayList<Object> extractCardsFromSets(JSONArray cardSets, int numOfCards) {
+    private ArrayList<Object> extractObjectsFromJSONArray(JSONArray cardSets, int numOfCards) {
         ArrayList<JSONObject> cardsListTemp;
         ArrayList<Object> extractedCards = new ArrayList<>();
         int randomNumber;
@@ -68,7 +94,6 @@ public class CardDBHandlerJSON implements CardDBHandler {
             JSONArray randomCardSet = cardSets.getJSONArray(randomNumber);
             // equivalenceCardSetHashCode describes the current card set
             // shuffle the selected card set so that we pick random cards
-            randomCardSet = jsonFileHandler.shuffleJsonArray(randomCardSet);
             Iterator it = randomCardSet.iterator();
             // categories will hold every category that has been already read so we only add one card from each category
             ArrayList categories = new ArrayList();

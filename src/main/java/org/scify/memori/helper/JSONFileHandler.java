@@ -13,27 +13,6 @@ public class JSONFileHandler {
 
 
     /**
-     * Shuffles the contents of a {@link JSONArray}. Mutates the initial array.
-     * @param array the initial array
-     * @return the shuffled array
-     * @throws JSONException if trying to access an element out of bounds, for example.
-     */
-    public JSONArray shuffleJsonArray (JSONArray array) throws JSONException {
-        // Implementing Fisher–Yates shuffle
-        Random rnd = new Random();
-        for (int i = array.length() - 1; i >= 0; i--)
-        {
-            int j = rnd.nextInt(i + 1);
-            // Simple swap
-            Object object = array.get(j);
-            array.put(j, array.get(i));
-            array.put(i, object);
-        }
-        return array;
-    }
-
-
-    /**
      * Given a JSONObject and a name of an array inside this object, get the array
      * @param arrayName the array name
      * @return the shuffled set
