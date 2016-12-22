@@ -25,7 +25,6 @@ import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.AudioEngine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FXAudioEngine implements AudioEngine{
 
@@ -38,33 +37,10 @@ public class FXAudioEngine implements AudioEngine{
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
     protected static ResourceLocator resourceLocator = new ResourceLocator();
 
-    private HashMap<Integer, String> rowHelpSounds = new HashMap<>();
-    private HashMap<Integer, String> columnHelpSounds = new HashMap<>();
-
-    /**
-     * the directory of the current language
-     */
-    private String langDirectory;
-    /**
-     * the directory of the default language
-     */
-    private String defaultLangDirectory;
-
     public FXAudioEngine() {
-        columnHelpSounds.put(0, "one.wav");
-        columnHelpSounds.put(1, "two.wav");
-        columnHelpSounds.put(2, "three.wav");
-        columnHelpSounds.put(3, "four.wav");
-
-        rowHelpSounds.put(0, "A.wav");
-        rowHelpSounds.put(1, "B.wav");
-        rowHelpSounds.put(2, "C.wav");
-        rowHelpSounds.put(3, "D.wav");
 
         MemoriConfiguration configuration = new MemoriConfiguration();
 
-        this.defaultLangDirectory = configuration.getProjectProperty("APP_LANG");
-        this.langDirectory = configuration.getProjectProperty("APP_LANG");
         this.soundBasePath = configuration.getProjectProperty("SOUND_BASE_PATH");
         this.numBasePath = configuration.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
         this.letterBasePath = configuration.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
