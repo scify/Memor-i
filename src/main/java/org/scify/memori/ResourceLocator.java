@@ -2,7 +2,14 @@ package org.scify.memori;
 
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.helper.MemoriConfiguration;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responsible for locating and retrieving project resource files
@@ -33,5 +40,41 @@ public class ResourceLocator {
         }
         System.err.println("Eventually loaded: " + file);
         return file;
+    }
+
+
+    /**
+     * Gets the content files and directories names of a resource path
+     * @param dirPath the desired path name
+     * @return a set of names of the paths
+     */
+    public List<String> getResourcesFromDirectory(String dirPath) {
+        try {
+            return this.getResourceFiles(dirPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the content files and directories names of a resource path
+     * @param path the desired path name
+     * @return a set of names of the paths
+     */
+    private List<String> getResourceFiles( String path ) throws IOException {
+        List<String> filenames = new ArrayList<>();
+
+        try(
+                InputStream in = getClass().getResourceAsStream( path );
+                BufferedReader br = new BufferedReader( new InputStreamReader( in ) ) ) {
+            String resource;
+
+            while( (resource = br.readLine()) != null ) {
+                filenames.add( resource );
+            }
+        }
+
+        return filenames;
     }
 }

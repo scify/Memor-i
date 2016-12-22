@@ -41,7 +41,7 @@ public class FXAudioEngine implements AudioEngine{
 
         MemoriConfiguration configuration = new MemoriConfiguration();
 
-        this.soundBasePath = configuration.getProjectProperty("SOUND_BASE_PATH");
+        this.soundBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.numBasePath = configuration.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
         this.letterBasePath = configuration.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
 
