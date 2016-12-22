@@ -203,7 +203,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playNumSound(int number) {
         pauseCurrentlyPlayingAudios();
-        playSound(resourceLocator.getCorrectPathForFile(this.soundBasePath, numBasePath + String.valueOf(number) + ".mp3"), true);
+        playSound(numBasePath + String.valueOf(number) + ".mp3", true);
     }
 
     /**
@@ -212,7 +212,7 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playLetterSound(int number) {
         pauseCurrentlyPlayingAudios();
-        playSound(resourceLocator.getCorrectPathForFile(this.soundBasePath, letterBasePath + number + ".mp3"), true);
+        playSound( letterBasePath + number + ".mp3", true);
     }
 
     /**
