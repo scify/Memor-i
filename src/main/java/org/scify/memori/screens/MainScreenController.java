@@ -31,6 +31,7 @@ import javafx.stage.WindowEvent;
 import org.scify.memori.*;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
+import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
 import java.awt.geom.Point2D;
@@ -77,7 +78,7 @@ public class MainScreenController implements Initializable {
 
     protected Stage primaryStage;
     protected Scene primaryScene;
-    protected SceneHandler sceneHandler = new SceneHandler();
+    protected FXSceneHandler sceneHandler = new FXSceneHandler();
     protected FXAudioEngine audioEngine = new FXAudioEngine();
 
     @Override

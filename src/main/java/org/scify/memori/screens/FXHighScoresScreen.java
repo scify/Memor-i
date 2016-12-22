@@ -21,7 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.scify.memori.SceneHandler;
+import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.HighScoresScreen;
@@ -38,9 +38,9 @@ import static org.scify.memori.MainOptions.mWidth;
  */
 public class FXHighScoresScreen implements HighScoresScreen {
 
-    protected SceneHandler sceneHandler;
+    protected FXSceneHandler sceneHandler;
 
-    public FXHighScoresScreen(SceneHandler shSceneHandler, Stage mainWindow) {
+    public FXHighScoresScreen(FXSceneHandler shSceneHandler, Stage mainWindow) {
         this.sceneHandler = shSceneHandler;
         sceneHandler.setMainWindow(mainWindow);
         MemoriConfiguration configuration = new MemoriConfiguration();

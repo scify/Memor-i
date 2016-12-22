@@ -22,7 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.scify.memori.fx.FXAudioEngine;
-import org.scify.memori.SceneHandler;
+import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.HighScoresScreen;
 
@@ -36,12 +36,12 @@ import static org.scify.memori.MainOptions.mWidth;
  */
 public class SponsorsScreen implements HighScoresScreen {
 
-    protected SceneHandler sceneHandler;
+    protected FXSceneHandler sceneHandler;
     private FXAudioEngine audioEngine;
     private MemoriConfiguration configuration;
     protected String miscellaneousSoundsBasePath;
     
-    public SponsorsScreen(SceneHandler shSceneHandler, Stage mainWindow) {
+    public SponsorsScreen(FXSceneHandler shSceneHandler, Stage mainWindow) {
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         this.sceneHandler = shSceneHandler;

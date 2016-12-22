@@ -19,13 +19,12 @@ package org.scify.memori.fx;
 
 
 import org.scify.memori.MemoriGame;
-import org.scify.memori.SceneHandler;
 
 public class FXMemoriGame extends MemoriGame {
-    protected SceneHandler sceneHandler;
+    protected FXSceneHandler sceneHandler;
 
 
-    public FXMemoriGame(SceneHandler shSceneHandler) {
+    public FXMemoriGame(FXSceneHandler shSceneHandler) {
         this.sceneHandler = shSceneHandler;
     }
 
