@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.scify.memori.helper.JSONFileHandler;
 import org.scify.memori.MainOptions;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.CardDBHandler;
 
 import java.io.InputStreamReader;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 public class CardDBHandlerJSON implements CardDBHandler {
 
@@ -24,6 +26,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
         jsonFileHandler = new JSONFileHandler();
         MemoriConfiguration configuration = new MemoriConfiguration();
         dbFile = configuration.getProjectProperty("DATA_PACKAGE") + "/json_DB/equivalence_cards_sets.json";
+        MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFile);
     }
 
     @Override
