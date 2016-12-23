@@ -1,7 +1,5 @@
 package org.scify.memori.card;
 
-import org.scify.memori.MainOptions;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -17,15 +15,19 @@ public class MemoriCardDelegator extends CardDBHandlerJSON{
 
 
 
-    public List<Card> getMemoriCards() {
+    public List<Card> getMemoriCards(int numOfCards) {
         /*
           The number of cards we need depends on the level (number of rows and columns)
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
-        int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
-        System.out.println("num of cards needed: " + numOfCards);
         return shuffleCards(getCardsFromDB(numOfCards));
     }
+
+    public int getNumberOfCards() {
+        System.out.println("equivalence card sets: " + getNumberOfEquivalenceCardSets() + ", num of cards: " + getNumOfCardsInDB());
+        return getNumberOfEquivalenceCardSets();
+    }
+
 
     /**
      * Shuffles the given {@link List} of {@link Card}s.

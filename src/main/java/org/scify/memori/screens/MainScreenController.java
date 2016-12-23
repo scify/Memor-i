@@ -1,13 +1,13 @@
 
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,50 +25,39 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.scify.memori.*;
+import org.scify.memori.GameLevelService;
+import org.scify.memori.MainOptions;
+import org.scify.memori.MemoriGameLevel;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 
-import java.awt.geom.Point2D;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
 
 public class MainScreenController implements Initializable {
-    @FXML
-    private Button tutorial;
-    @FXML
-    private Button level1;
-    @FXML
-    private Button level2;
-    @FXML
-    private Button level3;
-    @FXML
-    private Button level4;
-    @FXML
-    private Button level5;
-    @FXML
-    private Button level6;
-    @FXML
-    private Button level7;
 
-    private Map<Integer, Point2D> gameLevelToDimensions = new HashMap<>();
-    MemoriConfiguration configuration;
-    protected String miscellaneousSoundsBasePath;
-    
+
+    private List<MemoriGameLevel> gameLevels = new ArrayList<>();
+    private MemoriConfiguration configuration;
+    private String miscellaneousSoundsBasePath;
+
 
     public MainScreenController() {
         configuration = new MemoriConfiguration();
@@ -83,13 +72,58 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        gameLevelToDimensions.put(1, new Point2D.Double(2,3));
-        gameLevelToDimensions.put(2, new Point2D.Double(2,4));
-        gameLevelToDimensions.put(3, new Point2D.Double(3,4));
-        gameLevelToDimensions.put(4, new Point2D.Double(4,4));
-        gameLevelToDimensions.put(5, new Point2D.Double(5,4));
-        gameLevelToDimensions.put(6, new Point2D.Double(4,6));
-        gameLevelToDimensions.put(7, new Point2D.Double(5,6));
+
+    }
+
+    /**
+     * Gets all game levels available and adds a button for each one
+     * @param buttonsContainer FXML container (div) for adding the buttons
+     */
+    private void addGameLevelButtons(VBox buttonsContainer) {
+        GameLevelService gameLevelService = new GameLevelService();
+        gameLevels = new ArrayList<>();
+        gameLevels = gameLevelService.getAllLevels();
+        for (MemoriGameLevel currLevel : gameLevels) {
+            Button gameLevelBtn = new Button();
+            gameLevelBtn.setText(currLevel.getLevelName());
+            gameLevelBtn.getStyleClass().add("optionButton");
+            gameLevelBtn.setId(String.valueOf(currLevel.getLevelCode()));
+            gameLevelBtn.focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                if (newPropertyValue) {
+                    audioEngine.pauseAndPlaySound(currLevel.getIntroScreenSound(), false);
+                }
+            });
+            buttonsContainer.getChildren().add(gameLevelBtn);
+            levelBtnHandler(gameLevelBtn, currLevel);
+        }
+    }
+
+    /**
+     * When the user clicks on a game level button, a new Game should start
+     * @param gameLevelBtn the button clcked
+     * @param gameLevel the game level associated with this button
+     */
+    protected void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
+        gameLevelBtn.setOnKeyPressed(event -> {
+            if (event.getCode() == SPACE) {
+
+                MainOptions.gameLevel = gameLevel.getLevelCode();
+                MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+                MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+                Thread thread = new Thread(() -> startNormalGame(gameLevel));
+                thread.start();
+            } else if (event.getCode() == ESCAPE) {
+                exitScreen();
+            }
+        });
+    }
+
+    /**
+     * Pauses all sounds and exits the application
+     */
+    private void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        System.exit(0);
     }
 
     public void setParameters(Stage primaryStage, Scene primaryScene) {
@@ -112,7 +146,6 @@ public class MainScreenController implements Initializable {
         Rectangle2D bounds = screen.getVisualBounds();
 
 
-
         primaryStage.setX(bounds.getMinX());
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
@@ -121,15 +154,23 @@ public class MainScreenController implements Initializable {
         primaryStage.getIcons().add(new Image(configuration.getProjectProperty("IMAGES_BASE_PATH") + "logo_memor-i_white letters.png"));
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
+        VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
+        addGameLevelButtons(gameLevelsContainer);
 
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
-
+        attachButtonClickHandlers();
         primaryStage.show();
 
+    }
+
+    /**
+     * Attaches click handlers to fixed buttons (tutorial, exit, etc)
+     */
+    private void attachButtonClickHandlers() {
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
@@ -139,49 +180,6 @@ public class MainScreenController implements Initializable {
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
-            }
-        });
-
-
-        primaryScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level1.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level2.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level3.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level4.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level5.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level6.mp3", false);
-            }
-        });
-
-        primaryScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level7.mp3", false);
             }
         });
 
@@ -202,64 +200,34 @@ public class MainScreenController implements Initializable {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
             }
         });
-
     }
 
     /**
      * Quits game
+     *
      * @param evt the keyboard event
      */
     @FXML
     protected void exitGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            System.exit(0);
+            exitScreen();
         }
     }
 
     /**
-     * Depending on the button clicked, the Main options (number of columns and rows) are initialized and a new game starts
-     * @param evt the keyboard event
+     * When the user clicks on "tutorial" button, start a new tutorial game
+     * @param evt the click event
      */
     @FXML
-    protected void initializeGameOptions(KeyEvent evt) {
+    protected void initializeTutorialGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            if (evt.getSource() == tutorial) {
-                MainOptions.TUTORIAL_MODE = true;
-                MainOptions.gameLevel = 1;
-            } else if (evt.getSource() == level1) {
-                MainOptions.gameLevel = 1;
-            } else if (evt.getSource() == level2) {
-                MainOptions.gameLevel = 2;
-            } else if (evt.getSource() == level3) {
-                MainOptions.gameLevel = 3;
-            } else if(evt.getSource() == level4) {
-                MainOptions.gameLevel = 4;
-            } else if(evt.getSource() == level5) {
-                MainOptions.gameLevel = 5;
-            } else if(evt.getSource() == level6) {
-                MainOptions.gameLevel = 6;
-            } else if(evt.getSource() == level7) {
-                MainOptions.gameLevel = 7;
-            }
-
-            MainOptions.NUMBER_OF_ROWS = (int) gameLevelToDimensions.get(MainOptions.gameLevel).getX();
-            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelToDimensions.get(MainOptions.gameLevel).getY();
-            Thread thread = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    startNormalGame();
-                }
-
-            });
-
-            thread.start();
-
-
+            MainOptions.TUTORIAL_MODE = true;
+            MainOptions.gameLevel = 1;
         } else if (evt.getCode() == ESCAPE) {
-            System.exit(0);
+            exitScreen();
         }
     }
+
 
     @FXML
     protected void myScores(KeyEvent evt) {
@@ -291,13 +259,14 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private void startNormalGame() {
+    private void startNormalGame(MemoriGameLevel gameLevel) {
+        MemoriLogger.LOGGER.log(Level.INFO, "Starting a new game on level: " + gameLevel.getLevelName());
         audioEngine.pauseCurrentlyPlayingAudios();
-        FXMemoriGame game = new FXMemoriGame(sceneHandler);
+        FXMemoriGame game = new FXMemoriGame(sceneHandler, gameLevel);
         game.initialize();
 
         // Run game in separate thread
-        ExecutorService es  = Executors.newFixedThreadPool(1);
+        ExecutorService es = Executors.newFixedThreadPool(1);
         Future<Integer> future = es.submit(game);
         es.shutdown();
         // While the game has not finished
@@ -310,57 +279,50 @@ public class MainScreenController implements Initializable {
 //            }
 //        }
 
+        //this code will execute once the user exits the game
+        // (either to go to next level or to exit)
         try {
             Integer result = future.get();
             //quit to main screen
-            if(result == 1) {
+            if (result == 1) {
                 System.err.println("QUITING TO MAIN SCREEN");
-                if(MainOptions.TUTORIAL_MODE)
+                if (MainOptions.TUTORIAL_MODE)
                     MainOptions.TUTORIAL_MODE = false;
                 sceneHandler.popScene();
-            } else if(result == 2) // load next level
-                 {
-                sceneHandler.simplePopScene();
-                if(MainOptions.TUTORIAL_MODE) {
-                    //if the last game was in tutorial mode, load the first normal game
-                    MainOptions.TUTORIAL_MODE = false;
-                    startNormalGame();
-                }
-                else
-                    loadNextLevelForNormalGame();
-
-            } else if(result == 3) //play same level again
+            } else if (result == 2) // load next level
             {
                 sceneHandler.simplePopScene();
-                startNormalGame();
+                if (MainOptions.TUTORIAL_MODE) {
+                    //if the last game was in tutorial mode, load the first normal game
+                    MainOptions.TUTORIAL_MODE = false;
+                    startNormalGame(gameLevel);
+                } else
+                    loadNextLevel();
+
+            } else if (result == 3) //play same level again
+            {
+                sceneHandler.simplePopScene();
+                startNormalGame(gameLevel);
             }
             System.out.println(result);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
+            MemoriLogger.LOGGER.log(Level.SEVERE, "Game exception: " + e.getMessage());
             e.printStackTrace();
         }
-        // Get the result and act accordingly
-
-//        try {
-//            es.awaitTermination(1, TimeUnit.DAYS);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        game.finalize();
 
     }
 
-    private void loadNextLevelForNormalGame() {
+    /**
+     * Gets the next level and starts a new game on this level.
+     */
+    private void loadNextLevel() {
         MainOptions.gameLevel++;
-        Point2D nextLevelDimensions = gameLevelToDimensions.get(MainOptions.gameLevel);
-        System.err.println("next level: " + nextLevelDimensions.getX() + ", " + nextLevelDimensions.getY());
-        if(nextLevelDimensions != null) {
-            MainOptions.NUMBER_OF_ROWS = (int) nextLevelDimensions.getX();
-            MainOptions.NUMBER_OF_COLUMNS = (int) nextLevelDimensions.getY();
-            startNormalGame();
-        } else {
-            sceneHandler.popScene();
-        }
+        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.gameLevel);
+
+        System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
+
+        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
+        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
+        startNormalGame(gameLevelNext);
     }
 }

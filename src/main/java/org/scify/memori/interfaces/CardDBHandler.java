@@ -13,4 +13,10 @@ public interface CardDBHandler {
      */
     List<Card> getCardsFromDB(int numOfCards);
 
+    /**
+     *
+     * @return the number of equivalence card sets available
+     */
+    int getNumberOfEquivalenceCardSets();
+
 }

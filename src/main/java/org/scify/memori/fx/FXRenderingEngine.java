@@ -28,10 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameState;
-import org.scify.memori.MemoriTerrain;
-import org.scify.memori.ResourceLocator;
+import org.scify.memori.*;
 import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.*;
@@ -96,7 +93,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     protected String packageName;
     protected String storyLineSoundsBasePath;
 
-    protected String levelIntroSoundsBasePath;
 
     protected String gameInstructionSoundsBasePath;
 
@@ -116,14 +112,14 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private ArrayList<String> endLevelEndingSounds;
 
     MemoriConfiguration configuration;
+    MemoriGameLevel gameLevel;
 
-    public FXRenderingEngine() {
+    public FXRenderingEngine(MemoriGameLevel gameLevel) {
         configuration = new MemoriConfiguration();
-
+        this.gameLevel = gameLevel;
         this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
         this.audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
-        this.levelIntroSoundsBasePath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
         this.gameInstructionSoundsBasePath = configuration.getProjectProperty("GAME_INSTRUCTION_SOUNDS");
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         this.funFactorSoundsBasePath = configuration.getProjectProperty("FUN_FACTOR_SOUNDS");
@@ -153,7 +149,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
         endLevelEndingSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.endLevelEndingSoundsBasePath);
         endLevelStartingSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.endLevelStartingSoundsBasePath);
-        introductorySounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.levelIntroSoundsBasePath);
         storyLineSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.storyLineSoundsBasePath);
         funFactorSounds = resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.funFactorSoundsBasePath);
 
@@ -461,7 +456,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "LEVEL_INTRO_AUDIO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.pauseAndPlaySound(this.levelIntroSoundsBasePath + introductorySounds.get(MainOptions.gameLevel - 1), currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(gameLevel.getIntroSound(), currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

@@ -27,7 +27,19 @@ public class CardDBHandlerJSON implements CardDBHandler {
     }
 
     @Override
+    public int getNumberOfEquivalenceCardSets() {
+        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
+        return initialObjectsSet.length();
+    }
+
+    public int getNumOfCardsInDB() {
+        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
+        return countCardsInACardSet(initialObjectsSet);
+    }
+
+    @Override
     public List<Card> getCardsFromDB(int numOfCards) {
+
         JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
 
         ArrayList<Object> setObjects = extractObjectsFromJSONArray(initialObjectsSet, numOfCards);
@@ -74,6 +86,15 @@ public class CardDBHandlerJSON implements CardDBHandler {
         return objectSets;
     }
 
+    public int countCardsInACardSet(JSONArray equivalenceCardSets) {
+        Iterator it = equivalenceCardSets.iterator();
+        int cardsNum = 0;
+        while(it.hasNext()) {
+            JSONArray currentEquivalenceCardSet = (JSONArray) it.next();
+            cardsNum += currentEquivalenceCardSet.length();
+        }
+        return cardsNum;
+    }
 
     /**
      * Extract a specific number of  {@link JSONObject}, Given a set of Json Objects
@@ -82,6 +103,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
      * @return a subset of the initial set
      */
     private ArrayList<Object> extractObjectsFromJSONArray(JSONArray cardSets, int numOfCards) {
+
         ArrayList<JSONObject> cardsListTemp;
         ArrayList<Object> extractedCards = new ArrayList<>();
         int randomNumber;

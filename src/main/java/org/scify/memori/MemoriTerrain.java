@@ -73,7 +73,9 @@ public class MemoriTerrain implements Terrain {
         //Preparing the JSON parser class
         MemoriCardDelegator cardDelegator = new MemoriCardDelegator();
         //read the cards from the JSON file
-        cardsList = cardDelegator.getMemoriCards();
+        int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
+        System.out.println("num of cards needed: " + numOfCards);
+        cardsList = cardDelegator.getMemoriCards(numOfCards);
 
         return cardsList;
     }

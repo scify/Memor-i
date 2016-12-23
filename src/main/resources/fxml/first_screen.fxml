@@ -25,14 +25,17 @@
     <VBox alignment="center" styleClass="optionButtonContainer">
         <Button contentDisplay="CENTER" styleClass="welcomeButton" text="Welcome to Memor-i!" fx:id="welcome"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment" fx:id="headphonesAdjustment" onKeyPressed="#headphonesAdjustment"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="2x3" fx:id="level1" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="2x4" fx:id="level2" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="3x4" fx:id="level3" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="4x4" fx:id="level4" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="5x4" fx:id="level5" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="4x6" fx:id="level6" onKeyPressed="#initializeGameOptions"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="5x6" fx:id="level7" onKeyPressed="#initializeGameOptions"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeTutorialGame"/>
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="2x3" fx:id="level1" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="2x4" fx:id="level2" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="3x4" fx:id="level3" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="4x4" fx:id="level4" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="5x4" fx:id="level5" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="4x6" fx:id="level6" onKeyPressed="#initializeGameOptions"/>-->
+        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="5x6" fx:id="level7" onKeyPressed="#initializeGameOptions"/>-->
+        <VBox alignment="center" fx:id="gameLevelsDiv">
+
+        </VBox>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%my_scores" fx:id="myScores" onKeyPressed="#myScores"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors" onKeyPressed="#goToSponsorsPage"/>

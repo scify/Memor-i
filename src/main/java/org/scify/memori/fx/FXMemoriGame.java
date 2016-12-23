@@ -19,19 +19,21 @@ package org.scify.memori.fx;
 
 
 import org.scify.memori.MemoriGame;
+import org.scify.memori.MemoriGameLevel;
 
 public class FXMemoriGame extends MemoriGame {
     protected FXSceneHandler sceneHandler;
+    protected MemoriGameLevel gameLevel;
 
-
-    public FXMemoriGame(FXSceneHandler shSceneHandler) {
+    public FXMemoriGame(FXSceneHandler shSceneHandler, MemoriGameLevel gameLevel) {
         this.sceneHandler = shSceneHandler;
+        this.gameLevel = gameLevel;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        FXRenderingEngine fUI = new FXRenderingEngine();
+        FXRenderingEngine fUI = new FXRenderingEngine(gameLevel);
         uInterface = fUI;
         reRenderer = fUI;
 
