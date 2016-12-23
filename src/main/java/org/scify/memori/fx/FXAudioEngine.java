@@ -22,9 +22,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.scify.memori.ResourceLocator;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class FXAudioEngine implements AudioEngine{
 
@@ -142,11 +144,12 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playSound(String soundFilePath, boolean isBlocking) {
 
+        String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
         try {
-            audioClip = new AudioClip(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath)).toExternalForm());
+            audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
             audioClip.play();
         } catch (Exception e) {
-            System.err.println("error loading sound for: " + soundFilePath);
+            MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             return;
         }
         playingAudios.add(audioClip);

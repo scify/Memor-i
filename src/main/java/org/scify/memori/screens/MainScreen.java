@@ -25,6 +25,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.scify.memori.MainOptions;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.UTF8Control;
 
 import java.awt.*;
@@ -43,7 +44,7 @@ public class MainScreen extends Application {
 
 
     public MainScreen() {
-        System.err.println("SELF:" + this.toString() + " from " + Thread.currentThread().toString());
+        MemoriLogger.initLogger();
     }
 
     @Override

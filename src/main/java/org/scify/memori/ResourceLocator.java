@@ -27,6 +27,7 @@ public class ResourceLocator {
 
     /**
      * Given a path that represents a resource, tries to find if the resource is available in the current data pack
+     *
      * @param filePath the path of the desired file
      * @param fileName the name of the desired file
      * @return the resource path in which the file is available (current data pack or default data pack)
@@ -34,47 +35,38 @@ public class ResourceLocator {
     public String getCorrectPathForFile(String filePath, String fileName) {
         String file = this.rootDataPath + filePath + fileName;
         URL fileURL = FXAudioEngine.class.getResource(file);
-        if(fileURL == null) {
-            System.err.println("Loading: " + file);
+        if (fileURL == null) {
             file = this.rootDataPathDefault + filePath + fileName;
+            System.out.println("Loaded default: " + file);
         }
-        System.err.println("Eventually loaded: " + file);
         return file;
     }
 
 
     /**
      * Gets the content files and directories names of a resource path
+     *
      * @param dirPath the desired path name
      * @return a set of names of the paths
      */
     public List<String> getResourcesFromDirectory(String dirPath) {
         try {
-            return this.getResourceFiles(dirPath);
+            List<String> filenames = new ArrayList<>();
+
+            try (
+                    InputStream in = getClass().getResourceAsStream(dirPath);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+                    String resource;
+
+                while ((resource = br.readLine()) != null) {
+                    filenames.add(resource);
+                }
+            }
+
+            return filenames;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * Gets the content files and directories names of a resource path
-     * @param path the desired path name
-     * @return a set of names of the paths
-     */
-    private List<String> getResourceFiles( String path ) throws IOException {
-        List<String> filenames = new ArrayList<>();
-
-        try(
-                InputStream in = getClass().getResourceAsStream( path );
-                BufferedReader br = new BufferedReader( new InputStreamReader( in ) ) ) {
-            String resource;
-
-            while( (resource = br.readLine()) != null ) {
-                filenames.add( resource );
-            }
-        }
-
-        return filenames;
     }
 }
