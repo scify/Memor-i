@@ -1,6 +1,6 @@
 package org.scify.memori;
 
-import org.scify.memori.card.MemoriCardDelegator;
+import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.helper.MemoriConfiguration;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public class GameLevelService {
 
     private ArrayList<Point2D> gameDimensionsPlayable = new ArrayList<>();
     public GameLevelService() {
-        MemoriCardDelegator cardDelegator = new MemoriCardDelegator();
+        MemoriCardService cardService = new MemoriCardService();
         ArrayList<Point2D> gameDimensions = new ArrayList<>();
 
         gameDimensions.add(new Point2D.Double(2,3));
@@ -25,7 +25,7 @@ public class GameLevelService {
         gameDimensions.add(new Point2D.Double(6,8));
 
         for(Point2D dimensions: gameDimensions) {
-            if((int)dimensions.getX() * (int)dimensions.getX() <= cardDelegator.getNumberOfCards()) {
+            if((int)dimensions.getX() * (int)dimensions.getX() <= cardService.getNumberOfCards()) {
                 gameDimensionsPlayable.add(dimensions);
             } else {
                 break;

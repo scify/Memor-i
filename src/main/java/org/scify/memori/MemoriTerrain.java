@@ -18,7 +18,7 @@
 package org.scify.memori;
 
 import org.scify.memori.card.Card;
-import org.scify.memori.card.MemoriCardDelegator;
+import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 
@@ -71,7 +71,7 @@ public class MemoriTerrain implements Terrain {
         //cardsMap will contain the values of the json object as key-value pairs
         List<Card> cardsList;
         //Preparing the JSON parser class
-        MemoriCardDelegator cardDelegator = new MemoriCardDelegator();
+        MemoriCardService cardDelegator = new MemoriCardService();
         //read the cards from the JSON file
         int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
         System.out.println("num of cards needed: " + numOfCards);

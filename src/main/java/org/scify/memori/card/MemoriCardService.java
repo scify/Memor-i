@@ -7,10 +7,12 @@ import java.util.Random;
 /**
  * Responsible for loading the cards for the game
  */
-public class MemoriCardDelegator extends CardDBHandlerJSON{
+public class MemoriCardService {
 
-    public MemoriCardDelegator() {
-        super();
+    protected CardDBHandlerJSON cardDBHandlerJSON;
+
+    public MemoriCardService() {
+        this.cardDBHandlerJSON = new CardDBHandlerJSON();
     }
 
 
@@ -20,12 +22,12 @@ public class MemoriCardDelegator extends CardDBHandlerJSON{
           The number of cards we need depends on the level (number of rows and columns)
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
-        return shuffleCards(getCardsFromDB(numOfCards));
+        return shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
     }
 
     public int getNumberOfCards() {
-        System.out.println("equivalence card sets: " + getNumberOfEquivalenceCardSets() + ", num of cards: " + getNumOfCardsInDB());
-        return getNumberOfEquivalenceCardSets();
+        System.out.println("equivalence card sets: " + this.cardDBHandlerJSON.getNumberOfEquivalenceCardSets() + ", num of cards: " + this.cardDBHandlerJSON.getNumOfCardsInDB());
+        return this.cardDBHandlerJSON.getNumberOfEquivalenceCardSets();
     }
 
 
