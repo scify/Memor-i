@@ -337,7 +337,9 @@ public class MemoriRules implements Rules {
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 4000, true));
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
+                //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
+
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFromOpenCards((MemoriTerrain) gsCurrentState.getTerrain(), currTile), new Date().getTime() + 6500, true));
                 //if in tutorial mode, push explaining events
                 if(MainOptions.TUTORIAL_MODE) {
                     if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
@@ -388,17 +390,17 @@ public class MemoriRules implements Rules {
         }
     }
 
-    protected String cardNameSound(MemoriTerrain memoriTerrain, Tile currTile) {
+    protected String cardDescriptionSoundFromOpenCards(MemoriTerrain memoriTerrain, Tile currTile) {
         CategorizedCard tileToCard = (CategorizedCard)currTile;
         if(tileToCard.getCategory().equals("item")) {
-            return tileToCard.getLabel();
+            return tileToCard.getDescriptionSound();
         }
         for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
             Tile element = iter.next();
-            CategorizedCard elementToCard = (CategorizedCard)element;
+            tileToCard = (CategorizedCard)element;
             // if the current card is not equal with the given card
-            if(elementToCard.getCategory().equals("item")) {
-                return elementToCard.getLabel();
+            if(tileToCard.getCategory().equals("item")) {
+                return tileToCard.getDescriptionSound();
             }
         }
         return null;
