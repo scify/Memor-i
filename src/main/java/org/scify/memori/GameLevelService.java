@@ -6,6 +6,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that creates game levels according to the number of available cards in the current game pack.
+ */
 public class GameLevelService {
 
     private ArrayList<Point2D> gameDimensionsPlayable = new ArrayList<>();

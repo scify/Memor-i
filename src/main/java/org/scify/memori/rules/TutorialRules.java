@@ -9,7 +9,7 @@ import org.scify.memori.interfaces.UserAction;
 import java.util.Date;
 
 /**
- * Class that contains Tutorial rules.
+ * Class that contains the rules that integrate in the tutorial game.
  */
 public class TutorialRules extends MemoriRules {
 

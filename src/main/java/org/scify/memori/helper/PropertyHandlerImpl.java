@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Created by pisaris on 21/12/2016.
+ * Handles every {@link Properties} instance in the application
  */
 public class PropertyHandlerImpl implements PropertyHandler {
 

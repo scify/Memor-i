@@ -28,6 +28,9 @@ import org.scify.memori.interfaces.AudioEngine;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+/**
+ * Responsible for handling Audio events
+ */
 public class FXAudioEngine implements AudioEngine{
 
     private AudioClip audioClip;
@@ -60,7 +63,10 @@ public class FXAudioEngine implements AudioEngine{
     }
 
     /**
-     * Plays a sound describing a certain movement on the UI layout
+     * Plays a sound describing a certain movement on the UI layout.
+     * We use {@link MediaPlayer} instead of {@link AudioClip} because of a bug of the former in Windows
+     * (when playing in left or right headphone, the clip plays unstoppably)
+     *
      * @param balance left/right panning value of the sound
      * @param rate indicates how fast the sound will be playing. Used to distinguish vertical movements
      */

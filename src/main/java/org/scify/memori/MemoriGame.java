@@ -21,7 +21,6 @@ import org.scify.memori.interfaces.*;
 import org.scify.memori.rules.MemoriRules;
 import org.scify.memori.rules.TutorialRules;
 
-
 public abstract class MemoriGame implements Game<Integer> {
     /**
      * constant defining whether the game is finished

@@ -111,12 +111,13 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private ArrayList<String> endLevelStartingSounds;
     private ArrayList<String> endLevelEndingSounds;
 
-    MemoriConfiguration configuration;
-    MemoriGameLevel gameLevel;
+    private MemoriConfiguration configuration;
+    private MemoriGameLevel gameLevel;
 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
         configuration = new MemoriConfiguration();
         this.gameLevel = gameLevel;
+        //TODO(3): Trace this function to see how the package is being loaded
         this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
         this.audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
@@ -583,6 +584,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         }
                         break;
                     case "DOOR_OPEN":
+                        //TODO (1): We need the door sound to be position-variable. For example, when opening the window from the left,
+                        // the open door sound should bpla from the left
                         if (new Date().getTime() > currentGameEvent.delay) {
                             fxAudioEngine.playSound(this.miscellaneousSoundsBasePath + "open_door.wav", currentGameEvent.blocking);
                             listIterator.remove();

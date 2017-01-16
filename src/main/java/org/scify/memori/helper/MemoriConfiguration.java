@@ -32,7 +32,9 @@ public class MemoriConfiguration {
      * @return the property value
      */
     public String getProjectProperty(String propertyKey) {
+        //When loading a resource, the "/" means root of the main/resources directory
         InputStream inputStream = getClass().getResourceAsStream("/project_additional.properties");
+        //if project_additional.properties file is not found, we load the default one
         if(inputStream == null)
             inputStream = getClass().getResourceAsStream("/project.properties");
         String propertyValue = this.getPropertyByName(inputStream, propertyKey);

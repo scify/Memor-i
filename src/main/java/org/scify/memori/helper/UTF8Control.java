@@ -10,7 +10,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * Created by pisaris on 15/12/2016.
+ * Helper class to Handle UTF encoding files (for example a properties file with different encoding)
  */
 public class UTF8Control extends ResourceBundle.Control {
     public ResourceBundle newBundle

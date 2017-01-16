@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 
 /**
  * Description of a game level for the Memori game
- * Created by pisaris on 23/12/2016.
+ *
  */
 public class MemoriGameLevel implements GameLevel{
     /**

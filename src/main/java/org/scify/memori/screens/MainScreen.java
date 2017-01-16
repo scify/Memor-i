@@ -35,6 +35,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 
 public class MainScreen extends Application {
@@ -51,7 +52,9 @@ public class MainScreen extends Application {
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = new MemoriConfiguration();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
-        addPath(configuration.getUserDir() + "memori_data");
+        //TODO (4): Here we add (for example) an additional data pack, called "additional_pack".
+        //To test it, create an "additional_pack" directory with different files
+        addPath(configuration.getUserDir() + "additional_pack");
         //Load fxml file (layout xml) for first screen
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
@@ -69,13 +72,28 @@ public class MainScreen extends Application {
         System.err.println(configuration.getUserDir() + "data_packs");
     }
 
-    public static void addPath(String s) throws Exception {
-        URL u = new File(s).toURI().toURL();
+    /**
+     * Adds a path to the classpath on runtime
+     * http://stackoverflow.com/questions/7884393/can-a-directory-be-added-to-the-class-path-at-runtime
+     *
+     * TODO(5): This method is irrelevant with the MainScreen and should be added elsewhere.
+     * Should we implement a helper class? Or just use one of the existing classes?
+     *
+     * @param path the path to be added
+     * @throws Exception if the path is not found or cannot be read
+     */
+    public static void addPath(String path) throws Exception {
+        File pathToFile = new File(path);
+        if(!pathToFile.exists()) {
+            MemoriLogger.LOGGER.log(Level.SEVERE, "Path: " + path + " not found");
+            return;
+        }
+        URL pathUrl = new File(path).toURI().toURL();
         URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         Class urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+        Method method = urlClass.getDeclaredMethod("addURL", URL.class);
         method.setAccessible(true);
-        method.invoke(urlClassLoader, new Object[]{u});
+        method.invoke(urlClassLoader, pathUrl);
     }
 
 }

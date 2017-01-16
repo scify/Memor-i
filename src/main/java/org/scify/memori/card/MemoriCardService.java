@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Responsible for loading the cards for the game
+ * Responsible for loading and handling the cards for the game
  */
 public class MemoriCardService {
 
+    // DB handler is a representation of the DB towards the application
     protected CardDBHandlerJSON cardDBHandlerJSON;
 
     public MemoriCardService() {
         this.cardDBHandlerJSON = new CardDBHandlerJSON();
     }
-
-
 
     public List<Card> getMemoriCards(int numOfCards) {
         /*

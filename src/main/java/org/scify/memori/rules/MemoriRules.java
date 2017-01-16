@@ -323,6 +323,7 @@ public class MemoriRules implements Rules {
             gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
             gsCurrentState.getEventQueue().add(new GameEvent("flip", uaAction.getCoords(), new Date().getTime() + 1000, false));
             gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 3000, false));
+            //TODO (2): here we emmit the door open sound for the rendering engine
             gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
             gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 2200, false));
             if(MainOptions.TUTORIAL_MODE){

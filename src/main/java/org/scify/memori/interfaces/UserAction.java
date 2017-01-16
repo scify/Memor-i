@@ -29,10 +29,9 @@ public class UserAction {
         this.coords = coords;
     }
 
-    Point2D coords;
-    //TODO: next 2 make generic (Map String, String)
-    KeyEvent keyEvent;
-    KeyCode direction;
+    protected Point2D coords;
+    protected KeyEvent keyEvent;
+    protected KeyCode direction;
 
 
     public KeyCode getDirection() {
