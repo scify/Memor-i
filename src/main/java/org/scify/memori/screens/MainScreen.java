@@ -29,10 +29,11 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.UTF8Control;
 
 import java.awt.*;
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -51,12 +52,13 @@ public class MainScreen extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = new MemoriConfiguration();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
-        //TODO (4): Here we add (for example) an additional data pack, called "additional_pack".
+        //TODO (4): Here we add an additional directory called "additional_pack", which will contain the extra data pack, called "test_pack".
         //To test it, create an "additional_pack" directory with different files
+        System.out.println("adding path:" + configuration.getUserDir() + "additional_pack");
         addPath(configuration.getUserDir() + "additional_pack");
-        //Load fxml file (layout xml) for first screen
 
+        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        //Load fxml file (layout xml) for first screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = loader.load();
@@ -95,5 +97,4 @@ public class MainScreen extends Application {
         method.setAccessible(true);
         method.invoke(urlClassLoader, pathUrl);
     }
-
 }

@@ -624,7 +624,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * @param columnIndex the Node y position
      */
     private void focusOnTile(int rowIndex, int columnIndex) {
-        System.out.println("point: " + rowIndex + "," + columnIndex);
         //get Node (in our case it's a button)
         Node node = getNodeByRowColumnIndex(rowIndex, columnIndex, gridPane);
         //remove the focused class from every other Node
@@ -672,6 +671,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         // DEBUG LINES
         System.err.println("Key press! " + new Date().getTime());
 
+        //TODO (7) here we should add an event for a button (lets say F1) that will cause the language to change
         UserAction userAction = null;
         //Handle different kinds of UI (keyboard) events
         if (event.getCode() == SPACE) {
