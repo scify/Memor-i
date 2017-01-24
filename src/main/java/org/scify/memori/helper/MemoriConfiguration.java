@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
 
 /**
  * Created by pisaris on 21/12/2016.
@@ -32,11 +33,18 @@ public class MemoriConfiguration {
      * @return the property value
      */
     public String getProjectProperty(String propertyKey) {
+        return this.getDataPackProperty(propertyKey, "/project_additional.properties");
+    }
+
+    public String getDataPackProperty(String propertyKey, String propertyFileName) {
+        System.out.println("getting property file: " + propertyFileName);
         //When loading a resource, the "/" means root of the main/resources directory
-        InputStream inputStream = getClass().getResourceAsStream("/project_additional.properties");
+        InputStream inputStream = getClass().getResourceAsStream(propertyFileName);
         //if project_additional.properties file is not found, we load the default one
-        if(inputStream == null)
+        if(inputStream == null) {
             inputStream = getClass().getResourceAsStream("/project.properties");
+            MemoriLogger.LOGGER.log(Level.SEVERE, "Property file: " + propertyFileName + " not found");
+        }
         String propertyValue = this.getPropertyByName(inputStream, propertyKey);
         if(propertyValue == null) {
             inputStream = getClass().getResourceAsStream("/project.properties");
