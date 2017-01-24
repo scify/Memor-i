@@ -6,3 +6,4 @@ src/test/
 push_to_testing.sh
 *.log
 *.log.lck
+additional_pack
