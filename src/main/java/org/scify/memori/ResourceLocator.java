@@ -45,8 +45,9 @@ public class ResourceLocator {
         String additionalPackFileName = getFileNameEquivalentFromResourcePack(filePath + fileName);
         if(additionalPackFileName != null)
             fileName = additionalPackFileName;
-        System.out.println(fileName);
-        String file = this.rootDataPath + filePath + fileName;
+        String file = this.rootDataPath + fileName;
+
+//        System.err.println("trying to get: " + file);
         URL fileURL = FXAudioEngine.class.getResource(file);
         if (fileURL == null) {
             file = this.rootDataPathDefault + filePath + fileName;

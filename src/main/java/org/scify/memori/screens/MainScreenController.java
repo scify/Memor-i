@@ -24,6 +24,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -32,12 +33,15 @@ import javafx.stage.WindowEvent;
 import org.scify.memori.GameLevelService;
 import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameLevel;
+import org.scify.memori.ResourceLocator;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
+import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +61,6 @@ public class MainScreenController implements Initializable {
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
-
 
     public MainScreenController() {
         configuration = new MemoriConfiguration();
@@ -151,7 +154,9 @@ public class MainScreenController implements Initializable {
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
-        primaryStage.getIcons().add(new Image(configuration.getProjectProperty("IMAGES_BASE_PATH") + "logo_memor-i_white letters.png"));
+        FXRenderingEngine.setGamecoverIcon(primaryScene, "gameCoverImgContainer");
+
+        setStageFavicon(primaryStage);
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
         VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
@@ -165,6 +170,14 @@ public class MainScreenController implements Initializable {
         attachButtonClickHandlers();
         primaryStage.show();
 
+    }
+
+    private void setStageFavicon(Stage primaryStage) {
+        ResourceLocator resourceLocator = new ResourceLocator();
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
+        //set the "favicon"
+        Image faviconImage = new Image(gameCoverImgPath);
+        primaryStage.getIcons().add(faviconImage);
     }
 
     /**

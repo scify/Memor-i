@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.HighScoresHandlerImpl;
+import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
@@ -71,7 +72,7 @@ public class FXHighScoresScreenController {
             }
         });
 
-
+        FXRenderingEngine.setGamecoverIcon(scoresScene, "gameCoverImgContainer");
 
         scoresScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {

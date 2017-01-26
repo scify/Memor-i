@@ -9,10 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.FXHighScoresScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
-        <ImageView styleClass="boxImage">
-            <image>
-                <Image requestedHeight="250" requestedWidth="250" url="@../img/logo_memor-i_white letters.png" />
-            </image>
+        <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
         </ImageView>
     </HBox>
     <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">

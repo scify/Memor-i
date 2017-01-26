@@ -25,6 +25,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
@@ -33,6 +35,7 @@ import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.*;
 
+import javax.security.auth.login.Configuration;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.*;
@@ -725,5 +728,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     //maps a value to a new set
     private double map(double x, double in_min, double in_max, double out_min, double out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    public static void setGamecoverIcon(Scene scene, String imgContainer) {
+        ImageView gameCoverImgContainer = (ImageView) scene.lookup("#" + imgContainer);
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        ResourceLocator resourceLocator = new ResourceLocator();
+
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
+        System.out.println(gameCoverImgPath);
+        gameCoverImgContainer.setImage(new Image(gameCoverImgPath));
+        gameCoverImgContainer.setFitHeight(250);
+        gameCoverImgContainer.setFitWidth(250);
+        gameCoverImgContainer.setPreserveRatio(true);
     }
 }
