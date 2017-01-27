@@ -35,7 +35,6 @@ import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.*;
 
-import javax.security.auth.login.Configuration;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.*;
@@ -111,8 +110,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * Every time a level ends, we should construct the end level Sound which consists of:
      * 1) starting sound 2) the time in which the player finished the level 3) an ending sound
      */
-    private ArrayList<String> endLevelStartingSounds;
-    private ArrayList<String> endLevelEndingSounds;
+    private ArrayList<String> endLevelStartingSounds = new ArrayList<>();
+    private ArrayList<String> endLevelEndingSounds = new ArrayList<>();
 
     private MemoriConfiguration configuration;
     private MemoriGameLevel gameLevel;
@@ -150,12 +149,48 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     
     protected void initialiseGameSoundLists() {
         ResourceLocator resourceLocator = new ResourceLocator();
+//        endLevelStartingSounds.add("sound1.mp3");
+//        endLevelStartingSounds.add("sound2.mp3");
+//        endLevelStartingSounds.add("sound3.mp3");
+//        endLevelStartingSounds.add("sound4.mp3");
+//
+//        endLevelEndingSounds.add("sound1.mp3");
+//        endLevelEndingSounds.add("sound2.mp3");
+//        endLevelEndingSounds.add("sound3.mp3");
+//        endLevelEndingSounds.add("sound4.mp3");
+//
+//        storyLineSounds.add("storyLine1.mp3");
+//        storyLineSounds.add("storyLine2.mp3");
+//        storyLineSounds.add("storyLine3.mp3");
+//        storyLineSounds.add("storyLine4.mp3");
+//        storyLineSounds.add("storyLine5.mp3");
+//        storyLineSounds.add("storyLine6.mp3");
+//        storyLineSounds.add("storyLine7.mp3");
+//        storyLineSounds.add("storyLine8.mp3");
+//        storyLineSounds.add("storyLine9.mp3");
+        for(int i = 1; i < 11 ; i++) {
+            endLevelStartingSounds.add("sound" + i + ".mp3");
+        }
+        for(int i = 1; i < 11 ; i++) {
+            endLevelEndingSounds.add("sound" + i + ".mp3");
+        }
+        for(int i = 1; i < 11 ; i++) {
+            storyLineSounds.add("storyLine" + i + ".mp3");
+        }
+        for(int i = 1; i < 11 ; i++) {
+            funFactorSounds.add(i + ".mp3");
+        }
 
-        endLevelEndingSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.endLevelEndingSoundsBasePath);
-        endLevelStartingSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.endLevelStartingSoundsBasePath);
-        storyLineSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.storyLineSoundsBasePath);
-        funFactorSounds = resourceLocator.getResourcesFromDirectory("/" + this.packageName + "/" + this.audiosBasePath + this.funFactorSoundsBasePath);
-
+//        endLevelStartingSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.endLevelStartingSoundsBasePath);
+//        endLevelEndingSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.endLevelEndingSoundsBasePath);
+//        storyLineSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.storyLineSoundsBasePath);
+//        funFactorSounds = resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.funFactorSoundsBasePath);
+//
+//        //sort sounds alphabetically
+//        endLevelStartingSounds.sort(String::compareToIgnoreCase);
+//        endLevelEndingSounds.sort(String::compareToIgnoreCase);
+//        storyLineSounds.sort(String::compareToIgnoreCase);
+//        funFactorSounds.sort(String::compareToIgnoreCase);
     }
 
 

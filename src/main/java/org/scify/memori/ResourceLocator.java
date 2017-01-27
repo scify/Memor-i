@@ -1,18 +1,9 @@
 package org.scify.memori;
-
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.PropertyHandlerImpl;
-import org.scify.memori.helper.StringUtils;
-import org.scify.memori.interfaces.PropertyHandler;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Responsible for locating and retrieving project resource files
@@ -72,28 +63,80 @@ public class ResourceLocator {
         return null;
     }
 
-    /**
-     * Gets the content files and directories names of a resource path
-     *
-     * @param dirPath the desired path name
-     * @return a set of names of the paths
-     */
-    public List<String> getResourcesFromDirectory(String dirPath) {
-        try {
-            List<String> filenames = new ArrayList<>();
-            try (
-                    InputStream in = getClass().getResourceAsStream(dirPath);
-                    BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-                    String resource;
+//    public List<String> listFilesInResourceDirectory(String dirPath ) {
+//        List<String> filenames = new ArrayList<>();
+//        final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+//
+//        if(jarFile.isFile()) {  // Run with JAR file
+//            System.err.println("in jar!");
+//            JarFile jar;
+//            try {
+//                jar = new JarFile(jarFile);
+//            final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+//            while(entries.hasMoreElements()) {
+//                final String name = entries.nextElement().getName();
+//                if (name.startsWith(dirPath) && !name.endsWith("/")) { //filter according to the path
+//                    String fileName = name.substring(name.lastIndexOf("/") + 1).trim();
+//                    System.out.println(fileName);
+//                    filenames.add(fileName);
+//                }
+//            }
+//                jar.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else { // Run with IDE
+//            final URL url = Launcher.class.getResource("/" + dirPath);
+//            if (url != null) {
+//                try {
+//                    final File apps = new File(url.toURI());
+//                    for (File app : apps.listFiles()) {
+//                        filenames.add(app.getName());
+//                    }
+//                } catch (URISyntaxException ex) {
+//                    // never happens
+//                }
+//            }
+//        }
+//        return filenames;
+//    }
 
-                while ((resource = br.readLine()) != null) {
-                    filenames.add(resource);
-                }
-            }
-            return filenames;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+//    /**
+//     * Gets the content files and directories names of a resource path
+//     *
+//     * @param dirPath the desired path name
+//     * @return a set of names of the paths
+//     */
+//    public List<String> listFilesInResourceDirectory( String dirPath ) {
+//        List<String> filenames = new ArrayList<>();
+//        try {
+//            try(
+//                    InputStream in = getClass().getResourceAsStream( dirPath );
+//                    BufferedReader br = new BufferedReader( new InputStreamReader( in ) ) ) {
+//                //System.out.println(br.lines().count());
+//                String resource;
+//
+//                while( (resource = br.readLine()) != null ) {
+//                    System.err.println("RESOURCE: " + resource);
+//                    filenames.add( resource );
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return filenames;
+//    }
+
+    private InputStream getResourceAsStream( String resource ) {
+        final InputStream in
+                = getContextClassLoader().getResourceAsStream( resource );
+
+        return in == null ? getClass().getResourceAsStream( resource ) : in;
+    }
+
+    private ClassLoader getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 }

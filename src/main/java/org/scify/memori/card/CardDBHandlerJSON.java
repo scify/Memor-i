@@ -32,6 +32,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
     @Override
     public int getNumberOfEquivalenceCardSets() {
         JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
+        //MemoriLogger.LOGGER.log(Level.INFO, "NumberOfEquivalenceCardSets: " + initialObjectsSet.length());
         return initialObjectsSet.length();
     }
 

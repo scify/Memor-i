@@ -2,6 +2,7 @@ package org.scify.memori;
 
 import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.helper.MemoriConfiguration;
+
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.List;
 public class GameLevelService {
 
     private ArrayList<Point2D> gameDimensionsPlayable = new ArrayList<>();
+    private ArrayList<String> gameLevelNames = new ArrayList<>();
+    private ArrayList<String> gameLevelIntroSounds = new ArrayList<>();
+
     public GameLevelService() {
         MemoriCardService cardService = new MemoriCardService();
         ArrayList<Point2D> gameDimensions = new ArrayList<>();
@@ -34,6 +38,25 @@ public class GameLevelService {
                 break;
             }
         }
+
+        gameLevelNames.add("level1.mp3");
+        gameLevelNames.add("level2.mp3");
+        gameLevelNames.add("level3.mp3");
+        gameLevelNames.add("level4.mp3");
+        gameLevelNames.add("level5.mp3");
+        gameLevelNames.add("level6.mp3");
+        gameLevelNames.add("level7.mp3");
+        gameLevelNames.add("level8.mp3");
+
+        gameLevelIntroSounds.add("level1.mp3");
+        gameLevelIntroSounds.add("level2.mp3");
+        gameLevelIntroSounds.add("level3.mp3");
+        gameLevelIntroSounds.add("level4.mp3");
+        gameLevelIntroSounds.add("level5.mp3");
+        gameLevelIntroSounds.add("level6.mp3");
+        gameLevelIntroSounds.add("level7.mp3");
+        gameLevelIntroSounds.add("level8.mp3");
+
     }
 
 
@@ -42,7 +65,7 @@ public class GameLevelService {
      * (Given that each game level has EXACTLY one intro sound)
      * @return
      */
-    public List<MemoriGameLevel> getAllLevels() {
+    public List<MemoriGameLevel> createGameLevels() {
         MemoriConfiguration configuration = new MemoriConfiguration();
         ResourceLocator resourceLocator = new ResourceLocator();
 
@@ -50,11 +73,13 @@ public class GameLevelService {
         String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
 
         String packageName = configuration.getProjectProperty("DATA_PACKAGE");
+
         String audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
 
         //the number of sounds in the level_name_sounds directory is the name of the levels available for the current game version
-        ArrayList<String> levelIntroductorySounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + packageName + "/" + audiosBasePath + levelIntroSoundPath);
-        ArrayList<String> levelNameSounds = (ArrayList<String>) resourceLocator.getResourcesFromDirectory("/" + packageName + "/" + audiosBasePath + levelNameSoundPath);
+//        ArrayList<String> levelIntroductorySounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelIntroSoundPath);
+//        ArrayList<String> levelNameSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelNameSoundPath);
+//
 
         int levelIndex = 0;
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
@@ -63,8 +88,8 @@ public class GameLevelService {
                     levelIndex,
                     levelDimensions,
                     (int) levelDimensions.getX() + "x" + (int) levelDimensions.getY(),
-                    levelNameSoundPath + levelNameSounds.get(levelIndex),
-                    levelIntroSoundPath + levelIntroductorySounds.get(levelIndex)
+                    levelNameSoundPath + gameLevelNames.get(levelIndex),
+                    levelIntroSoundPath + gameLevelIntroSounds.get(levelIndex)
             );
             gameLevels.add(memoriGameLevel);
             levelIndex++;

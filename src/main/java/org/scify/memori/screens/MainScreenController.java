@@ -24,7 +24,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -41,7 +40,6 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +83,7 @@ public class MainScreenController implements Initializable {
     private void addGameLevelButtons(VBox buttonsContainer) {
         GameLevelService gameLevelService = new GameLevelService();
         gameLevels = new ArrayList<>();
-        gameLevels = gameLevelService.getAllLevels();
+        gameLevels = gameLevelService.createGameLevels();
         for (MemoriGameLevel currLevel : gameLevels) {
             Button gameLevelBtn = new Button();
             gameLevelBtn.setText(currLevel.getLevelName());

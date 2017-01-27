@@ -53,8 +53,8 @@ public class MainScreen extends Application {
         MemoriConfiguration configuration = new MemoriConfiguration();
         //TODO (4): Here we add an additional directory called "additional_pack", which will contain the extra data pack, called "test_pack".
         //To test it, create an "additional_pack" directory with different files
-        System.out.println("adding path:" + configuration.getUserDir() + "additional_pack");
-        addPath(configuration.getUserDir() + "additional_pack");
+//        System.out.println("adding path:" + configuration.getUserDir() + "test_pack");
+//        addPath(configuration.getUserDir() + "test_pack");
 
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
         //Load fxml file (layout xml) for first screen
@@ -70,7 +70,6 @@ public class MainScreen extends Application {
         Scene primaryScene = new Scene(root, mWidth, mHeight);
         primaryStage.setTitle("Memor-i");
         controller.setParameters(primaryStage, primaryScene);
-        System.err.println(configuration.getUserDir() + "data_packs");
     }
 
     /**
