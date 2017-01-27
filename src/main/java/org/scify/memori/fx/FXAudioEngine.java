@@ -151,6 +151,7 @@ public class FXAudioEngine implements AudioEngine{
     public void playSound(String soundFilePath, boolean isBlocking) {
 
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
+        System.out.println("Playing: " + fileResourcePath);
         try {
             audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
             audioClip.play();

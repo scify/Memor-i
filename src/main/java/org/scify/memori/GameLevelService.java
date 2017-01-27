@@ -39,7 +39,11 @@ public class GameLevelService {
             }
         }
 
-        gameLevelNames.add("level1.mp3");
+        for(int i = 1; i < 11 ; i++) {
+            gameLevelNames.add("level" + i + ".mp3");
+            gameLevelIntroSounds.add("level" + i + ".mp3");
+        }
+        /*gameLevelNames.add("level1.mp3");
         gameLevelNames.add("level2.mp3");
         gameLevelNames.add("level3.mp3");
         gameLevelNames.add("level4.mp3");
@@ -55,7 +59,7 @@ public class GameLevelService {
         gameLevelIntroSounds.add("level5.mp3");
         gameLevelIntroSounds.add("level6.mp3");
         gameLevelIntroSounds.add("level7.mp3");
-        gameLevelIntroSounds.add("level8.mp3");
+        gameLevelIntroSounds.add("level8.mp3");*/
 
     }
 
@@ -67,20 +71,21 @@ public class GameLevelService {
      */
     public List<MemoriGameLevel> createGameLevels() {
         MemoriConfiguration configuration = new MemoriConfiguration();
-        ResourceLocator resourceLocator = new ResourceLocator();
-
-        String levelIntroSoundPath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
-        String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
-
-        String packageName = configuration.getProjectProperty("DATA_PACKAGE");
-
-        String audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
-
-        //the number of sounds in the level_name_sounds directory is the name of the levels available for the current game version
+//        ResourceLocator resourceLocator = new ResourceLocator();
+//
+//
+//
+//        String packageName = configuration.getProjectProperty("DATA_PACKAGE");
+//
+//        String audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
+//
+//        //the number of sounds in the level_name_sounds directory is the name of the levels available for the current game version
 //        ArrayList<String> levelIntroductorySounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelIntroSoundPath);
 //        ArrayList<String> levelNameSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelNameSoundPath);
 //
 
+        String levelIntroSoundPath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
+        String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
         int levelIndex = 0;
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
         for(Point2D levelDimensions : gameDimensionsPlayable) {

@@ -169,15 +169,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 //        storyLineSounds.add("storyLine8.mp3");
 //        storyLineSounds.add("storyLine9.mp3");
         for(int i = 1; i < 11 ; i++) {
+            //TODO: should poll from sounds that exist in the additional pack only?
             endLevelStartingSounds.add("sound" + i + ".mp3");
         }
         for(int i = 1; i < 11 ; i++) {
+            //TODO: should poll from sounds that exist in the additional pack only?
             endLevelEndingSounds.add("sound" + i + ".mp3");
         }
         for(int i = 1; i < 11 ; i++) {
             storyLineSounds.add("storyLine" + i + ".mp3");
         }
         for(int i = 1; i < 11 ; i++) {
+            //TODO: should poll from fun factor sounds that exist in the additional pack only?
             funFactorSounds.add(i + ".mp3");
         }
 
