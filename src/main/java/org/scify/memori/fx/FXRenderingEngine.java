@@ -625,10 +625,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         }
                         break;
                     case "DOOR_OPEN":
-                        //TODO (1): We need the door sound to be position-variable. For example, when opening the window from the left,
-                        // the open door sound should bpla from the left
+                        // TODO (1): We need the door sound to be position-variable. For example, when opening the window from the left,
+                        // the open door sound should be emitted from from the left headphone.
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.miscellaneousSoundsBasePath + "open_door.wav", currentGameEvent.blocking);
+                            fxAudioEngine.playSound(this.miscellaneousSoundsBasePath + "open_door.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
