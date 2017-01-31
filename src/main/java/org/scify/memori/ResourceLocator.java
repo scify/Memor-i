@@ -35,6 +35,7 @@ public class ResourceLocator {
         String filePath = path + fileName;
         //check if there is a representation of the file in the additional data pack
         String additionalPackFileName = getFileNameEquivalentFromResourcePack(path + fileName);
+        System.out.println("additionalPackFileName: " + additionalPackFileName);
         if(additionalPackFileName != null)
             filePath = additionalPackFileName;
 
@@ -54,6 +55,7 @@ public class ResourceLocator {
      * @return the name of the file if found, otherwise null
      */
     private String getFileNameEquivalentFromResourcePack(String file) {
+        System.out.println("Trying to get mapped property: " + file);
         MemoriConfiguration memoriConfiguration = new MemoriConfiguration();
         //When loading a resource, the "/" means root of the main/resources directory
         InputStream inputStream = getClass().getResourceAsStream(this.rootDataPath + "resources_map.properties");
@@ -61,8 +63,7 @@ public class ResourceLocator {
         if(inputStream == null) {
             return null;
         } else {
-            String propertyValue = memoriConfiguration.getPropertyByName(inputStream, file);
-            return propertyValue;
+            return memoriConfiguration.getPropertyByName(inputStream, file);
         }
     }
 }

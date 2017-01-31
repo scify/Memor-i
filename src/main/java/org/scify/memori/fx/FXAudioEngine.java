@@ -124,7 +124,7 @@ public class FXAudioEngine implements AudioEngine{
         audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
         audioMediaPlayer = new MediaPlayer(audioMedia);
         audioMediaPlayer.setBalance(balance);
-        //Windows bug: when the sound is completed, if the rate has changed it keeps playing.
+        //Windows OS bug: when the sound is completed, if the rate has changed it keeps playing.
         //so, we need to force it to stop by overriding OnEndOfMedia method.
         audioMediaPlayer.setOnEndOfMedia(() -> audioMediaPlayer.stop());
         audioMediaPlayer.play();
