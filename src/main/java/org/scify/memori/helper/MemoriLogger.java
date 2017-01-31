@@ -20,11 +20,11 @@ public class MemoriLogger {
             LOGGER.addHandler(fileHandler);
             consoleHandler.setLevel(Level.ALL);
             fileHandler.setLevel(Level.ALL);
-            LOGGER.setLevel(Level.ALL);
+//            LOGGER.setLevel(Level.ALL);
             LOGGER.config("Configuration done.");
 
         } catch (IOException ioe) {
-            LOGGER.log(Level.SEVERE, "Error occurred in FileHandler.", ioe.getMessage());
+            LOGGER.log(Level.SEVERE, "Error occurred while initializing Logger:" + ioe.getMessage(), ioe.getMessage());
         }
     }
 

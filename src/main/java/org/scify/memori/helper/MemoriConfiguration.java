@@ -37,13 +37,11 @@ public class MemoriConfiguration {
     }
 
     public String getDataPackProperty(String propertyKey, String propertyFileName) {
-//        System.out.println("getting property file: " + propertyFileName);
         //When loading a resource, the "/" means root of the main/resources directory
         InputStream inputStream = getClass().getResourceAsStream(propertyFileName);
         //if project_additional.properties file is not found, we load the default one
         if(inputStream == null) {
             inputStream = getClass().getResourceAsStream("/project.properties");
-            //MemoriLogger.LOGGER.log(Level.SEVERE, "Property file: " + propertyFileName + " not found");
         }
         String propertyValue = this.getPropertyByName(inputStream, propertyKey);
         if(propertyValue == null) {

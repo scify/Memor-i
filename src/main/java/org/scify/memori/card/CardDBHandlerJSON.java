@@ -72,6 +72,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
      * @return
      */
     public JSONArray getObjectFromJSONFile(String dbFile, String objectId) {
+        System.err.println("opening db file: " + dbFile);
         JSONArray objectSets;
         Scanner scanner = null;
         try {

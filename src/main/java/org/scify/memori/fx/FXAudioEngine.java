@@ -33,33 +33,28 @@ import java.util.logging.Level;
  */
 public class FXAudioEngine implements AudioEngine{
 
-    private AudioClip audioClip;
-    private MediaPlayer movementSoundPlayer;
-    private Media movementSoundMedia;
+    private Media audioMedia;
+    private MediaPlayer audioMediaPlayer;
+
     private String soundBasePath;
     private String numBasePath;
     private String letterBasePath;
-    private ArrayList<AudioClip> playingAudios = new ArrayList<>();
+    private ArrayList<MediaPlayer> playingAudios = new ArrayList<>();
     protected static ResourceLocator resourceLocator = new ResourceLocator();
 
     public FXAudioEngine() {
-
         MemoriConfiguration configuration = new MemoriConfiguration();
-
         this.soundBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.numBasePath = configuration.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
         this.letterBasePath = configuration.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
-
     }
 
     /**
      * Pauses the currently playing audio, if there is one
      */
     private void pauseSound() {
-        if(audioClip != null)
-            audioClip.stop();
-        if(movementSoundPlayer != null)
-            movementSoundPlayer.stop();
+        if(audioMediaPlayer != null)
+            audioMediaPlayer.stop();
     }
 
     /**
@@ -72,15 +67,14 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playMovementSound(double balance, double rate) {
         pauseSound();
-        if(movementSoundMedia == null) {
-            System.err.println("construct new movement sound player");
-            movementSoundMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
-            movementSoundPlayer = new MediaPlayer(movementSoundMedia);
-        }
-        movementSoundPlayer.setBalance(balance);
-        movementSoundPlayer.setRate(rate);
-        movementSoundPlayer.setOnEndOfMedia(() -> movementSoundPlayer.stop());
-        movementSoundPlayer.play();
+        audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
+        audioMediaPlayer = new MediaPlayer(audioMedia);
+        audioMediaPlayer.setBalance(balance);
+        audioMediaPlayer.setRate(rate);
+        //Windows bug: when the sound is completed, if the rate has changed it keeps playing.
+        //so, we need to force it to stop by overriding OnEndOfMedia method.
+        audioMediaPlayer.setOnEndOfMedia(() -> audioMediaPlayer.stop());
+        audioMediaPlayer.play();
     }
 
     /**
@@ -97,7 +91,7 @@ public class FXAudioEngine implements AudioEngine{
      * Plays an appropriate sound associated with a successful Game Event
      */
     public void playSuccessSound() {
-        playSound("miscellaneous/success.wav", true);
+        playSound("miscellaneous/success.mp3", true);
     }
 
     /**
@@ -127,21 +121,18 @@ public class FXAudioEngine implements AudioEngine{
      * @param soundFile the file name (path) of the audio clip
      */
     public void playBalancedSound(double balance, String soundFile, boolean isBlocking) {
-        pauseCurrentlyPlayingAudios();
-        audioClip = new AudioClip(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
-        audioClip.play(1, balance, 1, balance, 1);
-        playingAudios.add(audioClip);
-        if(isBlocking)
-            while (audioClip.isPlaying()) {
-                try {
-                    Thread.sleep(100L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
+        audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
+        audioMediaPlayer = new MediaPlayer(audioMedia);
+        audioMediaPlayer.setBalance(balance);
+        //Windows bug: when the sound is completed, if the rate has changed it keeps playing.
+        //so, we need to force it to stop by overriding OnEndOfMedia method.
+        audioMediaPlayer.setOnEndOfMedia(() -> audioMediaPlayer.stop());
+        audioMediaPlayer.play();
+        if (isBlocking) {
+            blockUIThread(audioMediaPlayer);
+        }
     }
-
+    boolean playing;
 
     /**
      * Plays a sound given a sound file path
@@ -153,24 +144,37 @@ public class FXAudioEngine implements AudioEngine{
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
         System.out.println("Playing: " + fileResourcePath);
         try {
-            audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
-            audioClip.play();
+            audioMedia = new Media(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
+            audioMediaPlayer = new MediaPlayer(audioMedia);
+            audioMediaPlayer.play();
         } catch (Exception e) {
             MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
+            System.err.println("error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             return;
         }
-        playingAudios.add(audioClip);
+        playingAudios.add(audioMediaPlayer);
+        playing = true;
         if (isBlocking) {
-            // Wait until completion
-            while (audioClip.isPlaying()) {
-                try {
-                    Thread.sleep(100L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
+            blockUIThread(audioMediaPlayer);
         }
+    }
+
+    private void blockUIThread(MediaPlayer mediaPlayer) {
+        System.out.println("Waiting for blocking sound to complete");
+        // Wait until completion
+        mediaPlayer.setOnEndOfMedia(() -> {
+            System.err.println("completed!");
+            playing = false;
+        });
+        while (playing) {
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Sound still playing");
+        }
+        System.out.println("Sound completed");
     }
 
     /**
@@ -198,15 +202,15 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playLetterSound(int number) {
         pauseCurrentlyPlayingAudios();
-        playSound( letterBasePath + number + ".mp3", true);
+        playSound( letterBasePath + String.valueOf(number) + ".mp3", true);
     }
 
     /**
      * Pause any currently playing audios (every audio that is playing is stored in the playingAudios list).
      */
     public void pauseCurrentlyPlayingAudios() {
-        for (AudioClip audio: playingAudios) {
-            if(audio.isPlaying())
+        for (MediaPlayer audio: playingAudios) {
+            if(audio.getStatus().equals(MediaPlayer.Status.PLAYING))
                 audio.stop();
         }
     }
