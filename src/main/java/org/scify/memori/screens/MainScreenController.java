@@ -233,7 +233,12 @@ public class MainScreenController implements Initializable {
     protected void initializeTutorialGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
             MainOptions.TUTORIAL_MODE = true;
-            MainOptions.gameLevel = 1;
+            MemoriGameLevel gameLevel = gameLevels.get(0);
+            MainOptions.gameLevel = gameLevel.getLevelCode();
+            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+            Thread thread = new Thread(() -> startNormalGame(gameLevel));
+            thread.start();
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }

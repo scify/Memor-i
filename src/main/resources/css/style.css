@@ -53,7 +53,7 @@
 
 .rootPane {
     -fx-pref-height: 100%;
-    -fx-background-color: linear-gradient(to right, #005CCC, #003A80); /* Standard syntax */
+    -fx-background-color: linear-gradient(to right, #4457bf, #313f8e); /* Standard syntax */
 }
 
 GridPane {

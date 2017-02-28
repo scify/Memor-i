@@ -35,6 +35,7 @@ public class FXAudioEngine implements AudioEngine{
 
     private Media audioMedia;
     private MediaPlayer audioMediaPlayer;
+    private MediaPlayer concurrentAudioMediaPlayer;
 
     private String soundBasePath;
     private String numBasePath;
@@ -68,13 +69,13 @@ public class FXAudioEngine implements AudioEngine{
     public void playMovementSound(double balance, double rate) {
         pauseSound();
         audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
-        audioMediaPlayer = new MediaPlayer(audioMedia);
-        audioMediaPlayer.setBalance(balance);
-        audioMediaPlayer.setRate(rate);
+        concurrentAudioMediaPlayer = new MediaPlayer(audioMedia);
+        concurrentAudioMediaPlayer.setBalance(balance);
+        concurrentAudioMediaPlayer.setRate(rate);
         //Windows bug: when the sound is completed, if the rate has changed it keeps playing.
         //so, we need to force it to stop by overriding OnEndOfMedia method.
-        audioMediaPlayer.setOnEndOfMedia(() -> audioMediaPlayer.stop());
-        audioMediaPlayer.play();
+        concurrentAudioMediaPlayer.setOnEndOfMedia(() -> concurrentAudioMediaPlayer.stop());
+        concurrentAudioMediaPlayer.play();
     }
 
     /**
@@ -122,14 +123,14 @@ public class FXAudioEngine implements AudioEngine{
      */
     public void playBalancedSound(double balance, String soundFile, boolean isBlocking) {
         audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
-        audioMediaPlayer = new MediaPlayer(audioMedia);
-        audioMediaPlayer.setBalance(balance);
+        concurrentAudioMediaPlayer = new MediaPlayer(audioMedia);
+        concurrentAudioMediaPlayer.setBalance(balance);
         //Windows OS bug: when the sound is completed, if the rate has changed it keeps playing.
         //so, we need to force it to stop by overriding OnEndOfMedia method.
-        audioMediaPlayer.setOnEndOfMedia(() -> audioMediaPlayer.stop());
-        audioMediaPlayer.play();
+        concurrentAudioMediaPlayer.setOnEndOfMedia(() -> concurrentAudioMediaPlayer.stop());
+        concurrentAudioMediaPlayer.play();
         if (isBlocking) {
-            blockUIThread(audioMediaPlayer);
+            blockUIThread(concurrentAudioMediaPlayer);
         }
     }
     boolean playing;

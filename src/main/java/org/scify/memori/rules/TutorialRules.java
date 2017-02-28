@@ -79,7 +79,7 @@ public class TutorialRules extends MemoriRules {
                     //add tutorial_1 event to queue
                     gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_1_STEP_1"));
                     //add tutorial_1 UI event to queue
-                    gsCurrentState.getEventQueue().add(new GameEvent("GO_RIGHT_AGAIN", null, new Date().getTime() + 200, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("GO_RIGHT_AGAIN", null, new Date().getTime() + 400, true));
                 } //else  if user did not click RIGHT
                 else {
                     gsCurrentState.getEventQueue().add(new GameEvent("NOT_RIGHT_UI", null, new Date().getTime() + 200, false));
@@ -110,7 +110,7 @@ public class TutorialRules extends MemoriRules {
 
                                 } else {
                                     //add UI event indicating that the user should click LEFT
-                                    gsCurrentState.getEventQueue().add(new GameEvent("NOT_LEFT_UI", null, new Date().getTime() + 200, false));
+                                    gsCurrentState.getEventQueue().add(new GameEvent("NOT_LEFT_UI", null, new Date().getTime() + 200, true));
                                 }
                             } else {
                                 //if tutorial_3 event does not exist
