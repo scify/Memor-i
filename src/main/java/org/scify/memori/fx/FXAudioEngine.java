@@ -33,14 +33,14 @@ import java.util.logging.Level;
  */
 public class FXAudioEngine implements AudioEngine{
 
-    private Media audioMedia;
-    private MediaPlayer audioMediaPlayer;
-    private MediaPlayer concurrentAudioMediaPlayer;
-
+    private MediaPlayer movementSoundPlayer;
+    private Media movementSoundMedia;
+    private AudioClip audioClip;
     private String soundBasePath;
     private String numBasePath;
     private String letterBasePath;
-    private ArrayList<MediaPlayer> playingAudios = new ArrayList<>();
+    private boolean playing;
+    private ArrayList<AudioClip> playingAudios = new ArrayList<>();
     protected static ResourceLocator resourceLocator = new ResourceLocator();
 
     public FXAudioEngine() {
@@ -54,28 +54,23 @@ public class FXAudioEngine implements AudioEngine{
      * Pauses the currently playing audio, if there is one
      */
     private void pauseSound() {
-        if(audioMediaPlayer != null)
-            audioMediaPlayer.stop();
+        if(audioClip != null)
+            audioClip.stop();
+        if(movementSoundPlayer != null)
+            movementSoundPlayer.stop();
     }
 
-    /**
-     * Plays a sound describing a certain movement on the UI layout.
-     * We use {@link MediaPlayer} instead of {@link AudioClip} because of a bug of the former in Windows
-     * (when playing in left or right headphone, the clip plays unstoppably)
-     *
-     * @param balance left/right panning value of the sound
-     * @param rate indicates how fast the sound will be playing. Used to distinguish vertical movements
-     */
     public void playMovementSound(double balance, double rate) {
         pauseSound();
-        audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
-        concurrentAudioMediaPlayer = new MediaPlayer(audioMedia);
-        concurrentAudioMediaPlayer.setBalance(balance);
-        concurrentAudioMediaPlayer.setRate(rate);
-        //Windows bug: when the sound is completed, if the rate has changed it keeps playing.
-        //so, we need to force it to stop by overriding OnEndOfMedia method.
-        concurrentAudioMediaPlayer.setOnEndOfMedia(() -> concurrentAudioMediaPlayer.stop());
-        concurrentAudioMediaPlayer.play();
+        if(movementSoundMedia == null) {
+            System.err.println("construct new movement sound player");
+            movementSoundMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
+            movementSoundPlayer = new MediaPlayer(movementSoundMedia);
+        }
+        movementSoundPlayer.setBalance(balance);
+        movementSoundPlayer.setRate(rate);
+        movementSoundPlayer.setOnEndOfMedia(() -> movementSoundPlayer.stop());
+        movementSoundPlayer.play();
     }
 
     /**
@@ -111,29 +106,32 @@ public class FXAudioEngine implements AudioEngine{
 //        pauseAndPlaySound(failureSound, false);
 //    }
 
-    @Override
-    public void playSound(String soundFile) {
-        playSound(soundFile, false);
-    }
-
     /**
      * Plays a sound given a certain balance
      * @param balance the desired balance
      * @param soundFile the file name (path) of the audio clip
      */
     public void playBalancedSound(double balance, String soundFile, boolean isBlocking) {
-        audioMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
-        concurrentAudioMediaPlayer = new MediaPlayer(audioMedia);
-        concurrentAudioMediaPlayer.setBalance(balance);
-        //Windows OS bug: when the sound is completed, if the rate has changed it keeps playing.
-        //so, we need to force it to stop by overriding OnEndOfMedia method.
-        concurrentAudioMediaPlayer.setOnEndOfMedia(() -> concurrentAudioMediaPlayer.stop());
-        concurrentAudioMediaPlayer.play();
-        if (isBlocking) {
-            blockUIThread(concurrentAudioMediaPlayer);
-        }
+        pauseCurrentlyPlayingAudios();
+        audioClip = new AudioClip(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFile)).toExternalForm());
+        audioClip.play(1, balance, 1, balance, 1);
+        playingAudios.add(audioClip);
+        if(isBlocking)
+            while (audioClip.isPlaying()) {
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
     }
-    boolean playing;
+
+
+    @Override
+    public void playSound(String soundFile) {
+        playSound(soundFile, false);
+    }
 
     /**
      * Plays a sound given a sound file path
@@ -145,29 +143,24 @@ public class FXAudioEngine implements AudioEngine{
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
         System.out.println("Playing: " + fileResourcePath);
         try {
-            audioMedia = new Media(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
-            audioMediaPlayer = new MediaPlayer(audioMedia);
-            audioMediaPlayer.play();
+            audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
+            audioClip.play();
         } catch (Exception e) {
             MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             System.err.println("error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             return;
         }
-        playingAudios.add(audioMediaPlayer);
+        playingAudios.add(audioClip);
         playing = true;
         if (isBlocking) {
-            blockUIThread(audioMediaPlayer);
+            blockUIThread(audioClip);
         }
     }
 
-    private void blockUIThread(MediaPlayer mediaPlayer) {
+    private void blockUIThread(AudioClip audioClip) {
         System.out.println("Waiting for blocking sound to complete");
         // Wait until completion
-        mediaPlayer.setOnEndOfMedia(() -> {
-            System.err.println("completed!");
-            playing = false;
-        });
-        while (playing) {
+        while (audioClip.isPlaying()) {
             try {
                 Thread.sleep(100L);
             } catch (InterruptedException e) {
@@ -210,8 +203,8 @@ public class FXAudioEngine implements AudioEngine{
      * Pause any currently playing audios (every audio that is playing is stored in the playingAudios list).
      */
     public void pauseCurrentlyPlayingAudios() {
-        for (MediaPlayer audio: playingAudios) {
-            if(audio.getStatus().equals(MediaPlayer.Status.PLAYING))
+        for (AudioClip audio: playingAudios) {
+            if(audio.isPlaying())
                 audio.stop();
         }
     }

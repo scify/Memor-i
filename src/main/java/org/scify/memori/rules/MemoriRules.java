@@ -179,7 +179,7 @@ public class MemoriRules implements Rules {
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
                     } else {
-                        gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, false));
+                        gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, true));
                     }
                 } else {
                     gsCurrentState.getEventQueue().add(new GameEvent("GAME_END", null, new Date().getTime() + 8600, true));
@@ -325,7 +325,7 @@ public class MemoriRules implements Rules {
             gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 3000, false));
             //TODO (2): here we emmit the door open sound for the rendering engine
             gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 2200, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 2200, true));
             if(MainOptions.TUTORIAL_MODE){
                 if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
                     //add FLIP_EXPLANATION event to queue
