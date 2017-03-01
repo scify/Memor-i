@@ -113,6 +113,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
         ArrayList<Object> extractedCards = new ArrayList<>();
         int randomNumber;
         int cardCount = 0;
+        ArrayList equivalenceCardSetHashCodes = new ArrayList();
         while (cardCount < numOfCards) {
             cardsListTemp = new ArrayList<>();
             // produce a random number for the card sets (we want to select a random card set)
@@ -124,6 +125,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
             Iterator it = randomCardSet.iterator();
             // categories will hold every category that has been already read so we only add one card from each category
             ArrayList categories = new ArrayList();
+
             while(it.hasNext()) {
                 JSONObject currCard = (JSONObject) it.next();
                 // if the current category has not been read before and the current card has not been already added
@@ -131,7 +133,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
                     // if the current card is set to be unique
                     if(currCard.get("unique").equals(true)) {
                         // if not unique (ie already exists)
-                        if(extractedCards.contains(currCard)) {
+                        if(equivalenceCardSetHashCodes.contains(currCard.get("equivalenceCardSetHashCode"))) {
                             // reset the temporary cards list
                             cardsListTemp = new ArrayList<>();
                             //we need to break the loop so that we change equivalence card set
@@ -148,6 +150,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
             }
             extractedCards.addAll(cardsListTemp);
             cardCount += cardsListTemp.size();
+            equivalenceCardSetHashCodes.add(cardsListTemp.get(0).get("equivalenceCardSetHashCode"));
         }
         return extractedCards;
     }

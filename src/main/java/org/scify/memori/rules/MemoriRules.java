@@ -169,10 +169,10 @@ public class MemoriRules implements Rules {
                 //add appropriate event
                 gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH"));
                 //add UI events
-                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5000, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5500, true));
                 addTimeGameEvent(watch, gsCurrentState);
 
-                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7200, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
 
                 if(MainOptions.gameLevel < 7) {
                     if (MainOptions.TUTORIAL_MODE) {
@@ -325,7 +325,7 @@ public class MemoriRules implements Rules {
             gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 3000, false));
             //TODO (2): here we emmit the door open sound for the rendering engine
             gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 2200, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 1800, false));
             if(MainOptions.TUTORIAL_MODE){
                 if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
                     //add FLIP_EXPLANATION event to queue
@@ -337,7 +337,7 @@ public class MemoriRules implements Rules {
             }
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
-                gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 5500, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 5000, true));
                 //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
 
                 gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFromOpenCards((MemoriTerrain) gsCurrentState.getTerrain(), currTile), new Date().getTime() + 6500, true));
@@ -365,9 +365,9 @@ public class MemoriRules implements Rules {
                     memoriTerrain.resetOpenTiles();
                     for (Iterator<Point2D> iter = openTilesPoints.iterator(); iter.hasNext(); ) {
                         Point2D position = iter.next();
-                        gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 4500, false));
+                        gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 5500, false));
                     }
-                    gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 4500, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 5000, true));
 
 //                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4000, false));
 //                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4300, false));
