@@ -41,24 +41,6 @@ public class GameLevelService {
             gameLevelNames.add("level" + i + ".mp3");
             gameLevelIntroSounds.add("level" + i + ".mp3");
         }
-        /*gameLevelNames.add("level1.mp3");
-        gameLevelNames.add("level2.mp3");
-        gameLevelNames.add("level3.mp3");
-        gameLevelNames.add("level4.mp3");
-        gameLevelNames.add("level5.mp3");
-        gameLevelNames.add("level6.mp3");
-        gameLevelNames.add("level7.mp3");
-        gameLevelNames.add("level8.mp3");
-
-        gameLevelIntroSounds.add("level1.mp3");
-        gameLevelIntroSounds.add("level2.mp3");
-        gameLevelIntroSounds.add("level3.mp3");
-        gameLevelIntroSounds.add("level4.mp3");
-        gameLevelIntroSounds.add("level5.mp3");
-        gameLevelIntroSounds.add("level6.mp3");
-        gameLevelIntroSounds.add("level7.mp3");
-        gameLevelIntroSounds.add("level8.mp3");*/
-
     }
 
 
