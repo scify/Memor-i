@@ -32,4 +32,5 @@ public class MainOptions {
     public static double mHeight;
     public static double mWidth;
     public static int storyLineLevel = 1;
+    public static int MAX_NUM_OF_LEVELS;
 }

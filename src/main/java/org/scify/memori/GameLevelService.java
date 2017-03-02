@@ -37,7 +37,10 @@ public class GameLevelService {
             }
         }
 
-        for(int i = 1; i < 11 ; i++) {
+        //the max number of levels is the size of the game levels list
+        MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
+
+        for(int i = 1; i <= MainOptions.MAX_NUM_OF_LEVELS ; i++) {
             gameLevelNames.add("level" + i + ".mp3");
             gameLevelIntroSounds.add("level" + i + ".mp3");
         }
