@@ -59,16 +59,22 @@ public class Card implements Tile{
      * file name of the sound associated with the card
      */
     private String[] sounds;
+
     /**
      * file name of the card name sound
      */
+
     private String cardDescriptionSound;
+
+    private int cardDescriptionSoundProbability;
 
     protected String cardImageBasePath;
 
     protected String cardSoundsBasePath;
 
     protected String cardDescriptionSoundBasePath;
+
+
 
     protected String imagesBasePath;
 
@@ -100,6 +106,10 @@ public class Card implements Tile{
         isWon = true;
     }
 
+    public int getCardDescriptionSoundProbability() {
+        return cardDescriptionSoundProbability;
+    }
+
     /**
      * Checks if the card is flipped
      * @return true if the card is flipped
@@ -113,7 +123,7 @@ public class Card implements Tile{
         return label;
     }
 
-    public Card(String label, String[] images, String[] sounds, String cardDescriptionSound) {
+    public Card(String label, String[] images, String[] sounds, String cardDescriptionSound, int cardDescriptionSoundProbability) {
 
         MemoriConfiguration configuration = new MemoriConfiguration();
 
@@ -121,6 +131,7 @@ public class Card implements Tile{
         this.button = new Button();
         this.sounds = sounds;
         this.cardDescriptionSound = cardDescriptionSound;
+        this.cardDescriptionSoundProbability = cardDescriptionSoundProbability;
         this.button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
         double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);

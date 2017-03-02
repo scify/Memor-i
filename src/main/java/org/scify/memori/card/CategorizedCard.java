@@ -28,8 +28,8 @@ public class CategorizedCard extends Card{
         return equivalenceCardSetHashCode;
     }
 
-    public CategorizedCard(String label, String[] images, String[] sounds, String category, String equivalenceCardSetHashCode, String cardNameSound) {
-        super(label, images, sounds, cardNameSound);
+    public CategorizedCard(String label, String[] images, String[] sounds, String category, String equivalenceCardSetHashCode, String descriptionSound, int descriptionSoundProbability) {
+        super(label, images, sounds, descriptionSound, descriptionSoundProbability);
         this.category = category;
         this.equivalenceCardSetHashCode = equivalenceCardSetHashCode;
     }

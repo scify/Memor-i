@@ -341,7 +341,7 @@ public class MemoriRules implements Rules {
                 gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 5000, true));
                 //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
 
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFromOpenCards((MemoriTerrain) gsCurrentState.getTerrain(), currTile), new Date().getTime() + 6500, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain()), new Date().getTime() + 6500, true));
                 //if in tutorial mode, push explaining events
                 if(MainOptions.TUTORIAL_MODE) {
                     if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
@@ -392,17 +392,26 @@ public class MemoriRules implements Rules {
         }
     }
 
-    protected String cardDescriptionSoundFromOpenCards(MemoriTerrain memoriTerrain, Tile currTile) {
-        CategorizedCard tileToCard = (CategorizedCard)currTile;
-        if(tileToCard.getCategory().equals("item")) {
-            return tileToCard.getDescriptionSound();
-        }
-        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
-            Tile element = iter.next();
-            tileToCard = (CategorizedCard)element;
-            // if the current card is not equal with the given card
-            if(tileToCard.getCategory().equals("item")) {
-                return tileToCard.getDescriptionSound();
+    protected String cardDescriptionSoundFromOpenCardsByChance(MemoriTerrain memoriTerrain) {
+
+        CategorizedCard tileToCard;
+        // For each open tile
+        for (Tile element : memoriTerrain.getOpenTiles()) {
+            // Get the current tile
+            tileToCard = (CategorizedCard) element;
+            // if the card has a description sound file path set
+            if (tileToCard.getDescriptionSound() != null || !tileToCard.getDescriptionSound().equals("")) {
+                // we need to check the probability of this sound playing.
+                // every card that has a description sound, has a probability (integer 1- 100)
+                // describing the percentage probability of this sound playing.
+                // for example, a card with a description sound probability of 100 (100 %)
+                // will always get it's description sound playing.
+                // that is why we multiply by 0.01, to transform the percentage into a floating point number
+                // to be in compliance with the Math.random function of Java that returns floating point numbers
+                if(Math.random() < tileToCard.getCardDescriptionSoundProbability() * 0.01){
+                    return tileToCard.getDescriptionSound();
+                }
+
             }
         }
         return null;

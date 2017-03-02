@@ -51,13 +51,17 @@ public class CardDBHandlerJSON implements CardDBHandler {
         Iterator it = setObjects.iterator();
         while(it.hasNext()) {
             JSONObject currObj = (JSONObject) it.next();
+            int cardDescriptionSoundProbability = 0;
+            if(currObj.has("description_sound_probability"))
+                cardDescriptionSoundProbability = currObj.getInt("cardDescriptionSoundProbability");
             Card newCard = new CategorizedCard(
                     (String) currObj.get("label"),
                     jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("images")),
                     jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("sounds")),
                     (String)currObj.get("category"),
                     (String)currObj.get("equivalenceCardSetHashCode"),
-                    (String)currObj.get("description_sound")
+                    (String)currObj.get("description_sound"),
+                    cardDescriptionSoundProbability
             );
             cardSet.add(newCard);
         }
