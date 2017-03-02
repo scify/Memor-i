@@ -130,8 +130,8 @@ public class CardDBHandlerJSON implements CardDBHandler {
                 // if the current category has not been read before and the current card has not been already added
                 if(!categories.contains(currCard.get("category"))) {
                     // if the current card is set to be unique
-                    if(currCard.get("unique").equals(true)) {
-                        // if not unique (ie already exists)
+                    if(currCard.get("unique").equals(true) || currCard.get("unique").equals(1)) {
+                        // if we haven't picked from this equivalence set
                         if(equivalenceCardSetHashCodes.contains(currCard.get("equivalenceCardSetHashCode"))) {
                             // reset the temporary cards list
                             cardsListTemp = new ArrayList<>();
@@ -170,8 +170,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
             Iterator itCards = currSet.iterator();
             while(itCards.hasNext()) {
                 JSONObject currCard = (JSONObject) itCards.next();
-                if(currCard.get("equivalenceCardSetHashCode").equals(""))
-                    currCard.put("equivalenceCardSetHashCode", equivalenceCardSetHashCode);
+                currCard.put("equivalenceCardSetHashCode", equivalenceCardSetHashCode);
             }
         }
         return cardSets;
