@@ -24,9 +24,11 @@ public class MemoriCardService {
         return shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
     }
 
-    public int getNumberOfCards() {
-        System.out.println("equivalence card sets: " + this.cardDBHandlerJSON.getNumberOfEquivalenceCardSets() + ", num of cards: " + this.cardDBHandlerJSON.getNumOfCardsInDB());
-        return this.cardDBHandlerJSON.getNumberOfEquivalenceCardSets();
+    public int getNumberOfSets() {
+        int numOfSets = this.cardDBHandlerJSON.getNumberOfEquivalenceCardSets();
+        int numOfCards = this.cardDBHandlerJSON.getNumOfCardsInDB();
+        System.out.println("equivalence card sets: " + numOfSets + ", num of cards: " + numOfCards);
+        return numOfCards;
     }
 
 

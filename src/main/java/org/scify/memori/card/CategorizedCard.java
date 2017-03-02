@@ -16,6 +16,10 @@ public class CategorizedCard extends Card{
      */
     protected String equivalenceCardSetHashCode;
 
+    // number 1-100 describing the probability for the description sound to be played, after the card has found
+    //TODO: implement
+    protected int descriptionSoundProbability;
+
     public String getCategory() {
         return category;
     }

@@ -52,14 +52,15 @@ public class MemoriTerrain implements Terrain {
         List<Card> shuffledCards = produceDeckOfCards(MainOptions.NUMBER_OF_OPEN_CARDS);
 
         int cardIndex = 0;
+        int terrainWidth = getWidth();
+        int terrainHeight = getHeight();
 
-        for (int iX = 0; iX < getWidth(); iX++) {
-            for (int iY = 0; iY < getHeight(); iY++) {
+        for (int iX = 0; iX < terrainWidth; iX++) {
+            for (int iY = 0; iY < terrainHeight; iY++) {
                 tiles.put(new Point2D.Double(iX, iY), shuffledCards.get(cardIndex));
                 cardIndex++;
             }
         }
-        System.out.println("sdfsdf");
     }
 
     /**

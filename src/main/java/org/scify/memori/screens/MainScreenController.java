@@ -235,8 +235,8 @@ public class MainScreenController implements Initializable {
             MainOptions.TUTORIAL_MODE = true;
             MemoriGameLevel gameLevel = gameLevels.get(0);
             MainOptions.gameLevel = gameLevel.getLevelCode();
-            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getY();
+            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getX();
             Thread thread = new Thread(() -> startNormalGame(gameLevel));
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
@@ -337,8 +337,8 @@ public class MainScreenController implements Initializable {
 
         System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
 
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
+        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getY();
+        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getX();
         startNormalGame(gameLevelNext);
     }
 }

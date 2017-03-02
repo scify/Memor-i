@@ -3,7 +3,6 @@ package org.scify.memori.card;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.scify.memori.helper.JSONFileHandler;
-import org.scify.memori.MainOptions;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.CardDBHandler;
@@ -38,7 +37,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     public int getNumOfCardsInDB() {
         JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
-        return countCardsInACardSet(initialObjectsSet);
+        return countCardsInCardSet(initialObjectsSet);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
         return objectSets;
     }
 
-    public int countCardsInACardSet(JSONArray equivalenceCardSets) {
+    public int countCardsInCardSet(JSONArray equivalenceCardSets) {
         Iterator it = equivalenceCardSets.iterator();
         int cardsNum = 0;
         while(it.hasNext()) {
@@ -148,9 +147,11 @@ public class CardDBHandlerJSON implements CardDBHandler {
                 }
 
             }
-            extractedCards.addAll(cardsListTemp);
-            cardCount += cardsListTemp.size();
-            equivalenceCardSetHashCodes.add(cardsListTemp.get(0).get("equivalenceCardSetHashCode"));
+            if(cardsListTemp.size() > 0) {
+                extractedCards.addAll(cardsListTemp);
+                cardCount += cardsListTemp.size();
+                equivalenceCardSetHashCodes.add(cardsListTemp.get(0).get("equivalenceCardSetHashCode"));
+            }
         }
         return extractedCards;
     }

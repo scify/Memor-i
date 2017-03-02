@@ -27,12 +27,10 @@ public class GameLevelService {
         gameDimensions.add(new Point2D.Double(5,4));
         gameDimensions.add(new Point2D.Double(4,6));
         gameDimensions.add(new Point2D.Double(5,6));
-        gameDimensions.add(new Point2D.Double(6,6));
-        gameDimensions.add(new Point2D.Double(6,7));
-        gameDimensions.add(new Point2D.Double(6,8));
+        gameDimensions.add(new Point2D.Double(8,8));
 
         for(Point2D dimensions: gameDimensions) {
-            if((int)dimensions.getX() * (int)dimensions.getX() <= cardService.getNumberOfCards()) {
+            if((int)dimensions.getX() * (int)dimensions.getY() <= cardService.getNumberOfSets()) {
                 gameDimensionsPlayable.add(dimensions);
             } else {
                 break;
