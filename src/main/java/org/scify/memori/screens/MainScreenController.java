@@ -235,8 +235,8 @@ public class MainScreenController implements Initializable {
             MainOptions.TUTORIAL_MODE = true;
             MemoriGameLevel gameLevel = gameLevels.get(0);
             MainOptions.gameLevel = gameLevel.getLevelCode();
-            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getY();
-            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getX();
+            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
             Thread thread = new Thread(() -> startNormalGame(gameLevel));
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
