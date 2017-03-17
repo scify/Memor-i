@@ -316,7 +316,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         /**
                          * Plays an appropriate sound associated with an "empty" Game Event (if the user clicks on an already won Card)
                          */
-                        fxAudioEngine.playSound("miscellaneous/door-knock.wav");
+                        fxAudioEngine.playSound("miscellaneous/visited_card.wav");
                         listIterator.remove();
                         break;
                     case "cardSound":
