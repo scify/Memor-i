@@ -53,7 +53,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
             JSONObject currObj = (JSONObject) it.next();
             int cardDescriptionSoundProbability = 0;
             if(currObj.has("description_sound_probability"))
-                cardDescriptionSoundProbability = currObj.getInt("cardDescriptionSoundProbability");
+                cardDescriptionSoundProbability = currObj.getInt("description_sound_probability");
             Card newCard = new CategorizedCard(
                     (String) currObj.get("label"),
                     jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("images")),
