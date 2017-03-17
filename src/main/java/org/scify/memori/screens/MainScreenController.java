@@ -337,8 +337,8 @@ public class MainScreenController implements Initializable {
 
         System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
 
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getY();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getX();
+        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
+        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
         startNormalGame(gameLevelNext);
     }
 }
