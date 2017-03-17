@@ -340,8 +340,9 @@ public class MemoriRules implements Rules {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 5000, true));
                 //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
-
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain()), new Date().getTime() + 6500, true));
+                String cardDescriptionSoundFilePath = cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain());
+                if(cardDescriptionSoundFilePath != null)
+                    gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFilePath, new Date().getTime() + 6500, true));
                 //if in tutorial mode, push explaining events
                 if(MainOptions.TUTORIAL_MODE) {
                     if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
