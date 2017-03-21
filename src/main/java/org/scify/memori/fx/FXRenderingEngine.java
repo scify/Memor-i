@@ -148,26 +148,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         }
     
     protected void initialiseGameSoundLists() {
-        ResourceLocator resourceLocator = new ResourceLocator();
-//        endLevelStartingSounds.add("sound1.mp3");
-//        endLevelStartingSounds.add("sound2.mp3");
-//        endLevelStartingSounds.add("sound3.mp3");
-//        endLevelStartingSounds.add("sound4.mp3");
-//
-//        endLevelEndingSounds.add("sound1.mp3");
-//        endLevelEndingSounds.add("sound2.mp3");
-//        endLevelEndingSounds.add("sound3.mp3");
-//        endLevelEndingSounds.add("sound4.mp3");
-//
-//        storyLineSounds.add("storyLine1.mp3");
-//        storyLineSounds.add("storyLine2.mp3");
-//        storyLineSounds.add("storyLine3.mp3");
-//        storyLineSounds.add("storyLine4.mp3");
-//        storyLineSounds.add("storyLine5.mp3");
-//        storyLineSounds.add("storyLine6.mp3");
-//        storyLineSounds.add("storyLine7.mp3");
-//        storyLineSounds.add("storyLine8.mp3");
-//        storyLineSounds.add("storyLine9.mp3");
+
         for(int i = 1; i < 5 ; i++) {
             //TODO: should poll from sounds that exist in the additional pack only?
             endLevelStartingSounds.add("sound" + i + ".mp3");
@@ -183,17 +164,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             funFactorSounds.add(i + ".mp3");
         }
-
-//        endLevelStartingSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.endLevelStartingSoundsBasePath);
-//        endLevelEndingSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.endLevelEndingSoundsBasePath);
-//        storyLineSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.storyLineSoundsBasePath);
-//        funFactorSounds = resourceLocator.listFilesInResourceDirectory(this.packageName + "/" + this.audiosBasePath + this.funFactorSoundsBasePath);
-//
-//        //sort sounds alphabetically
-//        endLevelStartingSounds.sort(String::compareToIgnoreCase);
-//        endLevelEndingSounds.sort(String::compareToIgnoreCase);
-//        storyLineSounds.sort(String::compareToIgnoreCase);
-//        funFactorSounds.sort(String::compareToIgnoreCase);
     }
 
 

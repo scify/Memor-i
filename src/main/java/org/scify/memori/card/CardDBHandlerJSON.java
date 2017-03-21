@@ -2,6 +2,7 @@ package org.scify.memori.card;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.scify.memori.ResourceLocator;
 import org.scify.memori.helper.JSONFileHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
@@ -23,8 +24,12 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     public CardDBHandlerJSON() {
         jsonFileHandler = new JSONFileHandler();
-        MemoriConfiguration configuration = new MemoriConfiguration();
-        dbFile = configuration.getProjectProperty("DATA_PACKAGE") + "/json_DB/equivalence_cards_sets.json";
+        ResourceLocator resourceLocator = new ResourceLocator();
+        dbFile = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
+        //because we want to perform getResourceAsStream on the dbFile, we need to eliminate the slash "/" that the string starts with:
+        if (dbFile.charAt(0) == '/') {
+            dbFile = dbFile.substring(1, dbFile.length());
+        }
         MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFile);
     }
 
