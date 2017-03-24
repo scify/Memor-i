@@ -193,7 +193,7 @@ public class Card implements Tile{
      * function to set the UI of the flipped back card (change icons)
      */
     public void flipBackUI () {
-        String imgFile = resourceLocator.getCorrectPathForFile(this.imagesBasePath, "door.jpg");
+        String imgFile = resourceLocator.getCorrectPathForFile(this.imagesBasePath, "box.png");
         button.setStyle("-fx-background-image: url(" + imgFile +")");
     }
 
