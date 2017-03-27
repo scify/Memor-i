@@ -56,7 +56,7 @@ public class HighScoresHandlerImpl implements HighScoresHandler{
 
     public void updateHighScore(TimeWatch watch) {
         long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
-        String highScore = readHighScoreForLevel(String.valueOf(MainOptions.gameLevel));
+        String highScore = readHighScoreForLevel(String.valueOf(MainOptions.GAME_LEVEL_CURRENT));
         if (highScore == null || Objects.equals(highScore, ""))
             highScore = "99:00:00";
         System.out.println("highScore " + TimeToSeconds(highScore));
@@ -79,7 +79,7 @@ public class HighScoresHandlerImpl implements HighScoresHandler{
     }
 
     public void setHighScoreForLevel (String highScore) {
-        propertyHandler.setPropertyByName(highScoresFile, String.valueOf(MainOptions.gameLevel), highScore);
+        propertyHandler.setPropertyByName(highScoresFile, String.valueOf(MainOptions.GAME_LEVEL_CURRENT), highScore);
     }
 
 

@@ -108,7 +108,7 @@ public class MainScreenController implements Initializable {
         gameLevelBtn.setOnKeyPressed(event -> {
             if (event.getCode() == SPACE) {
 
-                MainOptions.gameLevel = gameLevel.getLevelCode();
+                MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
                 MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
                 MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
                 Thread thread = new Thread(() -> startNormalGame(gameLevel));
@@ -234,7 +234,7 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             MainOptions.TUTORIAL_MODE = true;
             MemoriGameLevel gameLevel = gameLevels.get(0);
-            MainOptions.gameLevel = gameLevel.getLevelCode();
+            MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
             MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
             MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
             Thread thread = new Thread(() -> startNormalGame(gameLevel));
@@ -332,8 +332,8 @@ public class MainScreenController implements Initializable {
      * Gets the next level and starts a new game on this level.
      */
     private void loadNextLevel() {
-        MainOptions.gameLevel++;
-        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.gameLevel);
+        MainOptions.GAME_LEVEL_CURRENT++;
+        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
 
         System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
 

@@ -28,7 +28,7 @@ public class MainOptions {
     public static int NUMBER_OF_COLUMNS = 4;
     public static int NUMBER_OF_ROWS = 4;
     public static int NUMBER_OF_OPEN_CARDS = 2;
-    public static int gameLevel;
+    public static int GAME_LEVEL_CURRENT;
     public static double mHeight;
     public static double mWidth;
     public static int storyLineLevel = 1;

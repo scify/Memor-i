@@ -60,7 +60,7 @@ public class GameLevelService {
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
         for(Point2D levelDimensions : gameDimensionsPlayable) {
             MemoriGameLevel memoriGameLevel = new MemoriGameLevel(
-                    levelIndex,
+                    levelIndex + 1GIT ,
                     levelDimensions,
                     (int) levelDimensions.getX() + "x" + (int) levelDimensions.getY(),
                     levelNameSoundPath + gameLevelNames.get(levelIndex),

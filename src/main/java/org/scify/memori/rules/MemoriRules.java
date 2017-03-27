@@ -103,7 +103,7 @@ public class MemoriRules implements Rules {
             if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "STORYLINE_AUDIO")) {
                 gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO"));
                 gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO_UI", null, 0, true));
-                if(!(MainOptions.gameLevel == 4)) {
+                if(!(MainOptions.GAME_LEVEL_CURRENT == 4)) {
                     if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
                         gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
                         if(MainOptions.storyLineLevel % 2 == 1) {
@@ -117,7 +117,7 @@ public class MemoriRules implements Rules {
                 }
             }
 
-            if(MainOptions.gameLevel == 4) {
+            if(MainOptions.GAME_LEVEL_CURRENT == 4) {
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS"));
                     gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_UI", null, 0, false));
@@ -174,9 +174,9 @@ public class MemoriRules implements Rules {
 
                 gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
 
-                System.out.println("Current level: " + MainOptions.gameLevel);
+                System.out.println("Current level: " + MainOptions.GAME_LEVEL_CURRENT);
                 System.out.println("Max number of levels: " + MainOptions.MAX_NUM_OF_LEVELS);
-                if(MainOptions.gameLevel < MainOptions.MAX_NUM_OF_LEVELS) {
+                if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS) {
                     if (MainOptions.TUTORIAL_MODE) {
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
