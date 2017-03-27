@@ -18,7 +18,6 @@ public class ResourceLocator {
         configuration = new MemoriConfiguration();
         this.rootDataPath = "/" + configuration.getProjectProperty("DATA_PACKAGE") + "/";
         this.rootDataPathDefault = "/" + configuration.getProjectProperty("DATA_PACKAGE_DEFAULT") + "/";
-        System.err.println("DATA_PACK: " + configuration.getProjectProperty("DATA_PACKAGE"));
     }
 
 
@@ -35,7 +34,6 @@ public class ResourceLocator {
         String filePath = path + fileName;
         //check if there is a representation of the file in the additional data pack
         String additionalPackFileName = getFileNameEquivalentFromResourcePack(path + fileName);
-        System.out.println("additionalPackFileName: " + additionalPackFileName);
         if(additionalPackFileName != null)
             filePath = additionalPackFileName;
 

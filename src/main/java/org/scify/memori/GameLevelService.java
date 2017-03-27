@@ -39,7 +39,7 @@ public class GameLevelService {
 
         //the max number of levels is the size of the game levels list
         MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
-
+        System.out.println("MAX_NUM_OF_LEVELS: " + MainOptions.MAX_NUM_OF_LEVELS);
         for(int i = 1; i <= MainOptions.MAX_NUM_OF_LEVELS ; i++) {
             gameLevelNames.add("level" + i + ".mp3");
             gameLevelIntroSounds.add("level" + i + ".mp3");
@@ -54,19 +54,6 @@ public class GameLevelService {
      */
     public List<MemoriGameLevel> createGameLevels() {
         MemoriConfiguration configuration = new MemoriConfiguration();
-//        ResourceLocator resourceLocator = new ResourceLocator();
-//
-//
-//
-//        String packageName = configuration.getProjectProperty("DATA_PACKAGE");
-//
-//        String audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
-//
-//        //the number of sounds in the level_name_sounds directory is the name of the levels available for the current game version
-//        ArrayList<String> levelIntroductorySounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelIntroSoundPath);
-//        ArrayList<String> levelNameSounds = (ArrayList<String>) resourceLocator.listFilesInResourceDirectory(packageName + "/" + audiosBasePath + levelNameSoundPath);
-//
-
         String levelIntroSoundPath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
         String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
         int levelIndex = 0;

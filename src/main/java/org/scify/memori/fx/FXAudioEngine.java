@@ -158,7 +158,7 @@ public class FXAudioEngine implements AudioEngine{
     }
 
     private void blockUIThread(AudioClip audioClip) {
-        System.out.println("Waiting for blocking sound to complete");
+        //System.out.println("Waiting for blocking sound to complete");
         // Wait until completion
         while (audioClip.isPlaying()) {
             try {
@@ -166,7 +166,7 @@ public class FXAudioEngine implements AudioEngine{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Sound still playing");
+            //System.out.println("Sound still playing");
         }
         System.out.println("Sound completed");
     }

@@ -96,7 +96,7 @@ public abstract class MemoriGame implements Game<Integer> {
         if(memoriGameState.loadNextLevel) {
             if(!MainOptions.TUTORIAL_MODE)
                 MainOptions.storyLineLevel++;
-            if(MainOptions.gameLevel < 7)
+            if(MainOptions.gameLevel < MainOptions.MAX_NUM_OF_LEVELS)
                 return NEXT_LEVEL;
             else
                 return GAME_FINISHED;

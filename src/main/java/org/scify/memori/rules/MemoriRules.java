@@ -174,7 +174,8 @@ public class MemoriRules implements Rules {
 
                 gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
 
-                //TODO: 7 should be changed to the actual last game level
+                System.out.println("Current level: " + MainOptions.gameLevel);
+                System.out.println("Max number of levels: " + MainOptions.MAX_NUM_OF_LEVELS);
                 if(MainOptions.gameLevel < MainOptions.MAX_NUM_OF_LEVELS) {
                     if (MainOptions.TUTORIAL_MODE) {
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
