@@ -135,8 +135,9 @@ public class Card implements Tile{
         this.button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
         double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
-        this.button.setPrefHeight(width * 0.8);
-        this.button.setPrefWidth(width * 0.8);
+        this.button.setPrefHeight(width * 0.6666);
+        this.button.setPrefWidth(width);
+        System.out.println("card width: " + width);
         // apply the appropriate style classes
         this.button.getStyleClass().addAll("cardButton", "closedCard");
         
