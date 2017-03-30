@@ -332,9 +332,9 @@ public class MainScreenController implements Initializable {
      * Gets the next level and starts a new game on this level.
      */
     private void loadNextLevel() {
-        MainOptions.GAME_LEVEL_CURRENT++;
-        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
 
+        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
+        MainOptions.GAME_LEVEL_CURRENT++;
         System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
 
         MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
