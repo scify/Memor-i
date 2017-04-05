@@ -397,7 +397,7 @@
         "category": "item_equivalent",
         "unique": true,
         "sounds": [
-          "sparrow.wav"
+          "frog.wav"
         ],
         "images": [
           "frog1.jpg",
