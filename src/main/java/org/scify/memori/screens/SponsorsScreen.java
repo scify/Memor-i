@@ -47,7 +47,15 @@ public class SponsorsScreen implements HighScoresScreen {
         this.sceneHandler = shSceneHandler;
         audioEngine = new FXAudioEngine();
         sceneHandler.setMainWindow(mainWindow);
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors.fxml"));
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        String appLang = configuration.getProjectProperty("APP_LANG");
+        FXMLLoader fxmlLoader = null;
+        if(appLang.equals("el")) {
+            fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors_el.fxml"));
+        } else if (appLang.equals("no")) {
+            fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors_no.fxml"));
+        }
+
         Parent root = null;
         try {
             root = fxmlLoader.load();

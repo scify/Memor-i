@@ -36,6 +36,10 @@
     -fx-background-radius: 5;
 }
 
+.sponsorLogoContainer {
+    -fx-padding: 250 0 0 0;
+}
+
 .closedCard {
     /*-fx-background-image: url("/img/door.jpg");*/
     -fx-background-size: 92% 92%;
@@ -121,5 +125,17 @@ StackPane {
     -fx-background-radius: 10 10 10 10;
     -fx-background-color: transparent;
     -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+}
+
+.sponsorTextBig {
+    -fx-font-family: Ubuntu;
+    -fx-max-width: 300px;
+    -fx-wrap-text: true;
+    -fx-font-size: 220%;
+    -fx-padding: 15px;
+    -fx-border-insets: 15px;
+    -fx-background-insets: 15px;
+    -fx-fill: #ffffff;
     -fx-font-weight: bold;
 }
