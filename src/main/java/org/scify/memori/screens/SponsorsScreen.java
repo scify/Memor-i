@@ -54,6 +54,8 @@ public class SponsorsScreen implements HighScoresScreen {
             fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors_el.fxml"));
         } else if (appLang.equals("no")) {
             fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors_no.fxml"));
+        } else if (appLang.equals("en")) {
+            fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/sponsors_en.fxml"));
         }
 
         Parent root = null;
