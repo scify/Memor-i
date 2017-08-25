@@ -18,39 +18,21 @@
 
 package org.scify.memori.rules;
 
-import javafx.scene.input.KeyEvent;
+import javafx.util.Pair;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
-import org.scify.memori.helper.TimeWatch;
 import org.scify.memori.interfaces.*;
-
 import java.awt.geom.Point2D;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Observable;
 
 /**
  * Integral part of the Game Engine. This class is used to evaluate every User event of the game and
  * to also prepare the {@link GameState} object to be rendered at every cycle
  */
-public class MemoriRules implements Rules {
-    /**
-     * a {@link HighScoresHandlerImpl} instance to handle the high score as soon as the game has finished
-     */
-    private HighScoresHandlerImpl highScore;
-    /**
-     * When the user makes the first move, start the watch
-     * This variable is used to identify if the watch has been already started or not
-     */
-    private boolean watchStarted = false;
-    /**
-     * a {@link TimeWatch} instance to track the elapsed time of the game
-     */
-    TimeWatch watch;
+public class MemoriRules extends Observable implements Rules {
 
-    public MemoriRules() {
-        highScore = new HighScoresHandlerImpl();
-    }
+    private ArrayList<UserAction> useractions = new ArrayList<>();
 
     @Override
     public GameState getInitialState() {
@@ -60,7 +42,6 @@ public class MemoriRules implements Rules {
     @Override
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
-
         MemoriGameState gsCurrentState = (MemoriGameState)gsCurrent;
 
         //if there is a blocking game event currently being handled by the Rendering engine, return.
@@ -68,16 +49,11 @@ public class MemoriRules implements Rules {
             return gsCurrentState;
         }
 
-        handleLevelStartingGameEvents(gsCurrentState);
+        handleGameStartingGameEvents(gsCurrentState);
 
         //if a user action (eg Keyboard event was provided), handle the emitting Game events
-        if(uaAction != null) {
+        if (uaAction != null) {
             handleUserActionGameEvents(uaAction, gsCurrentState);
-            //After the first user action, start the stopwatch
-            if(!watchStarted) {
-                watch = TimeWatch.start();
-                watchStarted = true;
-            }
         }
 
         //if last round, create appropriate READY_TO_FINISH event
@@ -93,37 +69,8 @@ public class MemoriRules implements Rules {
      * When a level starts the rules should add the relevant game events
      * @param gsCurrentState the current game state
      */
-    private void handleLevelStartingGameEvents(MemoriGameState gsCurrentState) {
-        if(MainOptions.TUTORIAL_MODE) {
-            if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INTRO")) {
-                gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INTRO"));
-                gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INTRO_UI", null, 0, true));
-            }
-        } else {
-            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "STORYLINE_AUDIO")) {
-                gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO"));
-                gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO_UI", null, 0, true));
-                if(!(MainOptions.GAME_LEVEL_CURRENT == 4)) {
-                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
-                        if(MainOptions.storyLineLevel % 2 == 1) {
-                            gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 0, true));
-                        }
-                    }
-                }
-                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "LEVEL_INTRO_AUDIO")) {
-                    gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO"));
-                    gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_INTRO_AUDIO_UI", null, 1000, true));
-                }
-            }
+    protected void handleGameStartingGameEvents(MemoriGameState gsCurrentState) {
 
-            if(MainOptions.GAME_LEVEL_CURRENT == 4) {
-                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")) {
-                    gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS"));
-                    gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_UI", null, 0, false));
-                }
-            }
-        }
     }
 
     /**
@@ -131,17 +78,18 @@ public class MemoriRules implements Rules {
      * @param gsCurrentState the current state
      * @return true if the events queue contains a blocking event
      */
-    private boolean eventQueueContainsBlockingEvent(MemoriGameState gsCurrentState) {
+    protected boolean eventQueueContainsBlockingEvent(MemoriGameState gsCurrentState) {
         //Iterate through game events. If there is a blocking event, return.
-        ListIterator<GameEvent> listIterator = gsCurrentState.getEventQueue().listIterator();
-        while (listIterator.hasNext()) {
-            GameEvent currentGameEvent = listIterator.next();
-            if(currentGameEvent.blocking) {
-                System.err.println("in blocking game event");
+        for (GameEvent currentGameEvent : gsCurrentState.getEventQueue()) {
+            if (currentGameEvent.blocking) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected void removeEventFromQueue(MemoriGameState gsCurrentState, String eventCode) {
+        gsCurrentState.getEventQueue().removeIf(currentGameEvent -> currentGameEvent.type.equals(eventCode));
     }
 
     /**
@@ -165,81 +113,59 @@ public class MemoriRules implements Rules {
                 }
             }
         } else {
-            if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH")) {
-                //add appropriate event
-                gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH"));
-                //add UI events
-                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5500, true));
-                addTimeGameEvent(watch, gsCurrentState);
-
-                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
-
-                System.out.println("Current level: " + MainOptions.GAME_LEVEL_CURRENT);
-                System.out.println("Max number of levels: " + MainOptions.MAX_NUM_OF_LEVELS);
-                if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS) {
-                    if (MainOptions.TUTORIAL_MODE) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
-                    } else {
-                        gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, true));
-                    }
-                } else {
-                    gsCurrentState.getEventQueue().add(new GameEvent("GAME_END", null, new Date().getTime() + 8600, true));
-                    gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 8600, true));
-                }
-                //update high score
-                highScore.updateHighScore(watch);
-            }
+            gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH"));
         }
     }
 
+    protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
+        handleUserActionGameEvents(uaAction, gsCurrentState, 0);
+    }
     /**
      * Handles the user actions
      * @param uaAction the user action (flip, move, help)
      * @param gsCurrentState the current game state
      */
-    private void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
-        if(movementValid(uaAction.getKeyEvent(), gsCurrentState)) {
-            gsCurrentState.updateRowIndex(uaAction.getKeyEvent());
-            gsCurrentState.updateColumnIndex(uaAction.getKeyEvent());
-            uaAction.setCoords(new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()));
-
-            MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
-            // currTile is the tile that was moved on or acted upon
-            Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
-            System.out.println(currTile.getTileType());
-            // Rules 1-4: Valid movement
-            // type: movement, params: coords
-            // delayed: false (zero), blocking:yes
-            if(uaAction.getActionType().equals("movement")) {
-                gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords()));
-            } else if (uaAction.getActionType().equals("flip")) {
-                if(MainOptions.TUTORIAL_MODE) {
-                    if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
-                        performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
-                }
-                else
-                    performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
-            } else if(uaAction.getActionType().equals("enter")) {
-                if(!MainOptions.TUTORIAL_MODE /*&& eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")*/)
-                    createHelpGameEvent(uaAction, gsCurrentState);
-            } else if(uaAction.getActionType().equals("escape")) {
-                //exit current game
-                gsCurrentState.setGameFinished(true);
-            }
+    protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
+        if(movementValid(uaAction.getDirection(), gsCurrentState)) {
+            this.handleValidActionEvent(uaAction, gsCurrentState, delay);
         } else {
             // if invalid movement, return only an invalid game event
-            gsCurrentState.getEventQueue().add(new GameEvent("invalidMovement", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), 0 , false));
-            if(MainOptions.TUTORIAL_MODE) {
-                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT")) {
-                    //the invalid movement tutorial event should be emitted only if the tutorial has reached a certain point (step 2 which is go right second time)
-                    if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), new Date().getTime() + 500, true));
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT"));
-                    }
-                }
-            }
+            gsCurrentState.getEventQueue().add(new GameEvent("INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), 0 , false));
+        }
+    }
 
+    private void handleValidActionEvent(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
+
+        gsCurrentState.updateRowIndex(uaAction.getDirection());
+        gsCurrentState.updateColumnIndex(uaAction.getDirection());
+
+        uaAction.setCoords(new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()));
+
+        MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
+        // currTile is the tile that was moved on or acted upon
+        Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
+        // Rules 1-4: Valid movement
+        // type: movement, params: coords
+        // delayed: false (zero), blocking:yes
+        if(uaAction.getActionType().equals("movement")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords()));
+            this.useractions.add(uaAction);
+        } else if (uaAction.getActionType().equals("flip")) {
+            this.useractions.add(uaAction);
+            if(MainOptions.TUTORIAL_MODE) {
+                if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
+                    performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
+            }
+            else
+                performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
+        } else if(uaAction.getActionType().equals("enter")) {
+            if(!MainOptions.TUTORIAL_MODE /*&& eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")*/)
+                createHelpGameEvent(uaAction, gsCurrentState);
+        } else if(uaAction.getActionType().equals("escape")) {
+            //exit current game
+            gsCurrentState.setGameFinished(true);
+        } else if(uaAction.getActionType().equals("opponent_movement")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
         }
     }
 
@@ -250,7 +176,6 @@ public class MemoriRules implements Rules {
      */
     private void createHelpGameEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
         Point2D coords = uaAction.getCoords();
-        System.out.println("x: " + coords.getX() + " y: " + coords.getY());
         gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
         gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", MainOptions.NUMBER_OF_ROWS - ((int)coords.getX()), 0, true));
         //If in help instructions mode, add appropriate explanation
@@ -264,37 +189,7 @@ public class MemoriRules implements Rules {
         }
     }
 
-    /**
-     * Prepares the UI events that will play the sound clips for the high score
-     * @param watch The watch object that contains the timer
-     * @param gsCurrentState the current game state
-     */
-    private void addTimeGameEvent(TimeWatch watch, MemoriGameState gsCurrentState) {
-        long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
-        String timestampStr = String.valueOf(ConvertSecondToHHMMSSString((int) passedTimeInSeconds));
-        String[] tokens = timestampStr.split(":");
-        int minutes = Integer.parseInt(tokens[1]);
-        int seconds = Integer.parseInt(tokens[2]);
-        System.err.println("minutes: " + minutes);
-        System.err.println("seconds: " + seconds);
-        if(minutes != 0) {
-            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", minutes, new Date().getTime() + 5200, true));
-            if(minutes > 1)
-                gsCurrentState.getEventQueue().add(new GameEvent("MINUTES", minutes, new Date().getTime() + 5300, true));
-            else
-                gsCurrentState.getEventQueue().add(new GameEvent("MINUTE", minutes, new Date().getTime() + 5500, true));
-        }
-        if(minutes != 0 && seconds != 0)
-            gsCurrentState.getEventQueue().add(new GameEvent("AND", minutes, new Date().getTime() + 5700, true));
-        if(seconds != 0) {
-            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", seconds, new Date().getTime() + 6000, true));
-            if(seconds > 1)
-                gsCurrentState.getEventQueue().add(new GameEvent("SECONDS", minutes, new Date().getTime() + 5300, true));
-            else
-                gsCurrentState.getEventQueue().add(new GameEvent("SECOND", minutes, new Date().getTime() + 5500, true));
-        }
 
-    }
 
     /**
      * Applies the rules and creates the game events relevant to flipping a card
@@ -314,20 +209,24 @@ public class MemoriRules implements Rules {
             } else {
                 //else if card not won
                 // play card sound
-                gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), 0, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, true));
             }
         } else {
-            System.out.println("tile not flipped");
             // else if not flipped
             // flip card
             flipTile(currTile);
+            this.setChanged();
+            this.notifyObservers(new RuleObserverObject(new Pair<>(uaAction, currTile), "TILE_REVEALED"));
+            this.setChanged();
+            this.notifyObservers(new RuleObserverObject(this.useractions, "PLAYER_MOVE"));
+
             // push flip feedback event (delayed: false, blocking: no)
             gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
-            gsCurrentState.getEventQueue().add(new GameEvent("flip", uaAction.getCoords(), new Date().getTime() + 1000, false));
-            gsCurrentState.getEventQueue().add(new GameEvent("flip_second", uaAction.getCoords(), new Date().getTime() + 3000, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
             //TODO (2): here we emmit the door open sound for the rendering engine
             gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("cardSound", uaAction.getCoords(), new Date().getTime() + 1800, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 1800, false));
             if(MainOptions.TUTORIAL_MODE){
                 if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
                     //add FLIP_EXPLANATION event to queue
@@ -339,7 +238,7 @@ public class MemoriRules implements Rules {
             }
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
-                gsCurrentState.getEventQueue().add(new GameEvent("success", uaAction.getCoords(), new Date().getTime() + 5000, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("SUCCESS_UI", uaAction.getCoords(), new Date().getTime() + 5000, true));
                 //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
                 String cardDescriptionSoundFilePath = cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain());
                 if(cardDescriptionSoundFilePath != null)
@@ -357,6 +256,8 @@ public class MemoriRules implements Rules {
                 setAllOpenTilesWon(memoriTerrain);
                 //reset open tiles
                 memoriTerrain.resetOpenTiles();
+                gsCurrentState.getCurrentPlayer().setScore(gsCurrentState.getCurrentPlayer().getScore() + 1);
+                nextTurn(gsCurrentState);
             } else {
                 // else not last card in tuple
                 if(atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
@@ -368,12 +269,10 @@ public class MemoriRules implements Rules {
                     memoriTerrain.resetOpenTiles();
                     for (Iterator<Point2D> iter = openTilesPoints.iterator(); iter.hasNext(); ) {
                         Point2D position = iter.next();
-                        gsCurrentState.getEventQueue().add(new GameEvent("flipBack", position, new Date().getTime() + 5500, false));
+                        gsCurrentState.getEventQueue().add(new GameEvent("FLIP_BACK_UI", position, new Date().getTime() + 5500, false));
                     }
                     gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 5000, true));
 
-//                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4000, false));
-//                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_CLOSED", null, new Date().getTime() + 4300, false));
                     if(MainOptions.TUTORIAL_MODE) {
                         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_WRONG_PAIR")) {
                             gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR"));
@@ -387,14 +286,26 @@ public class MemoriRules implements Rules {
                             gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED_UI", null, new Date().getTime() + 7000, true));
                         }
                     }
+
+                    nextTurn(gsCurrentState);
                 } else {
                     memoriTerrain.addTileToOpenTiles(currTile);
                 }
             }
+
         }
     }
 
-    protected String cardDescriptionSoundFromOpenCardsByChance(MemoriTerrain memoriTerrain) {
+    private void nextTurn(MemoriGameState gsCurrentState) {
+        for(Player player: gsCurrentState.getPlayers()) {
+            System.err.println("Score for " + player.getName() + ": " + player.getScore());
+        }
+        gsCurrentState.incrementTurn();
+        this.useractions = new ArrayList<>();
+    }
+
+
+    private String cardDescriptionSoundFromOpenCardsByChance(MemoriTerrain memoriTerrain) {
 
         CategorizedCard tileToCard;
         // For each open tile
@@ -441,7 +352,7 @@ public class MemoriRules implements Rules {
      * @param gsCurrent the current game state
      * @return true if the current round is the last one
      */
-    private boolean isLastRound(GameState gsCurrent) {
+    protected boolean isLastRound(GameState gsCurrent) {
         return ((MemoriGameState)gsCurrent).areAllTilesWon();
     }
 
@@ -464,11 +375,10 @@ public class MemoriRules implements Rules {
     protected boolean atLeastOneOtherTileIsDifferent(MemoriTerrain memoriTerrain, Tile currTile) {
         CategorizedCard tileToCard = (CategorizedCard)currTile;
         boolean answer = false;
-        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
-            Tile element = iter.next();
-            CategorizedCard elementToCard = (CategorizedCard)element;
+        for (Tile element : memoriTerrain.getOpenTiles()) {
+            CategorizedCard elementToCard = (CategorizedCard) element;
             // if the current card is not equal with the given card
-            if(!cardsAreEqual(elementToCard, tileToCard))
+            if (!cardsAreEqual(elementToCard, tileToCard))
                 answer = true;
         }
         return answer;
@@ -481,10 +391,6 @@ public class MemoriRules implements Rules {
      * @return true if the 2 given cards are equal
      */
     protected boolean cardsAreEqual(CategorizedCard card1, CategorizedCard card2) {
-        System.out.println("category1: " + card1.getCategory());
-        System.out.println("category2: " + card2.getCategory());
-        System.out.println("hash1: " + card1.getEquivalenceCardSetHashCode());
-        System.out.println("hash2: " + card2.getEquivalenceCardSetHashCode());
         return !(card1.getCategory().equals(card2.getCategory())) && card1.getEquivalenceCardSetHashCode().equals(card2.getEquivalenceCardSetHashCode());
     }
 
@@ -529,13 +435,11 @@ public class MemoriRules implements Rules {
     public List<Point2D> resetAllOpenTiles(MemoriTerrain memoriTerrain) {
         List<Point2D> openTilesPoints = new ArrayList<>();
         memoriTerrain.getOpenTiles().forEach(Tile::flip);
-        for (Iterator<Tile> iter = memoriTerrain.getOpenTiles().iterator(); iter.hasNext(); ) {
-            Tile element = iter.next();
-            Iterator it = memoriTerrain.getTiles().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                if(element == pair.getValue()) {
-                    Point2D pos = (Point2D)pair.getKey();
+        for (Tile element : memoriTerrain.getOpenTiles()) {
+            for (Object o : memoriTerrain.getTiles().entrySet()) {
+                Map.Entry pair = (Map.Entry) o;
+                if (element == pair.getValue()) {
+                    Point2D pos = (Point2D) pair.getKey();
                     openTilesPoints.add(new Point2D.Double(pos.getY(), pos.getX()));
                 }
             }
@@ -546,38 +450,34 @@ public class MemoriRules implements Rules {
 
     /**
      * Determines whether the user move was valid
-     * @param evt the kay event (action by the user)
+     * @param direction the direction (action by the user)
      * @param memoriGameState the current game state
      * @return true if the user move was valid
      */
-    public boolean movementValid(KeyEvent evt, MemoriGameState memoriGameState) {
-        switch(evt.getCode()) {
-            case LEFT:
+    public boolean movementValid(String direction, MemoriGameState memoriGameState) {
+        switch(direction) {
+            case "LEFT":
                 if(memoriGameState.getColumnIndex() == 0) {
                     return false;
                 }
                 break;
-            case RIGHT:
+            case "RIGHT":
                 if(memoriGameState.getColumnIndex() == MainOptions.NUMBER_OF_COLUMNS - 1) {
                     return false;
                 }
                 break;
-            case UP:
+            case "UP":
                 if(memoriGameState.getRowIndex() == 0) {
                     return false;
                 }
                 break;
-            case DOWN:
+            case "DOWN":
                 if(memoriGameState.getRowIndex() == MainOptions.NUMBER_OF_ROWS - 1) {
                     return false;
                 }
                 break;
         }
         return true;
-    }
-
-    private String ConvertSecondToHHMMSSString(int nSecondTime) {
-        return LocalTime.MIN.plusSeconds(nSecondTime).toString();
     }
 
 }

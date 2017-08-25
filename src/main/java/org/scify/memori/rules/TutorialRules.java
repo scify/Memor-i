@@ -1,12 +1,15 @@
 package org.scify.memori.rules;
 
 import javafx.scene.input.KeyCode;
+import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameState;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.UserAction;
 
+import java.awt.geom.Point2D;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Class that contains the rules that integrate in the tutorial game.
@@ -23,11 +26,37 @@ public class TutorialRules extends MemoriRules {
 
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
-        gsCurrent = super.getNextState(gsCurrent, uaAction);
+        MemoriGameState gsCurrentState;
+
+        gsCurrentState = (MemoriGameState) super.getNextState(gsCurrent, uaAction);
+        handleGameStartingGameEvents(gsCurrentState);
         // handle the tutorial game events
         if(uaAction != null)
             tutorialRulesSet((MemoriGameState) gsCurrent, uaAction);
+        if(isLastRound(gsCurrent)) {
+            //if ready to finish event already in events queue
+            handleLevelFinishGameEvents(gsCurrentState);
+        }
         return gsCurrent;
+    }
+
+    protected void handleGameStartingGameEvents(MemoriGameState gsCurrentState) {
+        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INTRO")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INTRO"));
+            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INTRO_UI", null, 0, true));
+        }
+    }
+
+    protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
+        if(!movementValid(uaAction.getDirection(), gsCurrentState)) {
+            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT")) {
+                //the invalid movement tutorial event should be emitted only if the tutorial has reached a certain point (step 2 which is go right second time)
+                if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), new Date().getTime() + 500, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT"));
+                }
+            }
+        }
     }
 
     /**
@@ -62,6 +91,8 @@ public class TutorialRules extends MemoriRules {
         //add tutorial_3 UI event to queue
         //if tutorial_3 event exists
         // if tutorial_0 event does not exist
+
+
         if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0")) {
             //If user clicked space
             if (uaAction.getActionType().equals("flip")) {
@@ -75,7 +106,7 @@ public class TutorialRules extends MemoriRules {
             //if tutorial_1 event does not exist
             if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_1")) {
                 //if user clicked RIGHT
-                if (uaAction.getDirection() == KeyCode.RIGHT) {
+                if (uaAction.getDirection().equals("RIGHT")) {
                     //add tutorial_1 event to queue
                     gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_1_STEP_1"));
                     //add tutorial_1 UI event to queue
@@ -88,7 +119,7 @@ public class TutorialRules extends MemoriRules {
             } else {
                 if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
                     //if user clicked RIGHT
-                    if (uaAction.getDirection() == KeyCode.RIGHT) {
+                    if (uaAction.getDirection().equals("RIGHT")) {
                         //add tutorial_1 event to queue
                         gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_1_STEP_2"));
                     } //else  if user did not click RIGHT
@@ -103,7 +134,7 @@ public class TutorialRules extends MemoriRules {
                         if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT_UI")) {
                             if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_2")) {
                                 //if user clicked LEFT
-                                if (uaAction.getDirection() == KeyCode.LEFT) {
+                                if (uaAction.getDirection().equals("LEFT")) {
                                     // add tutorial_2 UI event to queue
                                     gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_2_UI", null, new Date().getTime() + 500, true));
                                     gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_2"));
@@ -130,5 +161,10 @@ public class TutorialRules extends MemoriRules {
 
             }
         }
+    }
+
+    private void handleLevelFinishGameEvents(MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
+        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
     }
 }
