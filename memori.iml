@@ -13,5 +13,11 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.mobicents.external.freetts:cmu_us_kal:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mobicents.external.freetts:cmu_time_awb:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mobicents.external.freetts:freetts:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mobicents.external.freetts:en_us:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mobicents.external.freetts:cmulex:1.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.speech:jsapi:1.0" level="project" />
   </component>
 </module>
