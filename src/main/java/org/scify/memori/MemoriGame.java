@@ -19,6 +19,8 @@ package org.scify.memori;
 
 import org.scify.memori.interfaces.*;
 import org.scify.memori.rules.MemoriRules;
+import org.scify.memori.rules.MultiPlayerRules;
+import org.scify.memori.rules.SinglePlayerRules;
 import org.scify.memori.rules.TutorialRules;
 
 public abstract class MemoriGame implements Game<Integer> {
@@ -44,7 +46,6 @@ public abstract class MemoriGame implements Game<Integer> {
      */
     protected RenderingEngine reRenderer;
 
-
     @Override
     /**
      * Subclasses should initialize a UI
@@ -52,12 +53,13 @@ public abstract class MemoriGame implements Game<Integer> {
     public void initialize() {
         if(MainOptions.TUTORIAL_MODE)
             rRules = new TutorialRules();
-        else
-            rRules = new MemoriRules();
-        // Example initialization
-//        RenderingEngine fUI = new FXRenderingEngine();
-//        uInterface = fUI;
-//        reRenderer = fUI;
+        else {
+            if(MainOptions.GAME_TYPE == 1) {
+                rRules = new SinglePlayerRules();
+            } else {
+                rRules = new MultiPlayerRules();
+            }
+        }
     }
 
     @Override

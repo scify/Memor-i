@@ -29,8 +29,9 @@ public class GameLevelService {
         gameDimensions.add(new Point2D.Double(5,6));
         gameDimensions.add(new Point2D.Double(8,8));
 
+        int numberOfSets = cardService.getNumberOfSets();
         for(Point2D dimensions: gameDimensions) {
-            if((int)dimensions.getX() * (int)dimensions.getY() <= cardService.getNumberOfSets()) {
+            if((int)dimensions.getX() * (int)dimensions.getY() <= numberOfSets) {
                 gameDimensionsPlayable.add(dimensions);
             } else {
                 break;
@@ -39,7 +40,6 @@ public class GameLevelService {
 
         //the max number of levels is the size of the game levels list
         MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
-        System.out.println("MAX_NUM_OF_LEVELS: " + MainOptions.MAX_NUM_OF_LEVELS);
         for(int i = 1; i <= MainOptions.MAX_NUM_OF_LEVELS ; i++) {
             gameLevelNames.add("level" + i + ".mp3");
             gameLevelIntroSounds.add("level" + i + ".mp3");

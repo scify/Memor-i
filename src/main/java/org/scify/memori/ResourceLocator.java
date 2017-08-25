@@ -38,11 +38,11 @@ public class ResourceLocator {
             filePath = additionalPackFileName;
 
         String file = this.rootDataPath + filePath;
-        System.err.println("trying to get: " + file);
+        //System.err.println("trying to get: " + file);
         URL fileURL = FXAudioEngine.class.getResource(file);
         if (fileURL == null) {
             file = this.rootDataPathDefault + filePath;
-            System.out.println("File " + this.rootDataPath + path + fileName + " not found. Loaded default: " + file);
+            //System.out.println("File " + this.rootDataPath + path + fileName + " not found. Loaded default: " + file);
         }
         return file;
     }
@@ -53,7 +53,7 @@ public class ResourceLocator {
      * @return the name of the file if found, otherwise null
      */
     private String getFileNameEquivalentFromResourcePack(String file) {
-        System.out.println("Trying to get mapped property: " + file);
+        //System.out.println("Trying to get mapped property: " + file);
         MemoriConfiguration memoriConfiguration = new MemoriConfiguration();
         //When loading a resource, the "/" means root of the main/resources directory
         InputStream inputStream = getClass().getResourceAsStream(this.rootDataPath + "resources_map.properties");

@@ -192,13 +192,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     public void setUpFXComponents() throws IOException {
-        System.out.println("setUpFXComponents");
         gridPane = ((GridPane) root);
         gameScene.getStylesheets().add("css/style.css");
     }
 
     protected void initFXComponents(MemoriGameState currentState) {
-        System.out.println("initFXComponents");
         MemoriGameState memoriGS = currentState;
         MemoriTerrain terrain = (MemoriTerrain) memoriGS.getTerrain();
         //Load the tiles list from the Terrain
@@ -260,23 +258,23 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             List<GameEvent> eventsList = Collections.synchronizedList(currentState.getEventQueue());
             ListIterator<GameEvent> listIterator = eventsList.listIterator();
             while (listIterator.hasNext()) {
-                //System.out.println(listIterator.next());
                 currentGameEvent = listIterator.next();
                 String eventType = currentGameEvent.type;
                 Point2D coords;
                 Card currCard;
                 switch (eventType) {
                     case "movement":
-
-                        coords = (Point2D) currentGameEvent.parameters;
-                        movementSound((int) coords.getX(), (int) coords.getY());
-                        Platform.runLater(() -> {
-                            focusOnTile((int) coords.getX(), (int) coords.getY());
-                            System.out.println("now at: " + coords.getX() + "," + coords.getY());
-                        });
-                        listIterator.remove();
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            coords = (Point2D) currentGameEvent.parameters;
+                            movementSound((int) coords.getX(), (int) coords.getY());
+                            Platform.runLater(() -> {
+                                focusOnTile((int) coords.getX(), (int) coords.getY());
+                                System.out.println("now at: " + coords.getX() + "," + coords.getY());
+                            });
+                            listIterator.remove();
+                        }
                         break;
-                    case "invalidMovement":
+                    case "INVALID_MOVEMENT_UI":
                         coords = (Point2D) currentGameEvent.parameters;
                         invalidMovementSound((int) coords.getX(), (int) coords.getY(), currentGameEvent.blocking);
                         listIterator.remove();
@@ -289,7 +287,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         fxAudioEngine.playSound("miscellaneous/visited_card.wav");
                         listIterator.remove();
                         break;
-                    case "cardSound":
+                    case "CARD_SOUND_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
 
                             coords = (Point2D) currentGameEvent.parameters;
@@ -315,7 +313,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
-                    case "flip":
+                    case "FLIP_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
                             coords = (Point2D) currentGameEvent.parameters;
@@ -337,7 +335,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
-                    case "flip_second":
+                    case "FLIP_SECOND_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
                             coords = (Point2D) currentGameEvent.parameters;
@@ -348,7 +346,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
-                    case "flipBack":
+                    case "FLIP_BACK_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
                             coords = (Point2D) currentGameEvent.parameters;
@@ -359,7 +357,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
-                    case "success":
+                    case "SUCCESS_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
                             fxAudioEngine.playSuccessSound();
@@ -433,8 +431,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "GAME_END":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            int idx = new Random().nextInt(endLevelStartingSounds.size());
-                            String randomSound = (endLevelEndingSounds.get(idx));
                             fxAudioEngine.pauseAndPlaySound(this.endLevelEndingSoundsBasePath + "game_end_sound.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
@@ -442,8 +438,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "PRESS_EXIT":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            int idx = new Random().nextInt(endLevelStartingSounds.size());
-                            String randomSound = (endLevelEndingSounds.get(idx));
                             fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "replay_or_exit.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
@@ -455,13 +449,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
-//                    case "failure":
-//                        //check if the event should happen after some time
-//                        if (new Date().getTime() > currentGameEvent.delay) {
-//                            fxAudioEngine.playFailureSound();
-//                            listIterator.remove();
-//                        }
-//                        break;
                     case "STORYLINE_AUDIO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
@@ -679,23 +666,19 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     @Override
     public void handle(KeyEvent event) {
 
-        // DEBUG LINES
-        System.err.println("Key press! " + new Date().getTime());
-
-        //TODO (7) here we should add an event for a button (lets say F1) that will cause the language to change
         UserAction userAction = null;
         //Handle different kinds of UI (keyboard) events
         if (event.getCode() == SPACE) {
-            userAction = new UserAction("flip", event);
+            userAction = new UserAction("flip", getMovementDirection(event));
         } else if(isMovementAction(event)) {
-            userAction = new UserAction("movement", event);
+            userAction = new UserAction("movement", getMovementDirection(event));
         } else if(event.getCode() == ENTER) {
             //userAction = new UserAction("help", event);
-            userAction = new UserAction("enter", event);
+            userAction = new UserAction("enter", getMovementDirection(event));
         } else if(event.getCode() == F1) {
-            userAction = new UserAction("f1", event);
+            userAction = new UserAction("f1", getMovementDirection(event));
         } else if(event.getCode() == ESCAPE) {
-            userAction = new UserAction("escape", event);
+            userAction = new UserAction("escape", getMovementDirection(event));
             event.consume();
         }
 
@@ -719,6 +702,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      */
     private boolean isMovementAction(KeyEvent evt) {
         return evt.getCode() == UP || evt.getCode() == DOWN || evt.getCode() == LEFT || evt.getCode() == RIGHT;
+    }
+
+    private String getMovementDirection(KeyEvent evt) {
+        System.err.println(evt.getCode().toString());
+        return evt.getCode().toString();
     }
 
     /**

@@ -63,7 +63,7 @@ public class FXAudioEngine implements AudioEngine{
     public void playMovementSound(double balance, double rate) {
         pauseSound();
         if(movementSoundMedia == null) {
-            System.err.println("construct new movement sound player");
+            //System.err.println("construct new movement sound player");
             movementSoundMedia = new Media(FXAudioEngine.class.getResource(resourceLocator.getCorrectPathForFile(this.soundBasePath, "miscellaneous/movement_sound.mp3")).toExternalForm());
             movementSoundPlayer = new MediaPlayer(movementSoundMedia);
         }
@@ -141,7 +141,7 @@ public class FXAudioEngine implements AudioEngine{
     public void playSound(String soundFilePath, boolean isBlocking) {
 
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
-        System.out.println("Playing: " + fileResourcePath);
+        //System.out.println("Playing: " + fileResourcePath);
         try {
             audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
             audioClip.play();
@@ -168,7 +168,7 @@ public class FXAudioEngine implements AudioEngine{
             }
             //System.out.println("Sound still playing");
         }
-        System.out.println("Sound completed");
+        //System.out.println("Sound completed");
     }
 
     /**

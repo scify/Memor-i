@@ -111,6 +111,7 @@ public class MainScreenController implements Initializable {
                 MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
                 MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
                 MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+                MainOptions.GAME_TYPE = 1;
                 Thread thread = new Thread(() -> startNormalGame(gameLevel));
                 thread.start();
             } else if (event.getCode() == ESCAPE) {
@@ -237,6 +238,45 @@ public class MainScreenController implements Initializable {
             MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
             MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
             MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+            MainOptions.GAME_TYPE = 1;
+            Thread thread = new Thread(() -> startNormalGame(gameLevel));
+            thread.start();
+        } else if (evt.getCode() == ESCAPE) {
+            exitScreen();
+        }
+    }
+
+    /**
+     * When the user clicks on "tutorial" button, start a new tutorial game
+     * @param evt the click event
+     */
+    @FXML
+    protected void initializePvCGame(KeyEvent evt) {
+        if (evt.getCode() == SPACE) {
+            MemoriGameLevel gameLevel = gameLevels.get(3);
+            MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
+            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+            MainOptions.GAME_TYPE = 2;
+            Thread thread = new Thread(() -> startNormalGame(gameLevel));
+            thread.start();
+        } else if (evt.getCode() == ESCAPE) {
+            exitScreen();
+        }
+    }
+
+    /**
+     * When the user clicks on "tutorial" button, start a new tutorial game
+     * @param evt the click event
+     */
+    @FXML
+    protected void initializePvPGame(KeyEvent evt) {
+        if (evt.getCode() == SPACE) {
+            MemoriGameLevel gameLevel = gameLevels.get(4);
+            MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
+            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+            MainOptions.GAME_TYPE = 3;
             Thread thread = new Thread(() -> startNormalGame(gameLevel));
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
@@ -285,15 +325,6 @@ public class MainScreenController implements Initializable {
         ExecutorService es = Executors.newFixedThreadPool(1);
         Future<Integer> future = es.submit(game);
         es.shutdown();
-        // While the game has not finished
-        // sleep
-//        while(!future.isDone()) {
-//            try {
-//                Thread.sleep(100L);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         //this code will execute once the user exits the game
         // (either to go to next level or to exit)

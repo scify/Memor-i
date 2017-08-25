@@ -137,7 +137,6 @@ public class Card implements Tile{
         double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
         this.button.setPrefHeight(width * 0.6666);
         this.button.setPrefWidth(width);
-        System.out.println("card width: " + width);
         // apply the appropriate style classes
         this.button.getStyleClass().addAll("cardButton", "closedCard");
         

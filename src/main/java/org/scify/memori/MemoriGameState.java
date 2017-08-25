@@ -17,12 +17,12 @@
 
 package org.scify.memori;
 
-import javafx.scene.input.KeyEvent;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.interfaces.Terrain;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -31,7 +31,8 @@ public class MemoriGameState implements GameState {
      * The terrain holding all the UI elements
      */
     protected Terrain terrain;
-    protected Player pCurrent;
+    protected ArrayList<Player> players;
+    protected Player currentPlayer;
     protected int iCurrentTurn;
     /**
      * A queue containing the game events (handled by the renderer Class)
@@ -55,36 +56,35 @@ public class MemoriGameState implements GameState {
     private int columnIndex = 0;
     private int rowIndex = 0;
 
-
     public MemoriGameState() {
+        players = new ArrayList<>();
         terrain = new MemoriTerrain();
-        pCurrent = new Player() {
-            @Override
-            public int getScore() {
-                return 0;
-            }
-        };
+        Player player1 = new Player("player1");
+        players.add(player1);
+
+        if(MainOptions.GAME_TYPE == 1) {
+            currentPlayer = player1;
+        } else {
+            Player player2 = new Player("player2");
+            players.add(player2);
+            //TODO current player should be decided after shuffle?
+            currentPlayer = player2;
+        }
+
         iCurrentTurn = 0;
         gameEventQueue = new LinkedList();
     }
 
-
-    public MemoriGameState(Player pSinglePlayer) {
-        terrain = new MemoriTerrain();
-        pCurrent = pSinglePlayer;
-        iCurrentTurn = 0;
-    }
-
     /**
      * Updates the column index based on the Key event passed
-     * @param evt the Key Event
+     * @param direction the direction of the user action
      */
-    public void updateColumnIndex(KeyEvent evt) {
-        switch(evt.getCode()) {
-            case LEFT:
+    public void updateColumnIndex(String direction) {
+        switch(direction) {
+            case "LEFT":
                 columnIndex--;
                 break;
-            case RIGHT:
+            case "RIGHT":
                 columnIndex++;
                 break;
             default: break;
@@ -93,15 +93,15 @@ public class MemoriGameState implements GameState {
 
     /**
      * Updates the row index based on the Key event passed
-     * @param evt the Key Event
+     * @param direction the direction of the user action
      */
-    public void updateRowIndex(KeyEvent evt) {
+    public void updateRowIndex(String direction) {
 
-        switch(evt.getCode()) {
-            case UP:
+        switch(direction) {
+            case "UP":
                 rowIndex--;
                 break;
-            case DOWN:
+            case "DOWN":
                 rowIndex++;
                 break;
             default: break;
@@ -137,7 +137,11 @@ public class MemoriGameState implements GameState {
 
     @Override
     public Player getCurrentPlayer() {
-        return pCurrent;
+        return currentPlayer;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return this.players;
     }
 
     /**
@@ -148,12 +152,25 @@ public class MemoriGameState implements GameState {
         gameEventQueue = new LinkedList();
     }
 
+    public void incrementTurn() {
+        this.iCurrentTurn++;
+        for(Player player: players) {
+            if(!player.equals(currentPlayer)) {
+                currentPlayer = player;
+                break;
+            }
+        }
+    }
+
+    public int getiCurrentTurn() {
+        return this.iCurrentTurn;
+    }
+
     /**
      * Checks if all tiles are in a won state
      * @return true if all tiles are won
      */
     public boolean areAllTilesWon() {
-        //System.out.println("won: " + terrain.areAllTilesWon());
         return terrain.areAllTilesWon();
     }
 
