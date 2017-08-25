@@ -1,13 +1,8 @@
 package org.scify.memori.screens;
 
-import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.scify.memori.GameLevelService;
 import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameLevel;
@@ -16,7 +11,6 @@ import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
-import org.scify.memori.helper.Text2Speech;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +26,6 @@ import static javafx.scene.input.KeyCode.SPACE;
 public class LevelsScreenController {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
-    protected Stage primaryStage;
     protected Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     protected FXAudioEngine audioEngine = new FXAudioEngine();

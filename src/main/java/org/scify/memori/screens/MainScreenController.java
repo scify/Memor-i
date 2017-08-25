@@ -115,9 +115,6 @@ public class MainScreenController implements Initializable {
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
-                String text = "pavlos_1991";
-                Text2Speech freeTTS = new Text2Speech(text);
-                freeTTS.speak();
             }
         });
         attachButtonClickHandlers();
@@ -248,13 +245,8 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            MemoriGameLevel gameLevel = gameLevels.get(4);
-            MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
-            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
             MainOptions.GAME_TYPE = 3;
-//            Thread thread = new Thread(() -> startNormalGame(gameLevel));
-//            thread.start();
+            UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
