@@ -17,36 +17,28 @@
 
 package org.scify.memori.interfaces;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-
+import com.google.gson.annotations.Expose;
 import java.awt.geom.Point2D;
 
 public class UserAction {
+    @Expose
+    private
     String actionType;
+    private Point2D coords;
+    @Expose
+    private String direction;
 
     public void setCoords(Point2D coords) {
         this.coords = coords;
     }
 
-    protected Point2D coords;
-    protected KeyEvent keyEvent;
-    protected KeyCode direction;
-
-
-    public KeyCode getDirection() {
-
+    public String getDirection() {
         return direction;
     }
 
-    public UserAction(String sType, KeyEvent evt) {
+    public UserAction(String sType, String direction) {
         actionType = sType;
-        keyEvent = evt;
-        direction = evt.getCode();
-    }
-
-    public KeyEvent getKeyEvent() {
-        return keyEvent;
+        this.direction = direction;
     }
 
     public Point2D getCoords() {
@@ -56,4 +48,6 @@ public class UserAction {
     public String getActionType() {
         return actionType;
     }
+
+
 }

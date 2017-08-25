@@ -17,22 +17,65 @@
 
 package org.scify.memori.interfaces;
 
-public abstract class Player {
+import com.google.gson.annotations.Expose;
+import org.scify.memori.helper.PropertyHandlerImpl;
 
-    protected int iScore;
-    protected String sName;
+import java.io.File;
+import java.util.UUID;
+
+public class Player {
+    @Expose
+    String id;
+
+    protected int score;
+    @Expose
+    protected String name;
+
+    private PropertyHandler propertyHandler;
+    @Expose
+    private static String userDataFile;
+
+    public Player(String playerName) {
+        propertyHandler = new PropertyHandlerImpl();
+        this.name = playerName;
+        String userDir;
+        if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
+            userDir = System.getenv("AppData");
+        } else {
+            userDir = System.getProperty("user.dir");
+        }
+        userDataFile = userDir + File.separator + ".user_data.properties";
+
+        if(this.playerHasId()) {
+            this.id = getId();
+        } else {
+            this.id = UUID.randomUUID().toString();
+            storeId();
+        }
+    }
+
+    public String getId() {
+        return propertyHandler.getPropertyByName(userDataFile, this.name + "_" + "user_id");
+    }
+
+    private void storeId() {
+        propertyHandler.setPropertyByName(userDataFile, this.name + "_" + "user_id", this.id);
+    }
+
+    private boolean playerHasId() {
+        return propertyHandler.getPropertyByName(userDataFile, this.name + "_" + "user_id") != null;
+    }
 
     public int getScore() {
-        return iScore;
+        return score;
     }
 
     public void setScore(int iNewScore) {
-        iScore = iNewScore;
+        score = iNewScore;
     }
 
     public String getName() {
-        return sName;
+        return name;
     }
 
-//    public Set<UserAction> getPossibleUserActions()
 }
