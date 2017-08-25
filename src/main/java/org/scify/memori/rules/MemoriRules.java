@@ -54,6 +54,7 @@ public class MemoriRules extends Observable implements Rules {
         //if a user action (eg Keyboard event was provided), handle the emitting Game events
         if (uaAction != null) {
             handleUserActionGameEvents(uaAction, gsCurrentState);
+            this.notifyObservers(new RuleObserverObject(uaAction, "PLAYER_MOVE"));
         }
 
         //if last round, create appropriate READY_TO_FINISH event
@@ -118,7 +119,7 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
-        handleUserActionGameEvents(uaAction, gsCurrentState, 0);
+        this.handleUserActionGameEvents(uaAction, gsCurrentState, 0);
     }
     /**
      * Handles the user actions
@@ -131,6 +132,13 @@ public class MemoriRules extends Observable implements Rules {
         } else {
             // if invalid movement, return only an invalid game event
             gsCurrentState.getEventQueue().add(new GameEvent("INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), 0 , false));
+            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT")) {
+                //the invalid movement tutorial event should be emitted only if the tutorial has reached a certain point (step 2 which is go right second time)
+                if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), new Date().getTime() + 500, true));
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT"));
+                }
+            }
         }
     }
 
@@ -155,6 +163,7 @@ public class MemoriRules extends Observable implements Rules {
             if(MainOptions.TUTORIAL_MODE) {
                 if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
                     performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
+
             }
             else
                 performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
@@ -218,7 +227,6 @@ public class MemoriRules extends Observable implements Rules {
             this.setChanged();
             this.notifyObservers(new RuleObserverObject(new Pair<>(uaAction, currTile), "TILE_REVEALED"));
             this.setChanged();
-            this.notifyObservers(new RuleObserverObject(this.useractions, "PLAYER_MOVE"));
 
             // push flip feedback event (delayed: false, blocking: no)
             gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
