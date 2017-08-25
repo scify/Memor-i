@@ -109,12 +109,13 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         RuleObserverObject ruleObserverObject = (RuleObserverObject) arg;
         String ruleObserverCode = ruleObserverObject.code;
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
-            ArrayList<UserAction> userActions = (ArrayList<UserAction>) ruleObserverObject.parameters;
-            sendUserMoveToServer(packUserActions(userActions));
+            UserAction userAction = (UserAction) ruleObserverObject.parameters;
+            userAction.setTimestamp(System.currentTimeMillis());
+            sendUserMoveToServer(packUserAction(userAction));
         }
     }
 
-    private String packUserActions(ArrayList<UserAction> userActions) {
+    private String packUserAction(UserAction userAction) {
         GsonBuilder gb;
         gb = new GsonBuilder()
                 .serializeNulls()
@@ -123,7 +124,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
                 .setVersion(1.0)
                 .registerTypeAdapter(Point2D.class, new OnlineMoveFactory.Point2DDeserializer());
         Gson gson = gb.create();
-        String jsonInString = gson.toJson(userActions);
+        String jsonInString = gson.toJson(userAction);
         return jsonInString;
     }
 
