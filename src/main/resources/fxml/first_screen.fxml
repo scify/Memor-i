@@ -28,7 +28,7 @@
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeTutorialGame"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player" onKeyPressed="#initializeSinglePlayerGame"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_computer" fx:id="versus_computer" onKeyPressed="#initializePvCGame"/>
-        <!--<Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player" onKeyPressed="#initializePvPGame"/>-->
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player" onKeyPressed="#initializePvPGame"/>
         <VBox alignment="center" fx:id="gameLevelsDiv">
 
         </VBox>
