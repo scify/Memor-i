@@ -79,6 +79,17 @@ StackPane {
     -fx-border-radius: 10 10 10 10;
     -fx-background-radius: 10 10 10 10;
     -fx-font-weight: bold;
+
+}
+
+.textField {
+    -fx-max-width: 400px;
+}
+
+.textLabel {
+    -fx-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
 }
 
 .largeButton {
