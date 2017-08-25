@@ -93,11 +93,9 @@ public class MainScreenController implements Initializable {
         primaryStage.requestFocus();
         primaryStage.sizeToScene();
         primaryStage.setFullScreen(true);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                System.out.println("Stage is closing");
-                System.exit(0);
-            }
+        primaryStage.setOnCloseRequest(we -> {
+            System.out.println("Stage is closing");
+            System.exit(0);
         });
 
         Screen screen = Screen.getPrimary();

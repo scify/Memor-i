@@ -68,11 +68,9 @@ public class LevelsScreenController {
     protected void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         gameLevelBtn.setOnKeyPressed(event -> {
             if (event.getCode() == SPACE) {
-
                 MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
                 MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
                 MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
-                MainOptions.GAME_TYPE = 1;
                 Thread thread = new Thread(() -> startNormalGame(gameLevel));
                 thread.start();
             } else if (event.getCode() == ESCAPE) {
