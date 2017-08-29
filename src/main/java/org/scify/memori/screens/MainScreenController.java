@@ -17,39 +17,26 @@
 
 package org.scify.memori.screens;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import org.scify.memori.GameLevelService;
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameLevel;
-import org.scify.memori.ResourceLocator;
+import org.scify.memori.*;
 import org.scify.memori.fx.FXAudioEngine;
-import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
-import org.scify.memori.helper.Text2Speech;
+import org.scify.memori.network.GameRequestManager;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
+import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -68,7 +55,6 @@ public class MainScreenController implements Initializable {
     public MainScreenController() {
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
-        System.err.println("Constructor running...");
     }
 
     @Override
@@ -111,7 +97,6 @@ public class MainScreenController implements Initializable {
         setStageFavicon(primaryStage);
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
-        addGameLevels();
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
@@ -119,7 +104,26 @@ public class MainScreenController implements Initializable {
         });
         attachButtonClickHandlers();
         primaryStage.show();
+        queryServerForGameRequests();
+    }
 
+    private void queryServerForGameRequests() {
+        String answer = null;
+        int timesCalled = 0;
+        while (answer == null) {
+            timesCalled ++;
+            ScheduledExecutorService scheduler = Executors
+                    .newScheduledThreadPool(1);
+            ScheduledFuture<String> future = scheduler.schedule(
+                    new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
+            try {
+                answer = future.get();
+                System.out.println(answer);
+                System.out.println("times called: " + timesCalled);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setStageFavicon(Stage primaryStage) {
@@ -130,14 +134,6 @@ public class MainScreenController implements Initializable {
         primaryStage.getIcons().add(faviconImage);
     }
 
-    /**
-     * Gets all game levels available
-     */
-    private void addGameLevels() {
-        GameLevelService gameLevelService = new GameLevelService();
-        gameLevels = new ArrayList<>();
-        gameLevels = gameLevelService.createGameLevels();
-    }
 
     /**
      * Attaches click handlers to fixed buttons (tutorial, exit, etc)
@@ -193,6 +189,9 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializeTutorialGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
+            GameLevelService gameLevelService = new GameLevelService();
+            gameLevels = new ArrayList<>();
+            gameLevels = gameLevelService.createGameLevels();
             MainOptions.TUTORIAL_MODE = true;
             MemoriGameLevel gameLevel = gameLevels.get(0);
             MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
@@ -246,7 +245,17 @@ public class MainScreenController implements Initializable {
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
             MainOptions.GAME_TYPE = 3;
-            UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
+            // if the player is already logged in, go directly to available players screen
+            PlayerManager playerManager = new PlayerManager();
+            String stringPlayerId = playerManager.getIdOfLastPlayer();
+            if(stringPlayerId != null) {
+                // go to available players screen
+                AvailablePlayers availablePlayersScreen = new AvailablePlayers(sceneHandler);
+            } else {
+                // else go to user name screen
+                UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
+            }
+
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
