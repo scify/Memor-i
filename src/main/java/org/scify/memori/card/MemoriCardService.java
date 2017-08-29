@@ -1,5 +1,10 @@
 package org.scify.memori.card;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.scify.memori.OnlineMoveFactory;
+
+import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -21,7 +26,17 @@ public class MemoriCardService {
           The number of cards we need depends on the level (number of rows and columns)
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
-        return shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
+        List<Card> cards = shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
+        GsonBuilder gb;
+        gb = new GsonBuilder()
+                .serializeNulls()
+                .enableComplexMapKeySerialization()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setVersion(1.0);
+        Gson gson = gb.create();
+        String jsonInString = gson.toJson(cards);
+        System.out.println(jsonInString);
+        return cards;
     }
 
     public int getNumberOfSets() {
