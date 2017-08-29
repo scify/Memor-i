@@ -42,7 +42,6 @@ public class RequestManager {
 
             HttpResponse response = client.execute(post);
             System.out.println("\nSending 'POST' request to URL : " + urlEndpoint);
-            System.out.println("Post parameters : " + post.getEntity());
             System.out.println("Response Code : " +
                     response.getStatusLine().getStatusCode());
 

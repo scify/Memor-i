@@ -8,10 +8,8 @@ import java.util.concurrent.Callable;
 public class GameRequestManager implements Callable<String> {
 
     private RequestManager requestManager;
-    private PlayerManager playerManager;
     public GameRequestManager(String step) {
         requestManager = new RequestManager();
-        playerManager = new PlayerManager();
     }
 
     public String call() throws Exception {
@@ -19,7 +17,7 @@ public class GameRequestManager implements Callable<String> {
     }
 
     public String askServerForGameRequests() {
-        String url = "games/request?player_id=" + playerManager.getIdOfLastPlayer();
+        String url = "games/request?player_id=" + PlayerManager.getPlayerId();
         String response = requestManager.doGet(url);
         if(response != null) {
             String opponentUserName = parseGameRequestResponse(response);

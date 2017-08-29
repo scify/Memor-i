@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
-import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCode.*;
 
 public class MainScreenController implements Initializable {
 
@@ -47,10 +46,10 @@ public class MainScreenController implements Initializable {
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
-    protected Stage primaryStage;
-    protected Scene primaryScene;
+    private Stage primaryStage;
+    private Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    protected FXAudioEngine audioEngine = new FXAudioEngine();
+    private FXAudioEngine audioEngine = new FXAudioEngine();
 
     public MainScreenController() {
         configuration = new MemoriConfiguration();
@@ -104,7 +103,9 @@ public class MainScreenController implements Initializable {
         });
         attachButtonClickHandlers();
         primaryStage.show();
-        queryServerForGameRequests();
+//        Thread gameRequestsThread = new Thread(this::queryServerForGameRequests);
+//        gameRequestsThread.start();
+
     }
 
     private void queryServerForGameRequests() {
@@ -120,10 +121,26 @@ public class MainScreenController implements Initializable {
                 answer = future.get();
                 System.out.println(answer);
                 System.out.println("times called: " + timesCalled);
+                if(answer != null) {
+                    listenForAnswerToGameRequest();
+                }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void listenForAnswerToGameRequest() {
+        primaryScene.setOnKeyReleased(event -> {
+            if(event.getCode() == ENTER) {
+                // TODO: accept game request
+                System.out.println("game request accepted");
+                new GameRequestScreen(sceneHandler);
+            } else if(event.getCode() == BACK_SPACE) {
+                // TODO: reject game request
+                System.out.println("game request rejected");
+            }
+        });
     }
 
     private void setStageFavicon(Stage primaryStage) {
@@ -244,17 +261,18 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            MainOptions.GAME_TYPE = 3;
-            // if the player is already logged in, go directly to available players screen
-            PlayerManager playerManager = new PlayerManager();
-            String stringPlayerId = playerManager.getIdOfLastPlayer();
-            if(stringPlayerId != null) {
-                // go to available players screen
-                AvailablePlayers availablePlayersScreen = new AvailablePlayers(sceneHandler);
-            } else {
-                // else go to user name screen
-                UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
-            }
+//            MainOptions.GAME_TYPE = 3;
+//            // if the player is already logged in, go directly to available players screen
+//            PlayerManager playerManager = new PlayerManager();
+//            String stringPlayerId = playerManager.getIdOfLastPlayer();
+//            if(stringPlayerId != null) {
+//                // go to available players screen
+//                AvailablePlayersScreen availablePlayersScreen = new AvailablePlayersScreen(sceneHandler);
+//            } else {
+//                // else go to user name screen
+//                UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
+//            }
+            new RegisterOrLoginScreen(sceneHandler);
 
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();

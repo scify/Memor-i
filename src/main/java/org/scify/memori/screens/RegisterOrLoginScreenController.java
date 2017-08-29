@@ -30,7 +30,7 @@ public class RegisterOrLoginScreenController {
         if (evt.getCode() == ESCAPE) {
             exitScreen();
         } else if(evt.getCode() == SPACE) {
-            new RegisterScreen(sceneHandler);
+            new RegisterLoginFormScreen(sceneHandler, true);
         }
     }
 
@@ -38,6 +38,8 @@ public class RegisterOrLoginScreenController {
     protected void goToLoginScreen(KeyEvent evt) {
         if (evt.getCode() == ESCAPE) {
             exitScreen();
+        } else if(evt.getCode() == SPACE) {
+            new RegisterLoginFormScreen(sceneHandler, false);
         }
     }
 

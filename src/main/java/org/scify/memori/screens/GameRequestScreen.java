@@ -14,15 +14,15 @@ import java.util.ResourceBundle;
 import static org.scify.memori.MainOptions.mHeight;
 import static org.scify.memori.MainOptions.mWidth;
 
-public class UserNameScreen {
+public class GameRequestScreen {
 
     protected FXSceneHandler sceneHandler;
 
-    public UserNameScreen(FXSceneHandler shSceneHandler) {
+    public GameRequestScreen(FXSceneHandler shSceneHandler) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = new MemoriConfiguration();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user_name_screen.fxml"),
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_request.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;
         try {
@@ -32,7 +32,7 @@ public class UserNameScreen {
         }
 
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
-        UserNameScreenController controller = loader.getController();
+        GameRequestScreenController controller = loader.getController();
 
         controller.setParameters(sceneHandler, gameLevelsScene);
     }

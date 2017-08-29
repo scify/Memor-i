@@ -14,15 +14,15 @@ import java.util.ResourceBundle;
 import static org.scify.memori.MainOptions.mHeight;
 import static org.scify.memori.MainOptions.mWidth;
 
-public class RegisterScreen {
+public class RegisterLoginFormScreen {
 
     protected FXSceneHandler sceneHandler;
 
-    public RegisterScreen(FXSceneHandler shSceneHandler) {
+    public RegisterLoginFormScreen(FXSceneHandler shSceneHandler, boolean isRegister) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = new MemoriConfiguration();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"),
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register_login_form.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;
         try {
@@ -32,8 +32,8 @@ public class RegisterScreen {
         }
 
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
-        RegisterScreenController controller = loader.getController();
+        RegisterLoginFormScreenController controller = loader.getController();
 
-        controller.setParameters(sceneHandler, gameLevelsScene);
+        controller.setParameters(sceneHandler, gameLevelsScene, isRegister);
     }
 }

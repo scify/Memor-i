@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import org.json.JSONObject;
 import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
@@ -16,7 +17,7 @@ import java.text.Normalizer;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
 
-public class RegisterScreenController {
+public class RegisterLoginFormScreenController {
 
     private Scene primaryScene;
     @FXML
@@ -29,11 +30,13 @@ public class RegisterScreenController {
     private PlayerManager playerManager;
     private String userNameStr;
     private String passwordStr;
+    private boolean isRegister;
 
-    public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
+    public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
         this.primaryScene = userNameScreenScene;
         this.sceneHandler = sceneHandler;
         this.playerManager = new PlayerManager();
+        this.isRegister = isRegister;
 
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
         sceneHandler.pushScene(userNameScreenScene);
@@ -62,11 +65,11 @@ public class RegisterScreenController {
     @FXML
     protected void submitPassword(KeyEvent evt) {
         if (evt.getCode() == ENTER){
-            String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            String cleanString = Normalizer.normalize(password.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
             passwordStr = cleanString;
             boolean valid = cleanString.matches("\\w+");
             if (valid) {
-                sendRegisterRequestToServer();
+                sendRequestToServer();
             } else {
                 //TODO: play sound informing the player that only english characters are allowed
             }
@@ -75,8 +78,12 @@ public class RegisterScreenController {
         }
     }
 
-    private void sendRegisterRequestToServer() {
-        String serverResponse = playerManager.registerToServer(userNameStr, passwordStr);
+    private void sendRequestToServer() {
+        String serverResponse;
+        if(isRegister)
+            serverResponse = playerManager.register(userNameStr, passwordStr);
+        else
+            serverResponse = playerManager.login(userNameStr, passwordStr);
         if(serverResponse != null) {
             parseServerResponse(serverResponse);
         }
@@ -89,9 +96,9 @@ public class RegisterScreenController {
         switch (code) {
             case 1:
                 // New player created
-                // store player id with username in file
-                Double newPlayerIdDouble = (Double) response.getParameters();
-                int newPlayerId = newPlayerIdDouble.intValue();
+                JSONObject responseObj = new JSONObject(serverResponse);
+                JSONObject paramsObj = responseObj.getJSONObject("parameters");
+                int newPlayerId = paramsObj.getInt("player_id");
                 PlayerManager.setPlayerId(newPlayerId);
                 new AvailablePlayersScreen(sceneHandler);
                 break;
@@ -99,6 +106,11 @@ public class RegisterScreenController {
                 // Player with username exists
                 // TODO play appropriate sound
                 System.out.println("Player with username " + userNameStr + " exists");
+                break;
+            case 3:
+                // Validation error
+                // TODO play appropriate sound
+                System.out.println("Validation error: " + response.getParameters());
                 break;
         }
 
