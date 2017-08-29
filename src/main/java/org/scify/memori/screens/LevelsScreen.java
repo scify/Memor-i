@@ -18,6 +18,7 @@ import static org.scify.memori.MainOptions.mWidth;
 public class LevelsScreen {
 
     protected FXSceneHandler sceneHandler;
+    LevelsScreenController controller;
 
     public LevelsScreen(FXSceneHandler shSceneHandler) {
         sceneHandler = shSceneHandler;
@@ -33,8 +34,12 @@ public class LevelsScreen {
         }
 
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
-        LevelsScreenController controller = loader.getController();
+        controller = loader.getController();
 
         controller.setParameters(sceneHandler, gameLevelsScene);
+    }
+
+    public void setOpponentId(int opponentId) {
+        this.controller.setOpponentId(opponentId);
     }
 }

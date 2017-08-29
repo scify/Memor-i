@@ -26,9 +26,10 @@ import static javafx.scene.input.KeyCode.SPACE;
 public class LevelsScreenController {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
-    protected Scene primaryScene;
+    private Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    protected FXAudioEngine audioEngine = new FXAudioEngine();
+    private FXAudioEngine audioEngine = new FXAudioEngine();
+    private int opponentId;
 
     /**
      * Gets all game levels available and adds a button for each one
@@ -58,18 +59,26 @@ public class LevelsScreenController {
      * @param gameLevelBtn the button clcked
      * @param gameLevel the game level associated with this button
      */
-    protected void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
+    private void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         gameLevelBtn.setOnKeyPressed(event -> {
             if (event.getCode() == SPACE) {
                 MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
                 MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
                 MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
-                Thread thread = new Thread(() -> startNormalGame(gameLevel));
-                thread.start();
+                if(MainOptions.GAME_TYPE != 3) {
+                    Thread thread = new Thread(() -> startNormalGame(gameLevel));
+                    thread.start();
+                } else {
+                    startOnlineGame();
+                }
             } else if (event.getCode() == ESCAPE) {
                 exitScreen();
             }
         });
+    }
+
+    private void startOnlineGame() {
+
     }
 
     /**
@@ -152,5 +161,9 @@ public class LevelsScreenController {
         MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
         MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
         startNormalGame(gameLevelNext);
+    }
+
+    public void setOpponentId(int opponentId) {
+        this.opponentId = opponentId;
     }
 }
