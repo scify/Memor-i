@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.RegisterOrLoginScreenController">
+    <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
+            <image>
+
+            </image>
+        </ImageView>
+    </HBox>
+    <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/Powered_by_SciFY.png" />
+            </image>
+        </ImageView>
+    </HBox>
+    <VBox alignment="center" styleClass="optionButtonContainer">
+        <VBox alignment="center" fx:id="actionsContainer">
+            <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%select_action" fx:id="welcome" />
+            <Button contentDisplay="CENTER" styleClass="optionButton" text="%register" onKeyPressed="#goToRegisterScreen"/>
+            <Button contentDisplay="CENTER" styleClass="optionButton" text="%login" onKeyPressed="#goToLoginScreen"/>
+        </VBox>
+    </VBox>
+    <stylesheets>
+        <URL value="@/css/style.css" />
+    </stylesheets>
+</StackPane>

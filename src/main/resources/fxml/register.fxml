@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.RegisterScreenController">
+    <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
+            <image>
+
+            </image>
+        </ImageView>
+    </HBox>
+    <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/Powered_by_SciFY.png" />
+            </image>
+        </ImageView>
+    </HBox>
+    <VBox alignment="center" styleClass="optionButtonContainer">
+        <VBox alignment="center" fx:id="actionsContainer">
+            <Text styleClass="optionButton, textLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:"/>
+            <TextField styleClass="optionButton,textField" onKeyPressed="#submitUserName" id="textfield" fx:id="username"/>
+            <Text styleClass="optionButton, textLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:"/>
+            <TextField styleClass="optionButton,textField" onKeyPressed="#submitPassword" id="textfield" fx:id="password"/>
+        </VBox>
+    </VBox>
+    <stylesheets>
+        <URL value="@/css/style.css" />
+    </stylesheets>
+</StackPane>
