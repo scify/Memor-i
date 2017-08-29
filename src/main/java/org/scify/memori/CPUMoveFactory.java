@@ -164,7 +164,7 @@ public class CPUMoveFactory implements Observer, MoveFactory {
         if(ruleObserverCode.equals("TILE_REVEALED")) {
             Pair<UserAction, Tile> newTilePos = (Pair<UserAction, Tile>) ruleObserverObject.parameters;
             visitedTilesWithPositions.put(new Point2D.Double(newTilePos.getKey().getCoords().getY(), newTilePos.getKey().getCoords().getX()), newTilePos.getValue());
-            System.err.println("I learned a new pair: " + newTilePos.getKey());
+            //System.err.println("I learned a new pair: " + newTilePos.getKey());
         }
     }
 }
