@@ -82,7 +82,7 @@ public class SponsorsScreen implements HighScoresScreen {
 
     }
 
-    protected void exitScreen() {
+    private void exitScreen() {
         audioEngine.pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();
     }
