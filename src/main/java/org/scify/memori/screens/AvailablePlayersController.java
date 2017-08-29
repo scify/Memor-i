@@ -5,14 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.scify.memori.MainOptions;
@@ -23,24 +15,19 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
-import static org.apache.http.protocol.HTTP.USER_AGENT;
 
 public class AvailablePlayersController {
 
-    protected Scene primaryScene;
+    private Scene primaryScene;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     protected FXAudioEngine audioEngine = new FXAudioEngine();
     private ArrayList<Player> availablePlayers = new ArrayList<>();
-    Text2Speech text2Speech;
+    private Text2Speech text2Speech;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
