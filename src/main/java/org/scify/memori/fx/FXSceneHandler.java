@@ -29,7 +29,6 @@ import java.util.List;
  */
 public class FXSceneHandler {
     public FXSceneHandler() {
-        System.out.println("Initializing scene handler...");
     }
 
     /**

@@ -732,7 +732,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         ResourceLocator resourceLocator = new ResourceLocator();
 
         String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
-        System.out.println(gameCoverImgPath);
         gameCoverImgContainer.setImage(new Image(gameCoverImgPath));
         gameCoverImgContainer.setFitHeight(250);
         gameCoverImgContainer.setFitWidth(250);
