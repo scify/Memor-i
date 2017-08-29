@@ -233,7 +233,7 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             MainOptions.GAME_TYPE = 1;
             audioEngine.pauseCurrentlyPlayingAudios();
-            LevelsScreen highScoresScreen = new LevelsScreen(sceneHandler);
+            new LevelsScreen(sceneHandler);
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
@@ -249,7 +249,7 @@ public class MainScreenController implements Initializable {
 
             MainOptions.GAME_TYPE = 2;
             audioEngine.pauseCurrentlyPlayingAudios();
-            LevelsScreen highScoresScreen = new LevelsScreen(sceneHandler);
+            new LevelsScreen(sceneHandler);
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
@@ -277,7 +277,7 @@ public class MainScreenController implements Initializable {
     protected void myScores(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
-            FXHighScoresScreen highScoresScreen = new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
+            new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }
@@ -286,7 +286,7 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void goToSponsorsPage(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            SponsorsScreen sponsorsScreen = new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
+            new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
         } else if (evt.getCode() == ESCAPE) {
             System.exit(0);
         }
