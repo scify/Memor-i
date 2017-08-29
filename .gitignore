@@ -8,3 +8,4 @@ push_to_testing.sh
 *.log.lck
 additional_pack
 .user_data.properties
+.user_names.properties
