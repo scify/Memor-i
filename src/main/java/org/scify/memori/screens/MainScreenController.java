@@ -31,6 +31,7 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -261,19 +262,11 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-//            MainOptions.GAME_TYPE = 3;
-//            // if the player is already logged in, go directly to available players screen
-//            PlayerManager playerManager = new PlayerManager();
-//            String stringPlayerId = playerManager.getIdOfLastPlayer();
-//            if(stringPlayerId != null) {
-//                // go to available players screen
-//                AvailablePlayersScreen availablePlayersScreen = new AvailablePlayersScreen(sceneHandler);
-//            } else {
-//                // else go to user name screen
-//                UserNameScreen userNameScreen = new UserNameScreen(sceneHandler);
-//            }
-            new RegisterOrLoginScreen(sceneHandler);
-
+            if(RequestManager.networkAvailable())
+                new RegisterOrLoginScreen(sceneHandler);
+            else {
+                // TODO: play appropriate sound
+            }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }

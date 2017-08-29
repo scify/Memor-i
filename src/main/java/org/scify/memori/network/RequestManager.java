@@ -13,6 +13,9 @@ import org.scify.memori.helper.MemoriConfiguration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,5 +90,19 @@ public class RequestManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean networkAvailable() {
+        try {
+            MemoriConfiguration configuration = new MemoriConfiguration();
+            final URL url = new URL(configuration.getProjectProperty("SERVER_URL"));
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
