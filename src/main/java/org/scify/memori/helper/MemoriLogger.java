@@ -16,11 +16,10 @@ public class MemoriLogger {
             Handler fileHandler = new FileHandler("./memori.log");
             Handler consoleHandler = new ConsoleHandler();
 
-            LOGGER.addHandler(consoleHandler);
+            //LOGGER.addHandler(consoleHandler);
             LOGGER.addHandler(fileHandler);
             consoleHandler.setLevel(Level.ALL);
             fileHandler.setLevel(Level.ALL);
-//            LOGGER.setLevel(Level.ALL);
             LOGGER.config("Configuration done.");
 
         } catch (IOException ioe) {
