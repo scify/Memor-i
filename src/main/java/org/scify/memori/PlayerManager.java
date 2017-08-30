@@ -19,14 +19,22 @@ public class PlayerManager {
     private RequestManager requestManager;
 
     private static int playerId;
+    private static int opponentId;
 
     public static void setPlayerId(int playerId) {
         PlayerManager.playerId = playerId;
     }
 
     public static int getPlayerId() {
-
         return playerId;
+    }
+
+    public static void setOpponentrId(int opponentId) {
+        PlayerManager.opponentId = opponentId;
+    }
+
+    public static int getOpponentId() {
+        return opponentId;
     }
 
     public PlayerManager() {

@@ -262,6 +262,7 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
+            MainOptions.GAME_TYPE = 3;
             if(RequestManager.networkAvailable())
                 new RegisterOrLoginScreen(sceneHandler);
             else {

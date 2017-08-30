@@ -1,22 +1,45 @@
 package org.scify.memori.network;
 
 import com.google.gson.Gson;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.scify.memori.PlayerManager;
+import org.scify.memori.helper.MemoriConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class GameRequestManager implements Callable<String> {
 
     private RequestManager requestManager;
+    private MemoriConfiguration configuration;
+    private static int gameRequestId;
+
+    public static void setGameRequestId(int gameRequestId) {
+        GameRequestManager.gameRequestId = gameRequestId;
+    }
+
+    public static int getGameRequestId() {
+
+        return gameRequestId;
+    }
+
+    public GameRequestManager() {
+        requestManager = new RequestManager();
+        configuration = new MemoriConfiguration();
+    }
+
     public GameRequestManager(String step) {
         requestManager = new RequestManager();
+        configuration = new MemoriConfiguration();
     }
 
     public String call() throws Exception {
         return askServerForGameRequests();
     }
 
-    public String askServerForGameRequests() {
+    private String askServerForGameRequests() {
         String url = "games/request?player_id=" + PlayerManager.getPlayerId();
         String response = requestManager.doGet(url);
         if(response != null) {
@@ -26,6 +49,17 @@ public class GameRequestManager implements Callable<String> {
             }
         }
         return null;
+    }
+
+    public String sendGameRequestToPlayer(int playerInitiatorId, int playerOpponentId, int gameLevelId) {
+        String url = "gameRequest/initiate";
+        String gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("player_initiator_id", String.valueOf(playerInitiatorId)));
+        urlParameters.add(new BasicNameValuePair("player_opponent_id", String.valueOf(playerOpponentId)));
+        urlParameters.add(new BasicNameValuePair("game_identifier", gameIdentifier));
+        urlParameters.add(new BasicNameValuePair("game_level_id", String.valueOf(gameLevelId)));
+        return this.requestManager.doPost(url, urlParameters);
     }
 
     private String parseGameRequestResponse(String serverResponse) {

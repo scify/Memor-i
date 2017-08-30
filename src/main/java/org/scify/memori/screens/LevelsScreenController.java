@@ -1,16 +1,23 @@
 package org.scify.memori.screens;
 
+import com.google.gson.Gson;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.scify.memori.GameLevelService;
 import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameLevel;
+import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.interfaces.Player;
+import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +37,7 @@ public class LevelsScreenController {
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
     private int opponentId;
+    private GameRequestManager gameRequestManager = new GameRequestManager();
 
     /**
      * Gets all game levels available and adds a button for each one
@@ -69,7 +77,7 @@ public class LevelsScreenController {
                     Thread thread = new Thread(() -> startNormalGame(gameLevel));
                     thread.start();
                 } else {
-                    startOnlineGame();
+                    sendGameRequest();
                 }
             } else if (event.getCode() == ESCAPE) {
                 exitScreen();
@@ -77,8 +85,41 @@ public class LevelsScreenController {
         });
     }
 
-    private void startOnlineGame() {
+    private void sendGameRequest() {
+        String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
+        if(serverResponse != null) {
+            parseServerResponse(serverResponse);
+        }
+    }
 
+    private void parseServerResponse(String serverResponse) {
+        Gson g = new Gson();
+        ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
+        int code = response.getCode();
+        String responseParameters;
+        switch (code) {
+            case 1:
+                // Game Request sent
+                JSONObject responseObj = new JSONObject(serverResponse);
+                JSONObject paramsObj = responseObj.getJSONObject("parameters");
+                int gameRequestId = paramsObj.getInt("game_request_id");
+                GameRequestManager.setGameRequestId(gameRequestId);
+                // TODO listen for opponent accept or reject
+                System.err.println("Success: " + gameRequestId);
+                break;
+            case 2:
+                // Error in creating game request
+                responseParameters = (String) response.getParameters();
+                System.err.println("ERROR: " + responseParameters);
+                break;
+            case 3:
+                // Error in server validation rules
+                responseParameters = (String) response.getParameters();
+                System.err.println("ERROR: " + responseParameters);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -165,5 +206,6 @@ public class LevelsScreenController {
 
     public void setOpponentId(int opponentId) {
         this.opponentId = opponentId;
+        PlayerManager.setOpponentrId(opponentId);
     }
 }

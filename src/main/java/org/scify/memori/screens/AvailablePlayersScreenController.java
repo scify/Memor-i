@@ -65,8 +65,11 @@ public class AvailablePlayersScreenController {
         }
         VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#playersDiv");
         if(availablePlayers.isEmpty()) {
+            // TODO play appropriate sound
             addPlayerVsCPUBtn(gameLevelsContainer);
         } else {
+            // TODO play sound to inform the user that they can
+            // either wait for a game request or select a player to send them a request
             addPlayersButtons(gameLevelsContainer);
         }
 
