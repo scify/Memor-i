@@ -128,7 +128,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         return jsonInString;
     }
 
-    static class Point2DDeserializer implements JsonDeserializer<Point2D>, JsonSerializer<Point2D> {
+    public static class Point2DDeserializer implements JsonDeserializer<Point2D>, JsonSerializer<Point2D> {
 
         @Override
         public Point2D deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

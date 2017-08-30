@@ -119,7 +119,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
         configuration = new MemoriConfiguration();
         this.gameLevel = gameLevel;
-        //TODO(3): Trace this function to see how the package is being loaded
         this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
         this.audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");

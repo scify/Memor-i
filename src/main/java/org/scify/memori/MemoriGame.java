@@ -17,8 +17,11 @@
 
 package org.scify.memori;
 
+import com.google.gson.Gson;
+import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.interfaces.*;
-import org.scify.memori.rules.MemoriRules;
+import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.rules.MultiPlayerRules;
 import org.scify.memori.rules.SinglePlayerRules;
 import org.scify.memori.rules.TutorialRules;
@@ -68,6 +71,9 @@ public abstract class MemoriGame implements Game<Integer> {
         reRenderer.drawGameState(gsInitialState); // Initialize UI layout
         // Run asyncronously
         GameState gsCurrentState = gsInitialState; // Init
+        if(MainOptions.GAME_TYPE == 3) {
+            sendShuffledDeckToServer((MemoriGameState)gsInitialState);
+        }
         // For every cycle
         while (!rRules.isGameFinished(gsCurrentState)) {
             final GameState toHandle = gsCurrentState;
@@ -117,4 +123,40 @@ public abstract class MemoriGame implements Game<Integer> {
         System.err.println("FINALIZE");
     }
 
+    private void sendShuffledDeckToServer(MemoriGameState initialGameState) {
+        MemoriTerrain terrain = (MemoriTerrain) initialGameState.getTerrain();
+        MemoriCardService cardService = new MemoriCardService();
+        String JSONRepresentationOfTiles = cardService.terrainTilesToJSON(terrain.getTiles());
+        System.out.println(JSONRepresentationOfTiles);
+        GameRequestManager gameRequestManager = new GameRequestManager();
+        String serverResponse = gameRequestManager.sendShuffledDeckToServer(JSONRepresentationOfTiles);
+        if(serverResponse != null) {
+            parseServerResponse(serverResponse);
+        }
+    }
+
+    private void parseServerResponse(String serverResponse) {
+        Gson g = new Gson();
+        ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
+        int code = response.getCode();
+        String responseParameters;
+        switch (code) {
+            case 1:
+                // Cards sent successfully
+
+                break;
+            case 2:
+                // Error in creating game request
+                responseParameters = (String) response.getParameters();
+                System.err.println("ERROR: " + responseParameters);
+                break;
+            case 3:
+                // Error in server validation rules
+                responseParameters = (String) response.getParameters();
+                System.err.println("ERROR: " + responseParameters);
+                break;
+            default:
+                break;
+        }
+    }
 }

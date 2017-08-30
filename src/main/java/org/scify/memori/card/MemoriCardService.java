@@ -2,12 +2,10 @@ package org.scify.memori.card;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.scify.memori.OnlineMoveFactory;
+import org.scify.memori.interfaces.Tile;
 
 import java.awt.geom.Point2D;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Responsible for loading and handling the cards for the game
@@ -27,15 +25,7 @@ public class MemoriCardService {
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
         List<Card> cards = shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
-        GsonBuilder gb;
-        gb = new GsonBuilder()
-                .serializeNulls()
-                .enableComplexMapKeySerialization()
-                .excludeFieldsWithoutExposeAnnotation()
-                .setVersion(1.0);
-        Gson gson = gb.create();
-        String jsonInString = gson.toJson(cards);
-        System.out.println(jsonInString);
+
         return cards;
     }
 
@@ -56,6 +46,27 @@ public class MemoriCardService {
         long seed = System.nanoTime();
         Collections.shuffle(cards, new Random(seed));
         return cards;
+    }
+
+    public String terrainTilesToJSON(Map<Point2D, Tile> terrainTiles) {
+        Card[] cards = new Card[terrainTiles.size()];
+        int index = 0;
+        for(Map.Entry<Point2D, Tile> entry: terrainTiles.entrySet()) {
+            Card card = (Card)entry.getValue();
+            card.xPos = (int) entry.getKey().getX();
+            card.yPos = (int) entry.getKey().getY();
+            cards[index] = card;
+            index++;
+        }
+        GsonBuilder gb;
+        gb = new GsonBuilder()
+                .serializeNulls()
+                .enableComplexMapKeySerialization()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setVersion(1.0);
+        Gson gson = gb.create();
+        String jsonInString = gson.toJson(cards);
+        return  jsonInString;
     }
 
 }

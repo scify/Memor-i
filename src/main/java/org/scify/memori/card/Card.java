@@ -74,6 +74,11 @@ public class Card implements Tile{
     @Expose
     private int cardDescriptionSoundProbability;
 
+    @Expose
+    public int xPos;
+    @Expose
+    public int yPos;
+
     protected String cardImageBasePath;
 
     protected String cardSoundsBasePath;

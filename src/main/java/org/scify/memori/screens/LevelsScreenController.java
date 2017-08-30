@@ -21,14 +21,10 @@ import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 
-import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCode.*;
 
 public class LevelsScreenController {
 
@@ -77,7 +73,7 @@ public class LevelsScreenController {
                     Thread thread = new Thread(() -> startNormalGame(gameLevel));
                     thread.start();
                 } else {
-                    sendGameRequest();
+                    sendGameRequest(gameLevel);
                 }
             } else if (event.getCode() == ESCAPE) {
                 exitScreen();
@@ -85,14 +81,14 @@ public class LevelsScreenController {
         });
     }
 
-    private void sendGameRequest() {
+    private void sendGameRequest(MemoriGameLevel gameLevel) {
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
         if(serverResponse != null) {
-            parseServerResponse(serverResponse);
+            parseServerResponse(serverResponse, gameLevel);
         }
     }
 
-    private void parseServerResponse(String serverResponse) {
+    private void parseServerResponse(String serverResponse, MemoriGameLevel gameLevel) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
@@ -104,8 +100,8 @@ public class LevelsScreenController {
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
                 int gameRequestId = paramsObj.getInt("game_request_id");
                 GameRequestManager.setGameRequestId(gameRequestId);
-                // TODO listen for opponent accept or reject
-                System.err.println("Success: " + gameRequestId);
+                System.err.println("Success. Game request id: " + gameRequestId);
+                queryServerForGameRequestReply(gameLevel);
                 break;
             case 2:
                 // Error in creating game request
@@ -120,6 +116,50 @@ public class LevelsScreenController {
             default:
                 break;
         }
+    }
+
+    private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
+        String answer = null;
+        int timesCalled = 0;
+        while (answer == null) {
+            timesCalled ++;
+            ScheduledExecutorService scheduler = Executors
+                    .newScheduledThreadPool(1);
+            ScheduledFuture<String> future = scheduler.schedule(
+                    new GameRequestManager("GET_GAME_REQUEST_REPLY"), 5, TimeUnit.SECONDS);
+            try {
+                answer = future.get();
+                System.out.println(answer);
+                System.out.println("times called: " + timesCalled);
+                if(answer != null) {
+                    // we got a reply
+
+                    if(answer.equals("accepted")) {
+                        // TODO inform user that the request was accepted and prompt
+                        // to press enter to start the game
+                        promptForEnterAndStartGame(gameLevel);
+                    } else if(answer.equals("rejected")) {
+                        // TODO inform user that the request was rejected and prompt
+                        // either to select another level
+                        // or to press escape and select another opponent
+                    }
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void promptForEnterAndStartGame(MemoriGameLevel gameLevel) {
+        primaryScene.setOnKeyReleased(event -> {
+            if(event.getCode() == ENTER) {
+                System.out.println("game is about to start");
+                Thread thread = new Thread(() -> startNormalGame(gameLevel));
+                thread.start();
+            } else if(event.getCode() == BACK_SPACE) {
+                System.out.println("game rejected");
+            }
+        });
     }
 
     /**
