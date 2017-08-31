@@ -30,12 +30,13 @@ public class AvailablePlayersScreenController {
     protected FXAudioEngine audioEngine = new FXAudioEngine();
     private ArrayList<Player> availablePlayers = new ArrayList<>();
     private Text2Speech text2Speech;
+    private GameRequestManager gameRequestManager;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
         this.sceneHandler = sceneHandler;
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
-
+        gameRequestManager = new GameRequestManager();
         sceneHandler.pushScene(userNameScreenScene);
         text2Speech = new Text2Speech();
         getOnlinePlayersFromServer();
@@ -68,7 +69,7 @@ public class AvailablePlayersScreenController {
         VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#playersDiv");
         if(availablePlayers.isEmpty()) {
             // TODO play appropriate sound
-            addPlayerVsCPUBtn(gameLevelsContainer);
+            //addPlayerVsCPUBtn(gameLevelsContainer);
         } else {
             // TODO play sound to inform the user that they can
             // either wait for a game request or select a player to send them a request
@@ -86,14 +87,14 @@ public class AvailablePlayersScreenController {
 
     }
 
-    private void addPlayerVsCPUBtn(VBox buttonsContainer) {
-        Button verusCPUBtn = new Button();
-        verusCPUBtn.setText("Versus Computer");
-        verusCPUBtn.getStyleClass().add("optionButton");
-        buttonsContainer.getChildren().add(verusCPUBtn);
-        playVersusCPUBtnHandler(verusCPUBtn);
-        verusCPUBtn.requestFocus();
-    }
+//    private void addPlayerVsCPUBtn(VBox buttonsContainer) {
+//        Button verusCPUBtn = new Button();
+//        verusCPUBtn.setText("Versus Computer");
+//        verusCPUBtn.getStyleClass().add("optionButton");
+//        buttonsContainer.getChildren().add(verusCPUBtn);
+//        playVersusCPUBtnHandler(verusCPUBtn);
+//        verusCPUBtn.requestFocus();
+//    }
 
     private void addPlayersButtons(VBox buttonsContainer) {
         for (Player currPlayer : availablePlayers) {
@@ -112,16 +113,16 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void playVersusCPUBtnHandler(Button button) {
-        button.setOnKeyPressed(event -> {
-            if (event.getCode() == SPACE) {
-                MainOptions.GAME_TYPE = 2;
-                new LevelsScreen(this.sceneHandler);
-            } else if (event.getCode() == ESCAPE) {
-                sceneHandler.popScene();
-            }
-        });
-    }
+//    private void playVersusCPUBtnHandler(Button button) {
+//        button.setOnKeyPressed(event -> {
+//            if (event.getCode() == SPACE) {
+//                MainOptions.GAME_TYPE = 2;
+//                new LevelsScreen(this.sceneHandler);
+//            } else if (event.getCode() == ESCAPE) {
+//                sceneHandler.popScene();
+//            }
+//        });
+//    }
 
     private void playerBtnHandler(Button playerBtn, Player currPlayer) {
         playerBtn.setOnKeyPressed(event -> {
@@ -154,7 +155,7 @@ public class AvailablePlayersScreenController {
                     System.out.println("You have a new request from " +initiatorUserName + "!");
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
                     thread.start();
-                    listenForAnswerToGameRequest();
+                    answerToGameRequest();
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -162,15 +163,18 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void listenForAnswerToGameRequest() {
+    private void answerToGameRequest() {
+        // TODO tell player that in order to accept the request they click enter
+        // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 // TODO: accept game request
                 System.out.println("game request accepted");
-
+                gameRequestManager.sendGameRequestAnswerToServer(true);
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
+                gameRequestManager.sendGameRequestAnswerToServer(false);
             }
         });
     }

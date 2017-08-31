@@ -143,11 +143,10 @@ public abstract class MemoriGame implements Game<Integer> {
         switch (code) {
             case 1:
                 // Cards sent successfully
-
                 break;
             case 2:
-                // Error in creating game request
-                responseParameters = (String) response.getParameters();
+                // Error
+                responseParameters = response.getParameters().toString();
                 System.err.println("ERROR: " + responseParameters);
                 break;
             case 3:

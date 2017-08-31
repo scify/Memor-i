@@ -123,7 +123,7 @@ public class MainScreenController implements Initializable {
     private void attachButtonClickHandlers() {
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
+                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
             }
         });
 

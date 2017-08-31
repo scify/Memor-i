@@ -52,7 +52,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
     private ServerOperationResponse askServerForGameRequests() {
         String url = "player/requests?player_id=" + PlayerManager.getPlayerId();
         String response = requestManager.doGet(url);
-        if(response != null) {
+        if(response != null && !response.equals("null")) {
             ServerOperationResponse serverOperationResponse = parseGameRequestsResponse(response);
             if(serverOperationResponse != null) {
                 return serverOperationResponse;
@@ -126,5 +126,16 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(getGameRequestId())));
         urlParameters.add(new BasicNameValuePair("shuffled_cards", jsonRepresentationOfTiles));
         return this.requestManager.doPost(url, urlParameters);
+    }
+
+    public String sendGameRequestAnswerToServer(boolean gameRequestAccepted) {
+        String url = "gameRequest/reply";
+        System.out.println("answer: " + String.valueOf(gameRequestAccepted));
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(getGameRequestId())));
+        urlParameters.add(new BasicNameValuePair("accepted", String.valueOf(gameRequestAccepted)));
+        String serverResponse = this.requestManager.doPost(url, urlParameters);
+        System.out.println(serverResponse);
+        return  serverResponse;
     }
 }
