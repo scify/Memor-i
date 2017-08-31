@@ -119,26 +119,26 @@ public class LevelsScreenController {
     }
 
     private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
-        String answer = null;
+        ServerOperationResponse serverOperationResponse = null;
         int timesCalled = 0;
-        while (answer == null) {
+        while (serverOperationResponse == null) {
             timesCalled ++;
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
-            ScheduledFuture<String> future = scheduler.schedule(
+            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
                     new GameRequestManager("GET_GAME_REQUEST_REPLY"), 5, TimeUnit.SECONDS);
             try {
-                answer = future.get();
-                System.out.println(answer);
+                serverOperationResponse = future.get();
+                System.out.println(serverOperationResponse);
                 System.out.println("times called: " + timesCalled);
-                if(answer != null) {
+                if(serverOperationResponse != null) {
                     // we got a reply
 
-                    if(answer.equals("accepted")) {
+                    if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
                         promptForEnterAndStartGame(gameLevel);
-                    } else if(answer.equals("rejected")) {
+                    } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         // TODO inform user that the request was rejected and prompt
                         // either to select another level
                         // or to press escape and select another opponent

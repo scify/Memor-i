@@ -23,4 +23,8 @@ public class ServerOperationResponse {
         this.parameters = parameters;
 
     }
+
+    public void setParameters(Object parameters) {
+        this.parameters = parameters;
+    }
 }

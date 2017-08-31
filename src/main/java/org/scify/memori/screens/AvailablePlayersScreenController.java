@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import org.json.JSONArray;
+import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import org.scify.memori.MainOptions;
 import org.scify.memori.PlayerManager;
@@ -14,11 +15,12 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
-
+import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.ServerOperationResponse;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
-import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCode.*;
 
 public class AvailablePlayersScreenController {
 
@@ -71,6 +73,15 @@ public class AvailablePlayersScreenController {
             // TODO play sound to inform the user that they can
             // either wait for a game request or select a player to send them a request
             addPlayersButtons(gameLevelsContainer);
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            queryServerForGameRequests();
+                        }
+                    },
+                    5000
+            );
         }
 
     }
@@ -120,6 +131,46 @@ public class AvailablePlayersScreenController {
                 levelsScreen.setOpponentId(currPlayer.getId());
             } else if (event.getCode() == ESCAPE) {
                 sceneHandler.popScene();
+            }
+        });
+    }
+
+    private void queryServerForGameRequests() {
+        ServerOperationResponse serverResponse = null;
+        int timesCalled = 0;
+        while (serverResponse == null) {
+            timesCalled ++;
+            ScheduledExecutorService scheduler = Executors
+                    .newScheduledThreadPool(1);
+            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
+                    new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
+            try {
+                serverResponse = future.get();
+                if(serverResponse != null) {
+                    JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
+                    int gameRequestId = parametersObject.get("game_request_id").getAsInt();
+                    GameRequestManager.setGameRequestId(gameRequestId);
+                    String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
+                    System.out.println("You have a new request from " +initiatorUserName + "!");
+                    Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
+                    thread.start();
+                    listenForAnswerToGameRequest();
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void listenForAnswerToGameRequest() {
+        primaryScene.setOnKeyReleased(event -> {
+            if(event.getCode() == ENTER) {
+                // TODO: accept game request
+                System.out.println("game request accepted");
+
+            } else if(event.getCode() == BACK_SPACE) {
+                // TODO: reject game request
+                System.out.println("game request rejected");
             }
         });
     }

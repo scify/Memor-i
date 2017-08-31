@@ -12,6 +12,7 @@ public class Text2Speech {
     public Text2Speech() {
         voiceManager = VoiceManager.getInstance();
         voice = voiceManager.getVoice(VOICENAME_kevin);
+        voice.setRate(120);
     }
 
     public void speak(String text) {

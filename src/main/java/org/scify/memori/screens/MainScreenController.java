@@ -80,7 +80,6 @@ public class MainScreenController implements Initializable {
         primaryStage.sizeToScene();
         primaryStage.setFullScreen(true);
         primaryStage.setOnCloseRequest(we -> {
-            System.out.println("Stage is closing");
             System.exit(0);
         });
 
@@ -109,41 +108,6 @@ public class MainScreenController implements Initializable {
 
     }
 
-    private void queryServerForGameRequests() {
-        String answer = null;
-        int timesCalled = 0;
-        while (answer == null) {
-            timesCalled ++;
-            ScheduledExecutorService scheduler = Executors
-                    .newScheduledThreadPool(1);
-            ScheduledFuture<String> future = scheduler.schedule(
-                    new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
-            try {
-                answer = future.get();
-                System.out.println(answer);
-                System.out.println("times called: " + timesCalled);
-                if(answer != null) {
-                    listenForAnswerToGameRequest();
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void listenForAnswerToGameRequest() {
-        primaryScene.setOnKeyReleased(event -> {
-            if(event.getCode() == ENTER) {
-                // TODO: accept game request
-                System.out.println("game request accepted");
-                new GameRequestScreen(sceneHandler);
-            } else if(event.getCode() == BACK_SPACE) {
-                // TODO: reject game request
-                System.out.println("game request rejected");
-            }
-        });
-    }
-
     private void setStageFavicon(Stage primaryStage) {
         ResourceLocator resourceLocator = new ResourceLocator();
         String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
@@ -165,7 +129,7 @@ public class MainScreenController implements Initializable {
 
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
+                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
             }
         });
 

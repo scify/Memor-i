@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class GameRequestManager implements Callable<String> {
+public class GameRequestManager implements Callable<ServerOperationResponse> {
 
     private RequestManager requestManager;
     private MemoriConfiguration configuration;
@@ -37,7 +37,7 @@ public class GameRequestManager implements Callable<String> {
         this.callIdentifier = callIdentifier;
     }
 
-    public String call() throws Exception {
+    public ServerOperationResponse call() throws Exception {
         switch (callIdentifier) {
             case "GET_GAME_REQUEST_REPLY":
                 return askServerForGameRequestReply();
@@ -49,25 +49,25 @@ public class GameRequestManager implements Callable<String> {
         return null;
     }
 
-    private String askServerForGameRequests() {
-        String url = "games/request?player_id=" + PlayerManager.getPlayerId();
+    private ServerOperationResponse askServerForGameRequests() {
+        String url = "player/requests?player_id=" + PlayerManager.getPlayerId();
         String response = requestManager.doGet(url);
         if(response != null) {
-            String opponentUserName = parseGameRequestsResponse(response);
-            if(opponentUserName != null) {
-                return opponentUserName;
+            ServerOperationResponse serverOperationResponse = parseGameRequestsResponse(response);
+            if(serverOperationResponse != null) {
+                return serverOperationResponse;
             }
         }
         return null;
     }
 
-    private String askServerForGameRequestReply() {
+    private ServerOperationResponse askServerForGameRequestReply() {
         String url = "gameRequest/reply?game_request_id=" + getGameRequestId();
         String response = requestManager.doGet(url);
         if(response != null) {
-            String replyMessage = parseGameRequestReplyResponse(response);
-            if(replyMessage != null) {
-                return replyMessage;
+            ServerOperationResponse serverOperationResponse = parseGameRequestReplyResponse(response);
+            if(serverOperationResponse != null) {
+                return serverOperationResponse;
             }
         }
         return null;
@@ -84,21 +84,21 @@ public class GameRequestManager implements Callable<String> {
         return this.requestManager.doPost(url, urlParameters);
     }
 
-    private String parseGameRequestsResponse(String serverResponse) {
+    private ServerOperationResponse parseGameRequestsResponse(String serverResponse) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
+        response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
         switch (code) {
             case 1:
-                String opponentUserName = (String) response.getParameters();
-                return opponentUserName;
+                return response;
             case 2:
                 return null;
         }
         return null;
     }
 
-    private String parseGameRequestReplyResponse(String serverResponse) {
+    private ServerOperationResponse parseGameRequestReplyResponse(String serverResponse) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
@@ -106,8 +106,7 @@ public class GameRequestManager implements Callable<String> {
         switch (code) {
             case 1:
                 // game request was either accepted or rejected
-                String requestMessage = (String) response.getMessage();
-                return requestMessage;
+                return response;
             case 2:
                 // error
                 return null;
