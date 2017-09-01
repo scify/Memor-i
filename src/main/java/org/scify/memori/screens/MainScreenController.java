@@ -30,14 +30,12 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.*;
 
@@ -180,8 +178,8 @@ public class MainScreenController implements Initializable {
             MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
             MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
             MainOptions.GAME_TYPE = 1;
-            LevelsScreenController controller = new LevelsScreenController();
-            Thread thread = new Thread(() -> controller.startGame(gameLevel, sceneHandler));
+            MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
+            Thread thread = new Thread(() -> memoriGameLauncher.startNormalGame(gameLevel));
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();

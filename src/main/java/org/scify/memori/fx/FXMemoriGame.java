@@ -20,6 +20,10 @@ package org.scify.memori.fx;
 
 import org.scify.memori.MemoriGame;
 import org.scify.memori.MemoriGameLevel;
+import org.scify.memori.card.CategorizedCard;
+
+import java.awt.geom.Point2D;
+import java.util.Map;
 
 public class FXMemoriGame extends MemoriGame {
     protected FXSceneHandler sceneHandler;
@@ -33,10 +37,18 @@ public class FXMemoriGame extends MemoriGame {
     @Override
     public void initialize() {
         super.initialize();
+        setUpRenderingEngine();
+    }
+
+    public void initialize(Map<CategorizedCard, Point2D> cards) {
+        super.initialize(cards);
+        setUpRenderingEngine();
+    }
+
+    private void setUpRenderingEngine() {
         FXRenderingEngine fUI = new FXRenderingEngine(gameLevel);
         uInterface = fUI;
         reRenderer = fUI;
-
         // Plus update current scene
         sceneHandler.pushScene(fUI.gameScene);
     }

@@ -17,13 +17,16 @@
 
 package org.scify.memori;
 
+import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.interfaces.Terrain;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 public class MemoriGameState implements GameState {
@@ -57,8 +60,18 @@ public class MemoriGameState implements GameState {
     private int rowIndex = 0;
 
     public MemoriGameState() {
-        players = new ArrayList<>();
         terrain = new MemoriTerrain();
+        setUpPlayers();
+    }
+
+    public MemoriGameState(Map<CategorizedCard, Point2D> givenGameCards) {
+        terrain = new MemoriTerrain(givenGameCards);
+        setUpPlayers();
+    }
+
+    private void setUpPlayers() {
+        players = new ArrayList<>();
+
         Player player1 = new Player("player1");
         players.add(player1);
 

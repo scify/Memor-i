@@ -1,5 +1,8 @@
 package org.scify.memori.screens;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.internal.LinkedTreeMap;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,8 +11,10 @@ import javafx.scene.layout.VBox;
 import org.json.JSONArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
-import org.scify.memori.MainOptions;
-import org.scify.memori.PlayerManager;
+import org.scify.memori.*;
+import org.scify.memori.card.Card;
+import org.scify.memori.card.CategorizedCard;
+import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
@@ -17,7 +22,12 @@ import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
+
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.*;
@@ -31,6 +41,7 @@ public class AvailablePlayersScreenController {
     private ArrayList<Player> availablePlayers = new ArrayList<>();
     private Text2Speech text2Speech;
     private GameRequestManager gameRequestManager;
+    MemoriGameLauncher gameLauncher;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
@@ -40,6 +51,9 @@ public class AvailablePlayersScreenController {
         sceneHandler.pushScene(userNameScreenScene);
         text2Speech = new Text2Speech();
         getOnlinePlayersFromServer();
+        gameLauncher = new MemoriGameLauncher(sceneHandler);
+        GameRequestManager.setGameRequestId(1);
+        queryForGameRequestShuffledCards();
     }
 
     @FXML
@@ -171,6 +185,7 @@ public class AvailablePlayersScreenController {
                 // TODO: accept game request
                 System.out.println("game request accepted");
                 gameRequestManager.sendGameRequestAnswerToServer(true);
+                queryForGameRequestShuffledCards();
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
@@ -178,4 +193,47 @@ public class AvailablePlayersScreenController {
             }
         });
     }
+
+    private void queryForGameRequestShuffledCards() {
+        ServerOperationResponse serverResponse = null;
+        int timesCalled = 0;
+        while (serverResponse == null) {
+            timesCalled ++;
+            ScheduledExecutorService scheduler = Executors
+                    .newScheduledThreadPool(1);
+            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
+                    new GameRequestManager("GET_SHUFFLED_CARDS"), 3, TimeUnit.SECONDS);
+            try {
+                serverResponse = future.get();
+                if(serverResponse != null) {
+                    ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
+                    System.out.println("Got cards!");
+                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
+                    // TODO inform player that the cards are ready and should press enter
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {
+        Map<CategorizedCard, Point2D> cardsWithPositions = new HashMap<>();
+        MemoriCardService memoriCardService = new MemoriCardService();
+        for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
+            CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString());
+            cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
+        }
+        System.out.println(cardsWithPositions.size());
+        List<MemoriGameLevel> gameLevels = new ArrayList<>();
+        GameLevelService gameLevelService = new GameLevelService();
+        gameLevels = gameLevelService.createGameLevels();
+        MemoriGameLevel gameLevel = gameLevels.get(0);
+        MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
+        MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
+        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
+        Thread thread = new Thread(() -> gameLauncher.startNormalGameWithCards(gameLevel, cardsWithPositions));
+        thread.start();
+    }
+
 }

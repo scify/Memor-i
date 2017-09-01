@@ -48,30 +48,24 @@ public class Card implements Tile{
     /**
      * file name of the image associated with the card
      */
-    @Expose
     private String[] images;
     /**
      * whether the Card has been flipped
      */
-    @Expose
     private boolean isFlipped;
     /**
      * whether the Card has been won
      */
-    @Expose
     private boolean isWon;
     /**
      * file name of the sound associated with the card
      */
-    @Expose
     private String[] sounds;
 
     /**
      * file name of the card name sound
      */
-    @Expose
     private String cardDescriptionSound;
-    @Expose
     private int cardDescriptionSoundProbability;
 
     @Expose

@@ -40,6 +40,11 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     @Override
+    public GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards) {
+        return new MemoriGameState(givenGameCards);
+    }
+
+    @Override
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
         MemoriGameState gsCurrentState = (MemoriGameState)gsCurrent;

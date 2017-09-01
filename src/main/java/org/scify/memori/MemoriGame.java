@@ -18,6 +18,7 @@
 package org.scify.memori;
 
 import com.google.gson.Gson;
+import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.interfaces.*;
 import org.scify.memori.network.GameRequestManager;
@@ -25,6 +26,10 @@ import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.rules.MultiPlayerRules;
 import org.scify.memori.rules.SinglePlayerRules;
 import org.scify.memori.rules.TutorialRules;
+
+import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class MemoriGame implements Game<Integer> {
     /**
@@ -49,11 +54,21 @@ public abstract class MemoriGame implements Game<Integer> {
      */
     protected RenderingEngine reRenderer;
 
+    Map<CategorizedCard, Point2D> givenGameCards = new HashMap<>();
     @Override
     /**
      * Subclasses should initialize a UI
      */
     public void initialize() {
+        produceRules();
+    }
+
+    public void initialize(Map<CategorizedCard, Point2D> givenGameCards) {
+        this.givenGameCards = givenGameCards;
+        produceRules();
+    }
+
+    private void produceRules() {
         if(MainOptions.TUTORIAL_MODE)
             rRules = new TutorialRules();
         else {
@@ -67,7 +82,12 @@ public abstract class MemoriGame implements Game<Integer> {
 
     @Override
     public Integer call() {
-        final GameState gsInitialState = rRules.getInitialState();
+        final GameState gsInitialState;
+        if(givenGameCards == null)
+            gsInitialState = rRules.getInitialState();
+        else
+            gsInitialState = rRules.getInitialState(givenGameCards);
+
         reRenderer.drawGameState(gsInitialState); // Initialize UI layout
         // Run asyncronously
         GameState gsCurrentState = gsInitialState; // Init
@@ -143,10 +163,11 @@ public abstract class MemoriGame implements Game<Integer> {
         switch (code) {
             case 1:
                 // Cards sent successfully
+
                 break;
             case 2:
-                // Error
-                responseParameters = response.getParameters().toString();
+                // Error in creating game request
+                responseParameters = (String) response.getParameters();
                 System.err.println("ERROR: " + responseParameters);
                 break;
             case 3:

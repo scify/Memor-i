@@ -1,5 +1,7 @@
 package org.scify.memori.card;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * CategorizedCard is a class that represents a Card with a category.
  * This card belongs to an equivalence card set
@@ -10,6 +12,7 @@ public class CategorizedCard extends Card{
     /**
      * the category that the cards belongs to
      */
+    @Expose
     protected String category;
     /**
      * the equivalence Card Set identifier (hash code) that the card belongs to

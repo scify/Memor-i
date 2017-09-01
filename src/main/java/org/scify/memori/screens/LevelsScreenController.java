@@ -1,21 +1,17 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.scify.memori.GameLevelService;
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameLevel;
-import org.scify.memori.PlayerManager;
+import org.scify.memori.*;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
-import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 
@@ -34,6 +30,7 @@ public class LevelsScreenController {
     private FXAudioEngine audioEngine = new FXAudioEngine();
     private int opponentId;
     private GameRequestManager gameRequestManager = new GameRequestManager();
+    MemoriGameLauncher gameLauncher;
 
     /**
      * Gets all game levels available and adds a button for each one
@@ -64,13 +61,14 @@ public class LevelsScreenController {
      * @param gameLevel the game level associated with this button
      */
     private void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
+
         gameLevelBtn.setOnKeyPressed(event -> {
             if (event.getCode() == SPACE) {
                 MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
                 MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
                 MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
                 if(MainOptions.GAME_TYPE != 3) {
-                    Thread thread = new Thread(() -> startNormalGame(gameLevel));
+                    Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
                     thread.start();
                 } else {
                     sendGameRequest(gameLevel);
@@ -84,11 +82,11 @@ public class LevelsScreenController {
     private void sendGameRequest(MemoriGameLevel gameLevel) {
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
         if(serverResponse != null) {
-            parseServerResponse(serverResponse, gameLevel);
+            parseGameRequestServerResponse(serverResponse, gameLevel);
         }
     }
 
-    private void parseServerResponse(String serverResponse, MemoriGameLevel gameLevel) {
+    private void parseGameRequestServerResponse(String serverResponse, MemoriGameLevel gameLevel) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
@@ -137,6 +135,7 @@ public class LevelsScreenController {
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
+                        setAllLevelButtonsAsDisabled();
                         promptForEnterAndStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         // TODO inform user that the request was rejected and prompt
@@ -150,13 +149,22 @@ public class LevelsScreenController {
         }
     }
 
+    private void setAllLevelButtonsAsDisabled() {
+        VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
+        for(Node node: gameLevelsContainer.getChildren()) {
+            node.setDisable(true);
+        }
+    }
+
     private void promptForEnterAndStartGame(MemoriGameLevel gameLevel) {
+        // Inform the player that the opponent accepted
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 System.out.println("game is about to start");
-                Thread thread = new Thread(() -> startNormalGame(gameLevel));
+                Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
                 thread.start();
-            } else if(event.getCode() == BACK_SPACE) {
+            } else if(event.getCode() == ESCAPE) {
+                // TODO send request to server to mark GameRequest as "canceled"
                 System.out.println("game rejected");
             }
         });
@@ -174,7 +182,7 @@ public class LevelsScreenController {
         this.primaryScene = levelsScreenScene;
         this.sceneHandler = sceneHandler;
         FXRenderingEngine.setGamecoverIcon(levelsScreenScene, "gameCoverImgContainer");
-
+        gameLauncher = new MemoriGameLauncher(sceneHandler);
         sceneHandler.pushScene(levelsScreenScene);
         VBox gameLevelsContainer = (VBox) levelsScreenScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
@@ -183,66 +191,10 @@ public class LevelsScreenController {
 
     public void startGame(MemoriGameLevel gameLevel, FXSceneHandler sceneHandler) {
         this.sceneHandler = sceneHandler;
-        startNormalGame(gameLevel);
+        gameLauncher.startNormalGame(gameLevel);
     }
 
-    private void startNormalGame(MemoriGameLevel gameLevel) {
-        MemoriLogger.LOGGER.log(Level.INFO, "Starting a new game on level: " + gameLevel.getLevelName());
-        audioEngine.pauseCurrentlyPlayingAudios();
-        FXMemoriGame game = new FXMemoriGame(sceneHandler, gameLevel);
-        game.initialize();
 
-        // Run game in separate thread
-        ExecutorService es = Executors.newFixedThreadPool(1);
-        Future<Integer> future = es.submit(game);
-        es.shutdown();
-
-        //this code will execute once the user exits the game
-        // (either to go to next level or to exit)
-        try {
-            Integer result = future.get();
-            //quit to main screen
-            if (result == 1) {
-                System.err.println("QUITING TO MAIN SCREEN");
-                if (MainOptions.TUTORIAL_MODE)
-                    MainOptions.TUTORIAL_MODE = false;
-                sceneHandler.popScene();
-            } else if (result == 2) // load next level
-            {
-                sceneHandler.simplePopScene();
-                if (MainOptions.TUTORIAL_MODE) {
-                    //if the last game was in tutorial mode, load the first normal game
-                    MainOptions.TUTORIAL_MODE = false;
-                    startNormalGame(gameLevel);
-                } else
-                    loadNextLevel();
-
-            } else if (result == 3) //play same level again
-            {
-                sceneHandler.simplePopScene();
-                startNormalGame(gameLevel);
-            }
-            System.out.println(result);
-        } catch (InterruptedException | ExecutionException e) {
-            MemoriLogger.LOGGER.log(Level.SEVERE, "Game exception: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Gets the next level and starts a new game on this level.
-     */
-    private void loadNextLevel() {
-
-        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
-        MainOptions.GAME_LEVEL_CURRENT++;
-        System.err.println("next level: " + gameLevelNext.getDimensions().getX() + ", " + gameLevelNext.getDimensions().getY());
-
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
-        startNormalGame(gameLevelNext);
-    }
 
     public void setOpponentId(int opponentId) {
         this.opponentId = opponentId;

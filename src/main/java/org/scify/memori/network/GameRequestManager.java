@@ -43,6 +43,8 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
                 return askServerForGameRequestReply();
             case "GET_REQUESTS":
                 return askServerForGameRequests();
+            case "GET_SHUFFLED_CARDS":
+                return askServerForGameRequestShuffledCards();
             default:
                 break;
         }
@@ -65,7 +67,19 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         String url = "gameRequest/reply?game_request_id=" + getGameRequestId();
         String response = requestManager.doGet(url);
         if(response != null) {
-            ServerOperationResponse serverOperationResponse = parseGameRequestReplyResponse(response);
+            ServerOperationResponse serverOperationResponse = parseGameRequestResponse(response);
+            if(serverOperationResponse != null) {
+                return serverOperationResponse;
+            }
+        }
+        return null;
+    }
+
+    private ServerOperationResponse askServerForGameRequestShuffledCards() {
+        String url = "gameRequest/shuffledCards?game_request_id=" + getGameRequestId();
+        String response = requestManager.doGet(url);
+        if(response != null) {
+            ServerOperationResponse serverOperationResponse = parseGameRequestResponse(response);
             if(serverOperationResponse != null) {
                 return serverOperationResponse;
             }
@@ -98,7 +112,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         return null;
     }
 
-    private ServerOperationResponse parseGameRequestReplyResponse(String serverResponse) {
+    private ServerOperationResponse parseGameRequestResponse(String serverResponse) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
@@ -114,7 +128,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
                 // server validation not passed
                 return null;
             case 4:
-                // no reply for game request yet
+                // reply is "empty" (should not be passed back)
                 return null;
         }
         return null;

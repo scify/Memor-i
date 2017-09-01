@@ -18,6 +18,7 @@
 package org.scify.memori;
 
 import org.scify.memori.card.Card;
+import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
@@ -61,6 +62,30 @@ public class MemoriTerrain implements Terrain {
                 cardIndex++;
             }
         }
+    }
+
+    public MemoriTerrain(Map<CategorizedCard, Point2D> givenGameCards) {
+        tiles = new HashMap<>();
+        openTiles = new ArrayList<>();
+        int cardIndex = 0;
+        int terrainWidth = getWidth();
+        int terrainHeight = getHeight();
+
+        for (int iX = 0; iX < terrainWidth; iX++) {
+            for (int iY = 0; iY < terrainHeight; iY++) {
+                tiles.put(new Point2D.Double(iX, iY), getCardAtPosition(givenGameCards, iX, iY));
+                cardIndex++;
+            }
+        }
+    }
+
+    private CategorizedCard getCardAtPosition(Map<CategorizedCard, Point2D> givenGameCards, int xPos, int yPos) {
+        for(Map.Entry<CategorizedCard, Point2D> card: givenGameCards.entrySet()) {
+            Point2D cardPosition = card.getValue();
+            if((int) cardPosition.getX() == xPos && (int) cardPosition.getY() == yPos)
+                return card.getKey();
+        }
+        return null;
     }
 
     /**
