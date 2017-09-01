@@ -12,6 +12,7 @@ import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 
@@ -161,7 +162,7 @@ public class LevelsScreenController {
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 System.out.println("game is about to start");
-                Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
+                Thread thread = new Thread(() -> {PlayerManager.localPlayerIsInitiator = true; gameLauncher.startNormalGame(gameLevel);});
                 thread.start();
             } else if(event.getCode() == ESCAPE) {
                 // TODO send request to server to mark GameRequest as "canceled"
@@ -194,10 +195,9 @@ public class LevelsScreenController {
         gameLauncher.startNormalGame(gameLevel);
     }
 
-
-
     public void setOpponentId(int opponentId) {
         this.opponentId = opponentId;
-        PlayerManager.setOpponentrId(opponentId);
+        Player opponent = new Player(opponentId);
+        PlayerManager.setOpponentPlayer(opponent);
     }
 }

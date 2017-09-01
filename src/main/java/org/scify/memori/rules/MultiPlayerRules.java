@@ -1,9 +1,6 @@
 package org.scify.memori.rules;
 
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameState;
-import org.scify.memori.CPUMoveFactory;
-import org.scify.memori.OnlineMoveFactory;
+import org.scify.memori.*;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.MoveFactory;
@@ -37,6 +34,7 @@ public class MultiPlayerRules extends MemoriRules {
             super.handleGameStartingGameEvents(gsCurrentState);
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_STARTED"));
         } else {
+            System.out.println("Playing: " + gsCurrentState.getCurrentPlayer().getName());
             if(isOpponentPlaying(gsCurrentState)) {
                 handleOpponentNextMove(gsCurrentState);
             } else {
@@ -49,7 +47,7 @@ public class MultiPlayerRules extends MemoriRules {
     }
 
     protected boolean isOpponentPlaying(MemoriGameState memoriGameState) {
-        return memoriGameState.getCurrentPlayer().getName().equals("player2");
+        return memoriGameState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer());
     }
 
     private void handleOpponentNextMove(MemoriGameState gsCurrentState) {

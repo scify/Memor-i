@@ -31,15 +31,16 @@ public class Player {
     @Expose
     protected String name;
 
-    private PropertyHandler propertyHandler;
 
     public Player(String playerName) {
-        propertyHandler = new PropertyHandlerImpl();
         this.name = playerName;
     }
 
+    public Player(int id) {
+        this.id = id;
+    }
+
     public Player(String playerName, int id) {
-        propertyHandler = new PropertyHandlerImpl();
         this.name = playerName;
         this.id = id;
     }

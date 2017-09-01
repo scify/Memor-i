@@ -52,8 +52,6 @@ public class AvailablePlayersScreenController {
         text2Speech = new Text2Speech();
         getOnlinePlayersFromServer();
         gameLauncher = new MemoriGameLauncher(sceneHandler);
-        GameRequestManager.setGameRequestId(1);
-        queryForGameRequestShuffledCards();
     }
 
     @FXML
@@ -169,7 +167,7 @@ public class AvailablePlayersScreenController {
                     System.out.println("You have a new request from " +initiatorUserName + "!");
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
                     thread.start();
-                    answerToGameRequest();
+                    answerToGameRequest(initiatorUserName);
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -177,7 +175,7 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void answerToGameRequest() {
+    private void answerToGameRequest(String initiatorUserName) {
         // TODO tell player that in order to accept the request they click enter
         // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
@@ -185,7 +183,7 @@ public class AvailablePlayersScreenController {
                 // TODO: accept game request
                 System.out.println("game request accepted");
                 gameRequestManager.sendGameRequestAnswerToServer(true);
-                queryForGameRequestShuffledCards();
+                queryForGameRequestShuffledCards(initiatorUserName);
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
@@ -194,7 +192,7 @@ public class AvailablePlayersScreenController {
         });
     }
 
-    private void queryForGameRequestShuffledCards() {
+    private void queryForGameRequestShuffledCards(String initiatorUserName) {
         ServerOperationResponse serverResponse = null;
         int timesCalled = 0;
         while (serverResponse == null) {
@@ -208,7 +206,7 @@ public class AvailablePlayersScreenController {
                 if(serverResponse != null) {
                     ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
                     System.out.println("Got cards!");
-                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
+                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray, initiatorUserName);
                     // TODO inform player that the cards are ready and should press enter
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -217,7 +215,7 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {
+    private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray, String initiatorUserName) {
         Map<CategorizedCard, Point2D> cardsWithPositions = new HashMap<>();
         MemoriCardService memoriCardService = new MemoriCardService();
         for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
@@ -233,6 +231,8 @@ public class AvailablePlayersScreenController {
         MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
         MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
         Thread thread = new Thread(() -> gameLauncher.startNormalGameWithCards(gameLevel, cardsWithPositions));
+        Player opponent = new Player(initiatorUserName);
+        PlayerManager.setOpponentPlayer(opponent);
         thread.start();
     }
 

@@ -74,14 +74,22 @@ public class MemoriGameState implements GameState {
 
         Player player1 = new Player("player1");
         players.add(player1);
+        PlayerManager.setLocalPlayer(player1);
 
         if(MainOptions.GAME_TYPE == 1) {
             currentPlayer = player1;
-        } else {
+        } else if (MainOptions.GAME_TYPE == 2) {
             Player player2 = new Player("player2");
             players.add(player2);
-            //TODO current player should be decided after shuffle?
-            currentPlayer = player2;
+            currentPlayer = player1;
+        } else {
+            Player onlinePlayer = PlayerManager.getOpponentPlayer();
+            players.add(onlinePlayer);
+            currentPlayer = PlayerManager.getStartingPlayer();
+            if(PlayerManager.localPlayerIsInitiator)
+                PlayerManager.setStartingPlayer(player1);
+            else
+                PlayerManager.setStartingPlayer(onlinePlayer);
         }
 
         iCurrentTurn = 0;

@@ -19,7 +19,31 @@ public class PlayerManager {
     private RequestManager requestManager;
 
     private static int playerId;
-    private static int opponentId;
+    private static Player localPlayer;
+    private static Player opponentPlayer;
+    private static Player startingPlayer;
+    public static boolean localPlayerIsInitiator = false;
+
+    public static void setLocalPlayer(Player localPlayer) {
+        PlayerManager.localPlayer = localPlayer;
+    }
+
+
+    public static void setStartingPlayer(Player startingPlayer) {
+        PlayerManager.startingPlayer = startingPlayer;
+    }
+
+    public static Player getStartingPlayer() {
+        return localPlayerIsInitiator ? localPlayer : opponentPlayer;
+    }
+
+    public static void setOpponentPlayer(Player opponent) {
+        PlayerManager.opponentPlayer = opponent;
+    }
+
+    public static Player getOpponentPlayer() {
+        return opponentPlayer;
+    }
 
     public static void setPlayerId(int playerId) {
         PlayerManager.playerId = playerId;
@@ -27,14 +51,6 @@ public class PlayerManager {
 
     public static int getPlayerId() {
         return playerId;
-    }
-
-    public static void setOpponentrId(int opponentId) {
-        PlayerManager.opponentId = opponentId;
-    }
-
-    public static int getOpponentId() {
-        return opponentId;
     }
 
     public PlayerManager() {
