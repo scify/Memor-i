@@ -42,6 +42,7 @@ public class AvailablePlayersScreenController {
     private Text2Speech text2Speech;
     private GameRequestManager gameRequestManager;
     MemoriGameLauncher gameLauncher;
+    private Player candidateOpponent;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
@@ -164,10 +165,12 @@ public class AvailablePlayersScreenController {
                     int gameRequestId = parametersObject.get("game_request_id").getAsInt();
                     GameRequestManager.setGameRequestId(gameRequestId);
                     String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
+                    int initiatorId = parametersObject.get("initiator_id").getAsInt();
                     System.out.println("You have a new request from " +initiatorUserName + "!");
+                    candidateOpponent = new Player(initiatorUserName, initiatorId);
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
                     thread.start();
-                    answerToGameRequest(initiatorUserName);
+                    answerToGameRequest();
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -175,7 +178,7 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void answerToGameRequest(String initiatorUserName) {
+    private void answerToGameRequest() {
         // TODO tell player that in order to accept the request they click enter
         // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
@@ -183,7 +186,7 @@ public class AvailablePlayersScreenController {
                 // TODO: accept game request
                 System.out.println("game request accepted");
                 gameRequestManager.sendGameRequestAnswerToServer(true);
-                queryForGameRequestShuffledCards(initiatorUserName);
+                queryForGameRequestShuffledCards();
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
@@ -192,7 +195,7 @@ public class AvailablePlayersScreenController {
         });
     }
 
-    private void queryForGameRequestShuffledCards(String initiatorUserName) {
+    private void queryForGameRequestShuffledCards() {
         ServerOperationResponse serverResponse = null;
         int timesCalled = 0;
         while (serverResponse == null) {
@@ -206,7 +209,7 @@ public class AvailablePlayersScreenController {
                 if(serverResponse != null) {
                     ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
                     System.out.println("Got cards!");
-                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray, initiatorUserName);
+                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
                     // TODO inform player that the cards are ready and should press enter
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -215,7 +218,7 @@ public class AvailablePlayersScreenController {
         }
     }
 
-    private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray, String initiatorUserName) {
+    private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {
         Map<CategorizedCard, Point2D> cardsWithPositions = new HashMap<>();
         MemoriCardService memoriCardService = new MemoriCardService();
         for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
@@ -232,8 +235,7 @@ public class AvailablePlayersScreenController {
         MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
         MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
         Thread thread = new Thread(() -> gameLauncher.startNormalGameWithCards(gameLevel, cardsWithPositions));
-        Player opponent = new Player(initiatorUserName);
-        PlayerManager.setOpponentPlayer(opponent);
+        PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();
     }
 

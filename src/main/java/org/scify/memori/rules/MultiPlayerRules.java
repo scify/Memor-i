@@ -51,31 +51,32 @@ public class MultiPlayerRules extends MemoriRules {
 
     private void handleOpponentNextMove(MemoriGameState gsCurrentState) {
 
-        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_1")) {
-            if(generateOpponentMove(gsCurrentState)) {
-                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_1"));
-            }
-        } else {
-            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_1")) {
-                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_1"));
-                generateOpponentFlip(gsCurrentState);
-            } else {
-                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_2")) {
-                    if(generateOpponentMove(gsCurrentState)) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_2"));
-                    }
-                } else {
-                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_2")) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_2"));
-                        generateOpponentFlip(gsCurrentState);
-                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_1" );
-                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_2" );
-                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_1" );
-                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_2" );
-                    }
-                }
-            }
-        }
+//        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_1")) {
+//            if(generateOpponentMove(gsCurrentState)) {
+//                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_1"));
+//            }
+//        } else {
+//            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_1")) {
+//                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_1"));
+//                generateOpponentFlip(gsCurrentState);
+//            } else {
+//                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_2")) {
+//                    if(generateOpponentMove(gsCurrentState)) {
+//                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_2"));
+//                    }
+//                } else {
+//                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_2")) {
+//                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_2"));
+//                        generateOpponentFlip(gsCurrentState);
+//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_1" );
+//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_2" );
+//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_1" );
+//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_2" );
+//                    }
+//                }
+//            }
+//        }
+        generateOpponentMove(gsCurrentState);
 
     }
 

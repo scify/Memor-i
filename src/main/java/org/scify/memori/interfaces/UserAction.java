@@ -28,6 +28,17 @@ public class UserAction {
     @Expose
     private String direction;
 
+    @Expose protected long timestamp;
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public long getTimestamp() {
+
+        return timestamp;
+    }
+
     public void setCoords(Point2D coords) {
         this.coords = coords;
     }
@@ -39,6 +50,13 @@ public class UserAction {
     public UserAction(String sType, String direction) {
         actionType = sType;
         this.direction = direction;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public UserAction(String sType, String direction, long timestamp) {
+        actionType = sType;
+        this.direction = direction;
+        this.timestamp = timestamp;
     }
 
     public Point2D getCoords() {

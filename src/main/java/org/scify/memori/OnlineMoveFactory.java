@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class OnlineMoveFactory implements Observer, MoveFactory {
 
@@ -33,10 +34,12 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
                 UserAction currentAction = listIterator.next();
                 if(currentAction.getActionType().equals("movement")) {
                     actions.add(new UserAction("opponent_movement", currentAction.getDirection()));
+                } else {
+                    actions.add(new UserAction(currentAction.getActionType(), currentAction.getDirection()));
                 }
+                GameMovementManager.setTimestampOfLastOpponentMovement(currentAction.getTimestamp());
                 listIterator.remove();
             }
-
         }
         return actions;
     }
@@ -52,22 +55,12 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     }
 
     private void getLatestMoveFromServer() {
-        String sURL = "http://localhost/memoribackend/test";
         try {
-            URL url = new URL(sURL);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            JsonParser jp = new JsonParser(); //from gson
-            JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
-            JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
-            JsonArray moveObj = rootobj.get("actions").getAsJsonArray(); //just grab the zipcode
-            request.connect();
-            for (JsonElement movement : moveObj) {
-                JsonObject paymentObj = movement.getAsJsonObject();
-                String     actionType     = paymentObj.get("actionType").getAsString();
-                String     actionDirection = paymentObj.get("direction").getAsString();
-                opponentActions.add(new UserAction(actionType, actionDirection));
-            }
-        } catch (IOException e) {
+            TimeUnit.SECONDS.sleep(1);
+            UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
+            if(opponentLatestAction != null)
+                opponentActions.add(opponentLatestAction);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
