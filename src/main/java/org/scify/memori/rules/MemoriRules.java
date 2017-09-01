@@ -32,8 +32,6 @@ import java.util.Observable;
  */
 public class MemoriRules extends Observable implements Rules {
 
-    private ArrayList<UserAction> useractions = new ArrayList<>();
-
     @Override
     public GameState getInitialState() {
         return new MemoriGameState();
@@ -59,6 +57,7 @@ public class MemoriRules extends Observable implements Rules {
         //if a user action (eg Keyboard event was provided), handle the emitting Game events
         if (uaAction != null) {
             handleUserActionGameEvents(uaAction, gsCurrentState);
+            setChanged();
             this.notifyObservers(new RuleObserverObject(uaAction, "PLAYER_MOVE"));
         }
 
@@ -162,9 +161,9 @@ public class MemoriRules extends Observable implements Rules {
         // delayed: false (zero), blocking:yes
         if(uaAction.getActionType().equals("movement")) {
             gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords()));
-            this.useractions.add(uaAction);
+
         } else if (uaAction.getActionType().equals("flip")) {
-            this.useractions.add(uaAction);
+
             if(MainOptions.TUTORIAL_MODE) {
                 if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
                     performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
@@ -314,7 +313,6 @@ public class MemoriRules extends Observable implements Rules {
             System.err.println("Score for " + player.getName() + ": " + player.getScore());
         }
         gsCurrentState.incrementTurn();
-        this.useractions = new ArrayList<>();
     }
 
 

@@ -34,7 +34,6 @@ public class MultiPlayerRules extends MemoriRules {
             super.handleGameStartingGameEvents(gsCurrentState);
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_STARTED"));
         } else {
-            System.out.println("Playing: " + gsCurrentState.getCurrentPlayer().getName());
             if(isOpponentPlaying(gsCurrentState)) {
                 handleOpponentNextMove(gsCurrentState);
             } else {

@@ -12,6 +12,10 @@ public class GameMovementManager {
 
     private RequestManager requestManager;
 
+    public GameMovementManager() {
+        requestManager = new RequestManager();
+    }
+
     public String sendMovementToServer(String movementJson) {
         String url = "gameMovement/create";
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());

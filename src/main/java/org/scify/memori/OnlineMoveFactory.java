@@ -28,17 +28,13 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         if(opponentActions.isEmpty()) {
             getLatestMoveFromServer();
         } else {
-            boolean actionsCompleted = false;
             Iterator<UserAction> listIterator = opponentActions.iterator();
-            while(!actionsCompleted && listIterator.hasNext()) {
+            while(listIterator.hasNext()) {
                 UserAction currentAction = listIterator.next();
                 if(currentAction.getActionType().equals("movement")) {
                     actions.add(new UserAction("opponent_movement", currentAction.getDirection()));
-                    listIterator.remove();
-                } else {
-                    listIterator.remove();
-                    actionsCompleted = true;
                 }
+                listIterator.remove();
             }
 
         }
@@ -76,8 +72,8 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         }
     }
 
-    private void sendUserMoveToServer(String userActionsParam) {
-        gameMovementManager.sendMovementToServer(userActionsParam);
+    private String sendUserMoveToServer(String userActionsParam) {
+        return gameMovementManager.sendMovementToServer(userActionsParam);
     }
 
     @Override
@@ -87,7 +83,8 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
             UserAction userAction = (UserAction) ruleObserverObject.parameters;
             userAction.setTimestamp(System.currentTimeMillis());
-            sendUserMoveToServer(packUserAction(userAction));
+            String serverResponse = sendUserMoveToServer(packUserAction(userAction));
+            System.out.println("Sent movement. response: " + serverResponse);
         }
     }
 
@@ -97,31 +94,9 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
                 .serializeNulls()
                 .enableComplexMapKeySerialization()
                 .excludeFieldsWithoutExposeAnnotation()
-                .setVersion(1.0)
-                .registerTypeAdapter(Point2D.class, new OnlineMoveFactory.Point2DDeserializer());
+                .setVersion(1.0);
         Gson gson = gb.create();
         String jsonInString = gson.toJson(userAction);
         return jsonInString;
-    }
-
-    public static class Point2DDeserializer implements JsonDeserializer<Point2D>, JsonSerializer<Point2D> {
-
-        @Override
-        public Point2D deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
-
-            Point2D.Double ans = new Point2D.Double();
-            JsonObject obj = json.getAsJsonObject();
-
-            ans.x = obj.get("x").getAsDouble();
-            ans.y = obj.get("y").getAsDouble();
-
-            return ans;
-        }
-
-        @Override
-        public JsonElement serialize(final Point2D point2D, final Type type, final JsonSerializationContext jsonSerializationContext) {
-            return new Gson().toJsonTree(point2D);
-        }
     }
 }
