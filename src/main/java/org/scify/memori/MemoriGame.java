@@ -83,7 +83,7 @@ public abstract class MemoriGame implements Game<Integer> {
     @Override
     public Integer call() {
         final GameState gsInitialState;
-        if(givenGameCards == null)
+        if(givenGameCards.size() == 0)
             gsInitialState = rRules.getInitialState();
         else
             gsInitialState = rRules.getInitialState(givenGameCards);
@@ -91,7 +91,7 @@ public abstract class MemoriGame implements Game<Integer> {
         reRenderer.drawGameState(gsInitialState); // Initialize UI layout
         // Run asyncronously
         GameState gsCurrentState = gsInitialState; // Init
-        if(MainOptions.GAME_TYPE == 3) {
+        if(MainOptions.GAME_TYPE == 3 && PlayerManager.localPlayerIsInitiator) {
             sendShuffledDeckToServer((MemoriGameState)gsInitialState);
         }
         // For every cycle

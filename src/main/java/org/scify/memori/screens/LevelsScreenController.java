@@ -162,7 +162,8 @@ public class LevelsScreenController {
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 System.out.println("game is about to start");
-                Thread thread = new Thread(() -> {PlayerManager.localPlayerIsInitiator = true; gameLauncher.startNormalGame(gameLevel);});
+                PlayerManager.localPlayerIsInitiator = true;
+                Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
                 thread.start();
             } else if(event.getCode() == ESCAPE) {
                 // TODO send request to server to mark GameRequest as "canceled"

@@ -3,6 +3,7 @@ package org.scify.memori;
 import com.google.gson.*;
 import org.scify.memori.interfaces.MoveFactory;
 import org.scify.memori.interfaces.UserAction;
+import org.scify.memori.network.GameMovementManager;
 
 import java.awt.geom.Point2D;
 import java.io.*;
@@ -14,23 +15,17 @@ import java.util.*;
 public class OnlineMoveFactory implements Observer, MoveFactory {
 
     Queue<UserAction> opponentActions;
+    GameMovementManager gameMovementManager;
 
     public OnlineMoveFactory() {
         opponentActions = new LinkedList<>();
+        gameMovementManager = new GameMovementManager();
     }
 
     @Override
     public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState) {
         ArrayList<UserAction> actions = new ArrayList<>();
         if(opponentActions.isEmpty()) {
-//            opponentActions.add(new UserAction("movement", "DOWN"));
-//            opponentActions.add(new UserAction("movement", "RIGHT"));
-//            opponentActions.add(new UserAction("movement", "RIGHT"));
-//            opponentActions.add(new UserAction("movement", "UP"));
-//            opponentActions.add(new UserAction("flip", "SPACE"));
-//            opponentActions.add(new UserAction("movement", "UP"));
-//            opponentActions.add(new UserAction("movement", "LEFT"));
-//            opponentActions.add(new UserAction("flip", "SPACE"));
             getLatestMoveFromServer();
         } else {
             boolean actionsCompleted = false;
@@ -82,26 +77,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     }
 
     private void sendUserMoveToServer(String userActionsParam) {
-        System.out.println(userActionsParam);
-        String sURL = "http://localhost/memoribackend/testPost?actions=" + userActionsParam;
-        try {
-            URL url = new URL(sURL);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
-            int res = request.getResponseCode();
-
-            System.out.println(res);
-
-            InputStream is = request.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line = null;
-            while((line = br.readLine() ) != null) {
-                System.out.println(line);
-            }
-            request.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gameMovementManager.sendMovementToServer(userActionsParam);
     }
 
     @Override

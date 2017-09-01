@@ -226,6 +226,7 @@ public class AvailablePlayersScreenController {
         List<MemoriGameLevel> gameLevels = new ArrayList<>();
         GameLevelService gameLevelService = new GameLevelService();
         gameLevels = gameLevelService.createGameLevels();
+        // TODO change
         MemoriGameLevel gameLevel = gameLevels.get(0);
         MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
         MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();

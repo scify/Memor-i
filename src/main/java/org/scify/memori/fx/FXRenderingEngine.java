@@ -209,7 +209,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             Card card = (Card) pair.getValue();
             //add the card to layout when the Thread deems appropriate
             Platform.runLater(()-> {
-
                 try {
                     gridPane.add(card.getButton(), (int) point.getX(), (int) point.getY());
                 } catch (Exception e) {

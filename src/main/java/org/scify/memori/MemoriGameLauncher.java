@@ -38,7 +38,7 @@ public class MemoriGameLauncher {
     }
 
     public void startNormalGameWithCards(MemoriGameLevel gameLevel, Map<CategorizedCard, Point2D> cards) {
-        MemoriLogger.LOGGER.log(Level.INFO, "Starting a new game on level: " + gameLevel.getLevelName());
+        MemoriLogger.LOGGER.log(Level.INFO, "Starting a new game with given cards on level: " + gameLevel.getLevelName());
         audioEngine.pauseCurrentlyPlayingAudios();
         FXMemoriGame game = new FXMemoriGame(sceneHandler, gameLevel);
         game.initialize(cards);
