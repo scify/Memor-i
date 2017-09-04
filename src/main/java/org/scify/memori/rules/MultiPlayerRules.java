@@ -1,10 +1,8 @@
 package org.scify.memori.rules;
 
 import org.scify.memori.*;
-import org.scify.memori.interfaces.GameEvent;
-import org.scify.memori.interfaces.GameState;
-import org.scify.memori.interfaces.MoveFactory;
-import org.scify.memori.interfaces.UserAction;
+import org.scify.memori.interfaces.*;
+
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.concurrent.TimeUnit;
@@ -45,39 +43,50 @@ public class MultiPlayerRules extends MemoriRules {
         return gsCurrentState;
     }
 
-    protected boolean isOpponentPlaying(MemoriGameState memoriGameState) {
-        return memoriGameState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer());
+    private boolean isOpponentPlaying(MemoriGameState memoriGameState) {
+        Player currentPlayer = memoriGameState.getCurrentPlayer();
+        Player opponentPlayer = PlayerManager.getOpponentPlayer();
+        return currentPlayer.equals(opponentPlayer);
+    }
+
+    private void opponentCPUNextMove(MemoriGameState gsCurrentState) {
+        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_1")) {
+            if(generateOpponentMove(gsCurrentState)) {
+                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_1"));
+            }
+        } else {
+            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_1")) {
+                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_1"));
+                generateOpponentFlip(gsCurrentState);
+            } else {
+                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_2")) {
+                    if(generateOpponentMove(gsCurrentState)) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_2"));
+                    }
+                } else {
+                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_2")) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_2"));
+                        generateOpponentFlip(gsCurrentState);
+                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_1" );
+                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_2" );
+                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_1" );
+                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_2" );
+                    }
+                }
+            }
+        }
+    }
+
+    private void opponentOnlineNextMove(MemoriGameState gsCurrentState) {
+        generateOpponentMove(gsCurrentState);
     }
 
     private void handleOpponentNextMove(MemoriGameState gsCurrentState) {
-
-//        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_1")) {
-//            if(generateOpponentMove(gsCurrentState)) {
-//                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_1"));
-//            }
-//        } else {
-//            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_1")) {
-//                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_1"));
-//                generateOpponentFlip(gsCurrentState);
-//            } else {
-//                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_MOVEMENT_2")) {
-//                    if(generateOpponentMove(gsCurrentState)) {
-//                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_MOVEMENT_2"));
-//                    }
-//                } else {
-//                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "OPPONENT_FLIP_2")) {
-//                        gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_FLIP_2"));
-//                        generateOpponentFlip(gsCurrentState);
-//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_1" );
-//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_MOVEMENT_2" );
-//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_1" );
-//                        super.removeEventFromQueue(gsCurrentState, "OPPONENT_FLIP_2" );
-//                    }
-//                }
-//            }
-//        }
-        generateOpponentMove(gsCurrentState);
-
+        if(opponentMoveFactory instanceof CPUMoveFactory) {
+            opponentCPUNextMove(gsCurrentState);
+        } else {
+            opponentOnlineNextMove(gsCurrentState);
+        }
     }
 
     private boolean generateOpponentMove(MemoriGameState gsCurrentState) {
@@ -89,7 +98,7 @@ public class MultiPlayerRules extends MemoriRules {
         if(!movements.isEmpty()) {
             for (UserAction movement : movements) {
                 currentStep++;
-                super.handleUserActionGameEvents(movement, gsCurrentState, currentStep * 1000);
+                super.handleUserActionGameEvents(movement, gsCurrentState, currentStep * opponentMoveFactory.getMovementDelay());
             }
             return true;
         } else {

@@ -54,9 +54,14 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         opponentActions = new LinkedList<>();
     }
 
+    @Override
+    public int getMovementDelay() {
+        return 0;
+    }
+
     private void getLatestMoveFromServer() {
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(500);
             UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
             if(opponentLatestAction != null)
                 opponentActions.add(opponentLatestAction);

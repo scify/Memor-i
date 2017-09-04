@@ -19,14 +19,14 @@ public class MemoriCardService {
         this.cardDBHandlerJSON = new CardDBHandlerJSON();
     }
 
-    public List<Card> getMemoriCards(int numOfCards) {
-        /*
-          The number of cards we need depends on the level (number of rows and columns)
-          divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
-         */
-        List<Card> cards = shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
+    private static List<Card> cards = new ArrayList<>();
 
-        return cards;
+    public List<Card> getMemoriCards(int numOfCards) {
+        if(cards.isEmpty() || cards.size() != numOfCards) {
+            cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
+        }
+
+        return shuffleCards(cards);
     }
 
     public List<Card> getAllCards() {
@@ -80,7 +80,9 @@ public class MemoriCardService {
     }
 
     public CategorizedCard getCardFromLabelAndType(String cardLabel, String cardCategory) {
-        List<Card> cards = getAllCards();
+        if(cards.isEmpty()) {
+            cards = getAllCards();
+        }
         for(Card card: cards) {
             CategorizedCard categorizedCard = (CategorizedCard) card;
             if(categorizedCard.getLabel().equals(cardLabel) && categorizedCard.getCategory().equals(cardCategory))

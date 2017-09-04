@@ -13,11 +13,12 @@ public class CategorizedCard extends Card{
      * the category that the cards belongs to
      */
     @Expose
-    protected String category;
+    private String category;
+
     /**
      * the equivalence Card Set identifier (hash code) that the card belongs to
      */
-    protected String equivalenceCardSetHashCode;
+    private String equivalenceCardSetHashCode;
 
     // number 1-100 describing the probability for the description sound to be played, after the card has found
     //TODO: implement

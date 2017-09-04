@@ -8,4 +8,5 @@ public interface MoveFactory {
     public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState);
     public  UserAction getUserFlip();
     public void updateFactoryComponents();
+    int getMovementDelay();
 }

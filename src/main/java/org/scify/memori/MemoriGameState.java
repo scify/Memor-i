@@ -80,6 +80,7 @@ public class MemoriGameState implements GameState {
             currentPlayer = player1;
         } else if (MainOptions.GAME_TYPE == 2) {
             Player player2 = new Player("player2");
+            PlayerManager.setOpponentPlayer(player2);
             players.add(player2);
             currentPlayer = player1;
         } else {

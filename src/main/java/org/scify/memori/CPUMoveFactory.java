@@ -110,6 +110,11 @@ public class CPUMoveFactory implements Observer, MoveFactory {
         }
     }
 
+    @Override
+    public int getMovementDelay() {
+        return 1000;
+    }
+
     private boolean candidateTileCombinationVisited(Point2D candidateTilePosition) {
         if(visitedTilesPositionsForCurrTurn.isEmpty())
             return false;
