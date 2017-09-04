@@ -6,6 +6,8 @@
 <?import javafx.scene.image.Image?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
 <StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.InvitePlayerScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
@@ -23,7 +25,9 @@
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer">
         <VBox alignment="center" fx:id="playersDiv">
-            <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitIfEsc" />
+            <!--<Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitIfEsc" />-->
+            <Text styleClass="optionButton, textLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Player username:"/>
+            <TextField styleClass="optionButton,textField" onKeyPressed="#submitUsername" id="textfield" fx:id="username"/>
         </VBox>
     </VBox>
     <stylesheets>

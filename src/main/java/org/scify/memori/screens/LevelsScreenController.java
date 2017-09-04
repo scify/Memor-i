@@ -81,9 +81,9 @@ public class LevelsScreenController {
     }
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
+        setAllLevelButtonsAsDisabled();
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
         if(serverResponse != null) {
-            setAllLevelButtonsAsDisabled();
             parseGameRequestServerResponse(serverResponse, gameLevel);
         }
     }
@@ -139,6 +139,7 @@ public class LevelsScreenController {
                         // to press enter to start the game
                         promptForEnterAndStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
+                        setAllLevelButtonsAsEnabled();
                         // TODO inform user that the request was rejected and prompt
                         // either to select another level
                         // or to press escape and select another opponent
@@ -154,6 +155,13 @@ public class LevelsScreenController {
         VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
         for(Node node: gameLevelsContainer.getChildren()) {
             node.setDisable(true);
+        }
+    }
+
+    private void setAllLevelButtonsAsEnabled() {
+        VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
+        for(Node node: gameLevelsContainer.getChildren()) {
+            node.setDisable(false);
         }
     }
 

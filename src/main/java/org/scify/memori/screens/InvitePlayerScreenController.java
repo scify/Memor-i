@@ -1,16 +1,12 @@
 package org.scify.memori.screens;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
-import org.json.JSONArray;
 import com.google.gson.JsonObject;
-import org.json.JSONObject;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
@@ -23,6 +19,7 @@ import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 
 import java.awt.geom.Point2D;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,116 +31,118 @@ import static javafx.scene.input.KeyCode.*;
 public class InvitePlayerScreenController {
 
     private Scene primaryScene;
+    @FXML
+    TextField username;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     protected FXAudioEngine audioEngine = new FXAudioEngine();
     private ArrayList<Player> availablePlayers = new ArrayList<>();
     private Text2Speech text2Speech;
     private GameRequestManager gameRequestManager;
+    private PlayerManager playerManager;
     MemoriGameLauncher gameLauncher;
     private Player candidateOpponent;
+    ScheduledExecutorService gameRequestsExecutorService = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
         this.sceneHandler = sceneHandler;
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
         gameRequestManager = new GameRequestManager();
+        playerManager = new PlayerManager();
         sceneHandler.pushScene(userNameScreenScene);
         text2Speech = new Text2Speech();
-        getOnlinePlayersFromServer();
         gameLauncher = new MemoriGameLauncher(sceneHandler);
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        queryServerForGameRequests();
+                    }
+                },
+                5000
+        );
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        markPlayerActive();
+                    }
+                },
+                5000
+        );
     }
 
     @FXML
     private void exitIfEsc(KeyEvent evt) {
         if(evt.getCode() == ESCAPE) {
-            sceneHandler.popScene();
+            exitScreen();
         }
     }
 
-    private void getOnlinePlayersFromServer() {
-        PlayerManager playerManager = new PlayerManager();
-        String serverResponse = playerManager.getOnlinePlayersFromServer();
-        if(serverResponse != null) {
-            parseServerResponse(serverResponse);
+    private void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        sceneHandler.popScene();
+    }
+
+    @FXML
+    protected void submitUsername(KeyEvent evt) {
+        if (evt.getCode() == ENTER){
+            String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+            boolean valid = cleanString.matches("\\w+");
+            if (valid) {
+                getPlayerAvailability(cleanString);
+            } else {
+                //TODO: play sound informing the player that only english characters are allowed
+            }
+        } else if (evt.getCode() == ESCAPE) {
+            exitScreen();
         }
     }
 
-    private void parseServerResponse(String serverResponse) {
-        JSONArray jsonarray = new JSONArray(serverResponse);
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject jsonobject = jsonarray.getJSONObject(i);
-            String name = jsonobject.getString("user_name");
-            int id = jsonobject.getInt("id");
-            Player player = new Player(name, id);
-            availablePlayers.add(player);
-        }
-        VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#playersDiv");
-        if(availablePlayers.isEmpty()) {
-            // TODO play appropriate sound
-            //addPlayerVsCPUBtn(gameLevelsContainer);
-        } else {
-            // TODO play sound to inform the user that they can
-            // either wait for a game request or select a player to send them a request
-            addPlayersButtons(gameLevelsContainer);
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                        @Override
-                        public void run() {
-                            queryServerForGameRequests();
-                        }
-                    },
-                    5000
-            );
-        }
-
+    private void getPlayerAvailability(String playerUserName) {
+        String serverResponse = playerManager.getPlayerAvailability(playerUserName);
+        parsePlayerAvailabilityResponse(serverResponse);
     }
 
-//    private void addPlayerVsCPUBtn(VBox buttonsContainer) {
-//        Button verusCPUBtn = new Button();
-//        verusCPUBtn.setText("Versus Computer");
-//        verusCPUBtn.getStyleClass().add("optionButton");
-//        buttonsContainer.getChildren().add(verusCPUBtn);
-//        playVersusCPUBtnHandler(verusCPUBtn);
-//        verusCPUBtn.requestFocus();
-//    }
-
-    private void addPlayersButtons(VBox buttonsContainer) {
-        for (Player currPlayer : availablePlayers) {
-            Button playerBtn = new Button();
-            playerBtn.setText(currPlayer.getName());
-            playerBtn.getStyleClass().add("optionButton");
-            playerBtn.setId(String.valueOf(currPlayer.getId()));
-            playerBtn.focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-                if (newPropertyValue) {
-                    Thread thread = new Thread(() -> text2Speech.speak(currPlayer.getName()));
-                    thread.start();
+    private void parsePlayerAvailabilityResponse(String serverResponse) {
+        Gson g = new Gson();
+        ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
+        response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
+        int code = response.getCode();
+        System.out.println("game request reply response code: " + code);
+        switch (code) {
+            case 1:
+                String playerStatus = response.getMessage();
+                if(playerStatus.equals("player_available")) {
+                    // TODO inform that player is available and prompt to go to levels page
+                    JsonObject parametersObject = (JsonObject) response.getParameters();
+                    int playerId = parametersObject.get("player_id").getAsInt();
+                    System.out.println("Player available");
+                    promptToGoToLevelsPage(playerId);
+                    username.setDisable(true);
+                } else if(playerStatus.equals("player_not_available")) {
+                    // TODO inform that player is NOT available
+                    System.out.println("Player not available");
+                    // TODO prompt user to press space and play with CPU
                 }
-            });
-            buttonsContainer.getChildren().add(playerBtn);
-            playerBtnHandler(playerBtn, currPlayer);
+            case 2:
+                // error
+            case 3:
+                // server validation not passed
+            case 4:
+                // player not found
         }
     }
 
-//    private void playVersusCPUBtnHandler(Button button) {
-//        button.setOnKeyPressed(event -> {
-//            if (event.getCode() == SPACE) {
-//                MainOptions.GAME_TYPE = 2;
-//                new LevelsScreen(this.sceneHandler);
-//            } else if (event.getCode() == ESCAPE) {
-//                sceneHandler.popScene();
-//            }
-//        });
-//    }
-
-    private void playerBtnHandler(Button playerBtn, Player currPlayer) {
-        playerBtn.setOnKeyPressed(event -> {
+    private void promptToGoToLevelsPage(int opponentId) {
+        primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                System.out.println("opponent id: " + playerBtn.getId());
-                LevelsScreen levelsScreen = new LevelsScreen(this.sceneHandler);
-                levelsScreen.setOpponentId(currPlayer.getId());
-            } else if (event.getCode() == ESCAPE) {
-                sceneHandler.popScene();
+                LevelsScreen levelsScreen = new LevelsScreen(sceneHandler);
+                levelsScreen.setOpponentId(opponentId);
+                gameRequestsExecutorService.shutdown();
             }
         });
     }
@@ -153,9 +152,8 @@ public class InvitePlayerScreenController {
         int timesCalled = 0;
         while (serverResponse == null) {
             timesCalled ++;
-            ScheduledExecutorService scheduler = Executors
-                    .newScheduledThreadPool(1);
-            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
+
+            ScheduledFuture<ServerOperationResponse> future = gameRequestsExecutorService.schedule(
                     new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
             try {
                 serverResponse = future.get();
@@ -166,6 +164,7 @@ public class InvitePlayerScreenController {
                     String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
                     int initiatorId = parametersObject.get("initiator_id").getAsInt();
                     System.out.println("You have a new request from " +initiatorUserName + "!");
+                    username.setDisable(true);
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
                     thread.start();
@@ -189,9 +188,15 @@ public class InvitePlayerScreenController {
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
+                username.setDisable(false);
                 gameRequestManager.sendGameRequestAnswerToServer(false);
             }
         });
+    }
+
+    private void markPlayerActive() {
+        markPlayerActiveExecutorService.scheduleAtFixedRate(
+                new PlayerManager("PLAYER_ACTIVE"), 5, 5, TimeUnit.MINUTES);
     }
 
     private void queryForGameRequestShuffledCards() {

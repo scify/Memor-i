@@ -22,6 +22,8 @@ import javafx.util.Pair;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.interfaces.*;
+import org.scify.memori.network.GameRequestManager;
+
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.Observable;
@@ -65,6 +67,8 @@ public class MemoriRules extends Observable implements Rules {
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             handleLevelFinishGameEvents(uaAction, gsCurrentState);
+            if(MainOptions.GAME_TYPE == 3)
+                markOnlineGameAsFinished();
         }
 
         return gsCurrentState;
@@ -202,7 +206,10 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
-
+    private void markOnlineGameAsFinished() {
+        GameRequestManager gameRequestManager = new GameRequestManager();
+        gameRequestManager.endGame();
+    }
 
     /**
      * Applies the rules and creates the game events relevant to flipping a card
@@ -230,7 +237,6 @@ public class MemoriRules extends Observable implements Rules {
             flipTile(currTile);
             this.setChanged();
             this.notifyObservers(new RuleObserverObject(new Pair<>(uaAction, currTile), "TILE_REVEALED"));
-            this.setChanged();
 
             // push flip feedback event (delayed: false, blocking: no)
             gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));

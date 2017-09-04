@@ -2,19 +2,15 @@ package org.scify.memori;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.scify.memori.helper.PropertyHandlerImpl;
 import org.scify.memori.interfaces.Player;
-import org.scify.memori.interfaces.PropertyHandler;
 import org.scify.memori.network.RequestManager;
+import org.scify.memori.network.ServerOperationResponse;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class PlayerManager {
-
-    private String userNamesFile;
-    private PropertyHandler propertyHandler;
+public class PlayerManager  implements Runnable {
 
     private RequestManager requestManager;
 
@@ -23,6 +19,24 @@ public class PlayerManager {
     private static Player opponentPlayer;
     private static Player startingPlayer;
     public static boolean localPlayerIsInitiator = false;
+    private String callIdentifier;
+
+    public PlayerManager() {
+        requestManager = new RequestManager();
+    }
+
+    public PlayerManager(String callIdentifier) {
+        requestManager = new RequestManager();
+        this.callIdentifier = callIdentifier;
+    }
+
+
+    private void markPlayerActive() {
+        String url = "player/markActive";
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
+        String response = requestManager.doPost(url, urlParameters);
+    }
 
     public static void setLocalPlayer(Player localPlayer) {
         PlayerManager.localPlayer = localPlayer;
@@ -53,18 +67,6 @@ public class PlayerManager {
         return playerId;
     }
 
-    public PlayerManager() {
-        String userNamesFileDir;
-        propertyHandler = new PropertyHandlerImpl();
-        requestManager = new RequestManager();
-        if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
-            userNamesFileDir = System.getenv("AppData");
-        } else {
-            userNamesFileDir = System.getProperty("user.dir");
-        }
-        userNamesFile = userNamesFileDir + File.separator + ".user_names.properties";
-    }
-
     public String register(String userName, String password) {
         String url = "player/register";
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -81,6 +83,11 @@ public class PlayerManager {
         return this.requestManager.doPost(url, urlParameters);
     }
 
+    public String getPlayerAvailability(String userName) {
+        String url = "player/availability?user_name=" + userName;
+        return this.requestManager.doGet(url);
+    }
+
     public String getOnlinePlayersFromServer() {
         String url = "players/online";
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -89,5 +96,13 @@ public class PlayerManager {
         return this.requestManager.doGet(url);
     }
 
-
+    @Override
+    public void run() {
+        switch (callIdentifier) {
+            case "PLAYER_ACTIVE":
+                markPlayerActive();
+            default:
+                break;
+        }
+    }
 }
