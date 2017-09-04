@@ -17,12 +17,12 @@ public class RegisterOrLoginScreenController {
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     protected FXAudioEngine audioEngine = new FXAudioEngine();
 
-    public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
-        this.primaryScene = userNameScreenScene;
+    public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
+        this.primaryScene = scene;
         this.sceneHandler = sceneHandler;
-        FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
+        FXRenderingEngine.setGamecoverIcon(scene, "gameCoverImgContainer");
 
-        sceneHandler.pushScene(userNameScreenScene);
+        sceneHandler.pushScene(scene);
     }
 
     @FXML

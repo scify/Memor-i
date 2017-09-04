@@ -107,7 +107,7 @@ public class RegisterLoginFormScreenController {
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
                 int newPlayerId = paramsObj.getInt("player_id");
                 PlayerManager.setPlayerId(newPlayerId);
-                new AvailablePlayersScreen(sceneHandler);
+                new InvitePlayerScreen(sceneHandler);
                 break;
             case 2:
                 // Player with username exists

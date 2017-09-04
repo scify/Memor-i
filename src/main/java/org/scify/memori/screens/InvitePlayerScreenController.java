@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import org.scify.memori.*;
-import org.scify.memori.card.Card;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.fx.FXAudioEngine;
@@ -32,7 +31,7 @@ import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.*;
 
-public class AvailablePlayersScreenController {
+public class InvitePlayerScreenController {
 
     private Scene primaryScene;
 
