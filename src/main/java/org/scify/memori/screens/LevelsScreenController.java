@@ -83,6 +83,7 @@ public class LevelsScreenController {
     private void sendGameRequest(MemoriGameLevel gameLevel) {
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
         if(serverResponse != null) {
+            setAllLevelButtonsAsDisabled();
             parseGameRequestServerResponse(serverResponse, gameLevel);
         }
     }
@@ -136,7 +137,6 @@ public class LevelsScreenController {
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
-                        setAllLevelButtonsAsDisabled();
                         promptForEnterAndStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         // TODO inform user that the request was rejected and prompt

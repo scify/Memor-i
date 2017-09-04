@@ -44,6 +44,13 @@ public class RegisterLoginFormScreenController {
     }
 
     @FXML
+    private void exitIfEsc(KeyEvent evt) {
+        if(evt.getCode() == ESCAPE) {
+            sceneHandler.popScene();
+        }
+    }
+
+    @FXML
     protected void submitUserName(KeyEvent evt) {
         if (evt.getCode() == ENTER) {
             String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");

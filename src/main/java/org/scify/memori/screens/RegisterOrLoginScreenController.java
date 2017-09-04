@@ -26,6 +26,13 @@ public class RegisterOrLoginScreenController {
     }
 
     @FXML
+    private void exitIfEsc(KeyEvent evt) {
+        if(evt.getCode() == ESCAPE) {
+            sceneHandler.popScene();
+        }
+    }
+
+    @FXML
     protected void goToRegisterScreen(KeyEvent evt) {
         if (evt.getCode() == ESCAPE) {
             exitScreen();
