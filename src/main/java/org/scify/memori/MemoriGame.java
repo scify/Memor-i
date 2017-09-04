@@ -140,6 +140,8 @@ public abstract class MemoriGame implements Game<Integer> {
 
     @Override
     public void finalize() {
+        if(MainOptions.GAME_TYPE == 3)
+            markOnlineGameAsFinished();
         System.err.println("FINALIZE");
     }
 
@@ -178,5 +180,10 @@ public abstract class MemoriGame implements Game<Integer> {
             default:
                 break;
         }
+    }
+
+    private void markOnlineGameAsFinished() {
+        GameRequestManager gameRequestManager = new GameRequestManager();
+        gameRequestManager.endGame();
     }
 }

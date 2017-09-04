@@ -35,15 +35,17 @@ public class InvitePlayerScreenController {
     TextField username;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    protected FXAudioEngine audioEngine = new FXAudioEngine();
-    private ArrayList<Player> availablePlayers = new ArrayList<>();
+    private FXAudioEngine audioEngine = new FXAudioEngine();
     private Text2Speech text2Speech;
     private GameRequestManager gameRequestManager;
     private PlayerManager playerManager;
-    MemoriGameLauncher gameLauncher;
+    private MemoriGameLauncher gameLauncher;
     private Player candidateOpponent;
-    ScheduledExecutorService gameRequestsExecutorService = Executors.newScheduledThreadPool(1);
-    ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService gameRequestsExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
+    private int gameLevelId;
+    private ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
+    private boolean shouldQueryForRequests = true;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
@@ -110,7 +112,8 @@ public class InvitePlayerScreenController {
     private void parsePlayerAvailabilityResponse(String serverResponse) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
-        response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
+        if(!response.getParameters().equals(""))
+            response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
         System.out.println("game request reply response code: " + code);
         switch (code) {
@@ -127,6 +130,9 @@ public class InvitePlayerScreenController {
                     // TODO inform that player is NOT available
                     System.out.println("Player not available");
                     // TODO prompt user to press space and play with CPU
+                    Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with random player."));
+                    thread.start();
+                    promptToPlayWithCPU();
                 }
             case 2:
                 // error
@@ -138,11 +144,23 @@ public class InvitePlayerScreenController {
     }
 
     private void promptToGoToLevelsPage(int opponentId) {
+        Thread thread = new Thread(() -> text2Speech.speak("Player available. Press space."));
+        thread.start();
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler);
                 levelsScreen.setOpponentId(opponentId);
-                gameRequestsExecutorService.shutdown();
+                shouldQueryForRequests = false;
+            }
+        });
+    }
+
+    private void promptToPlayWithCPU() {
+        primaryScene.setOnKeyReleased(event -> {
+            if (event.getCode() == SPACE) {
+                MainOptions.GAME_TYPE = 2;
+                new LevelsScreen(sceneHandler);
+                shouldQueryForRequests = false;
             }
         });
     }
@@ -150,19 +168,20 @@ public class InvitePlayerScreenController {
     private void queryServerForGameRequests() {
         ServerOperationResponse serverResponse = null;
         int timesCalled = 0;
-        while (serverResponse == null) {
+        while (serverResponse == null && shouldQueryForRequests) {
             timesCalled ++;
 
-            ScheduledFuture<ServerOperationResponse> future = gameRequestsExecutorService.schedule(
+            gameRequestsFuture = gameRequestsExecutorService.schedule(
                     new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
             try {
-                serverResponse = future.get();
+                serverResponse = gameRequestsFuture.get();
                 if(serverResponse != null) {
                     JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
                     int gameRequestId = parametersObject.get("game_request_id").getAsInt();
                     GameRequestManager.setGameRequestId(gameRequestId);
                     String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
                     int initiatorId = parametersObject.get("initiator_id").getAsInt();
+                    gameLevelId = parametersObject.get("game_level_id").getAsInt();
                     System.out.println("You have a new request from " +initiatorUserName + "!");
                     username.setDisable(true);
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
@@ -230,11 +249,10 @@ public class InvitePlayerScreenController {
             cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
         }
         System.out.println(cardsWithPositions.size());
-        List<MemoriGameLevel> gameLevels = new ArrayList<>();
+        List<MemoriGameLevel> gameLevels;
         GameLevelService gameLevelService = new GameLevelService();
         gameLevels = gameLevelService.createGameLevels();
-        // TODO change
-        MemoriGameLevel gameLevel = gameLevels.get(0);
+        MemoriGameLevel gameLevel = gameLevels.get(gameLevelId -1);
         MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
         MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
         MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();

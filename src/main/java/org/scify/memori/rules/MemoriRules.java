@@ -67,8 +67,6 @@ public class MemoriRules extends Observable implements Rules {
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             handleLevelFinishGameEvents(uaAction, gsCurrentState);
-            if(MainOptions.GAME_TYPE == 3)
-                markOnlineGameAsFinished();
         }
 
         return gsCurrentState;
@@ -206,10 +204,7 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
-    private void markOnlineGameAsFinished() {
-        GameRequestManager gameRequestManager = new GameRequestManager();
-        gameRequestManager.endGame();
-    }
+
 
     /**
      * Applies the rules and creates the game events relevant to flipping a card
