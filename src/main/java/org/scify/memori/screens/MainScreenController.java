@@ -169,17 +169,9 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializeTutorialGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            GameLevelService gameLevelService = new GameLevelService();
-            gameLevels = new ArrayList<>();
-            gameLevels = gameLevelService.createGameLevels();
-            MainOptions.TUTORIAL_MODE = true;
-            MemoriGameLevel gameLevel = gameLevels.get(0);
-            MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
-            MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-            MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
-            MainOptions.GAME_TYPE = 1;
+
             MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
-            Thread thread = new Thread(() -> memoriGameLauncher.startNormalGame(gameLevel));
+            Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();

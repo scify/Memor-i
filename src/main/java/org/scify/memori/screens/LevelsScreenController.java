@@ -1,10 +1,12 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import org.json.JSONObject;
 import org.scify.memori.*;
 import org.scify.memori.fx.FXAudioEngine;
@@ -31,8 +33,10 @@ public class LevelsScreenController {
     private GameRequestManager gameRequestManager = new GameRequestManager();
     MemoriGameLauncher gameLauncher;
     private Text2Speech text2Speech = new Text2Speech();
-
-
+    @FXML
+    Text messageText;
+    @FXML
+    Text infoText;
     /**
      * Pauses all sounds and exits the application
      */
@@ -49,6 +53,7 @@ public class LevelsScreenController {
         sceneHandler.pushScene(levelsScreenScene);
         VBox gameLevelsContainer = (VBox) levelsScreenScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
+        infoText.setText("Select a Game level and press Space.");
     }
 
     /**
@@ -98,8 +103,19 @@ public class LevelsScreenController {
         });
     }
 
-    private void sendGameRequest(MemoriGameLevel gameLevel) {
+    private void waitForResponseUI() {
         setAllLevelButtonsAsDisabled();
+        messageText.setText("Waiting for Response...");
+    }
+
+    private void resetUI() {
+        setAllLevelButtonsAsEnabled();
+        messageText.setText("Press Space to play with a random player");
+    }
+
+    private void sendGameRequest(MemoriGameLevel gameLevel) {
+        Thread thread = new Thread(() -> waitForResponseUI());
+        thread.start();
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
         if(serverResponse != null) {
             parseGameRequestServerResponse(serverResponse, gameLevel);
@@ -138,29 +154,27 @@ public class LevelsScreenController {
 
     private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
         ServerOperationResponse serverOperationResponse = null;
-        int timesCalled = 0;
         while (serverOperationResponse == null) {
-            timesCalled ++;
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
             ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
                     new GameRequestManager("GET_GAME_REQUEST_REPLY"), 5, TimeUnit.SECONDS);
             try {
                 serverOperationResponse = future.get();
-                System.out.println(serverOperationResponse);
-                System.out.println("times called: " + timesCalled);
                 if(serverOperationResponse != null) {
                     // we got a reply
 
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
-
+                        messageText.setText("Player accepted! Press Space");
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
-                        setAllLevelButtonsAsEnabled();
-                        Thread thread = new Thread(() -> text2Speech.speak("The player rejected your request. Press space to go to game level screen and play with a random player."));
+                        messageText.setText("Player rejected. Press Escape");
+                        Thread thread = new Thread(() -> resetUI());
                         thread.start();
+                        Thread voiceThread = new Thread(() -> text2Speech.speak("The player rejected your request. Press space to go to game level screen and play with a random player."));
+                        voiceThread.start();
                         promptToPlayWithCPU();
                         // TODO inform user that the request was rejected and prompt
                         // either to select another level

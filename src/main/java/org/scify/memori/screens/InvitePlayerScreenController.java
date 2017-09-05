@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import com.google.gson.JsonObject;
+import javafx.scene.text.Text;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
@@ -33,6 +34,9 @@ public class InvitePlayerScreenController {
     private Scene primaryScene;
     @FXML
     TextField username;
+
+    @FXML
+    Text invitationText;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
@@ -124,13 +128,15 @@ public class InvitePlayerScreenController {
                     JsonObject parametersObject = (JsonObject) response.getParameters();
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
+                    invitationText.setText("Player available. Press space to continue.");
                     promptToGoToLevelsPage(playerId);
                     username.setDisable(true);
                 } else if(playerStatus.equals("player_not_available")) {
                     // TODO inform that player is NOT available
                     System.out.println("Player not available");
                     // TODO prompt user to press space and play with CPU
-                    Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with random player."));
+                    invitationText.setText("Player not available. Press space to play with a random player.");
+                    Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
                     thread.start();
                     promptToPlayWithCPU();
                 }
@@ -183,6 +189,7 @@ public class InvitePlayerScreenController {
                     int initiatorId = parametersObject.get("initiator_id").getAsInt();
                     gameLevelId = parametersObject.get("game_level_id").getAsInt();
                     System.out.println("You have a new request from " +initiatorUserName + "!");
+                    invitationText.setText("You have a new request from " +initiatorUserName + "! Press Enter to Accept.");
                     username.setDisable(true);
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
