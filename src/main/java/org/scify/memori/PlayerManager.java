@@ -2,13 +2,12 @@ package org.scify.memori;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.RequestManager;
-import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class PlayerManager  implements Runnable {
 
@@ -18,16 +17,20 @@ public class PlayerManager  implements Runnable {
     private static Player localPlayer;
     private static Player opponentPlayer;
     private static Player startingPlayer;
+    private MemoriConfiguration configuration = new MemoriConfiguration();
     public static boolean localPlayerIsInitiator = false;
     private String callIdentifier;
+    String gameIdentifier;
 
     public PlayerManager() {
         requestManager = new RequestManager();
+        gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
     }
 
     public PlayerManager(String callIdentifier) {
         requestManager = new RequestManager();
         this.callIdentifier = callIdentifier;
+        gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
     }
 
 
@@ -41,7 +44,6 @@ public class PlayerManager  implements Runnable {
     public static void setLocalPlayer(Player localPlayer) {
         PlayerManager.localPlayer = localPlayer;
     }
-
 
     public static void setStartingPlayer(Player startingPlayer) {
         PlayerManager.startingPlayer = startingPlayer;
@@ -72,6 +74,7 @@ public class PlayerManager  implements Runnable {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("user_name", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
+        urlParameters.add(new BasicNameValuePair("game_flavor_pack_identifier", gameIdentifier));
         return this.requestManager.doPost(url, urlParameters);
     }
 
@@ -80,11 +83,12 @@ public class PlayerManager  implements Runnable {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("user_name", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
+        urlParameters.add(new BasicNameValuePair("game_flavor_pack_identifier", gameIdentifier));
         return this.requestManager.doPost(url, urlParameters);
     }
 
     public String getPlayerAvailability(String userName) {
-        String url = "player/availability?user_name=" + userName;
+        String url = "player/availability?user_name=" + userName + "&game_flavor_pack_identifier=" + gameIdentifier;
         return this.requestManager.doGet(url);
     }
 
@@ -92,7 +96,7 @@ public class PlayerManager  implements Runnable {
         String url = "players/online";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(PlayerManager.getPlayerId())));
-        url += "?player_id=" + PlayerManager.getPlayerId();
+        url += "?player_id=" + PlayerManager.getPlayerId() + "&game_flavor_pack_identifier=" + gameIdentifier;
         return this.requestManager.doGet(url);
     }
 
