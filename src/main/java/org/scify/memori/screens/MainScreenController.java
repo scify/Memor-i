@@ -169,7 +169,6 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializeTutorialGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-
             MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
             Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
             thread.start();
@@ -187,7 +186,7 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             MainOptions.GAME_TYPE = 1;
             audioEngine.pauseCurrentlyPlayingAudios();
-            new LevelsScreen(sceneHandler);
+            new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
@@ -203,7 +202,7 @@ public class MainScreenController implements Initializable {
 
             MainOptions.GAME_TYPE = 2;
             audioEngine.pauseCurrentlyPlayingAudios();
-            new LevelsScreen(sceneHandler);
+            new LevelsScreen(sceneHandler, GameType.VS_CPU);
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }

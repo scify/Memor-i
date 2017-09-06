@@ -154,7 +154,7 @@ public class InvitePlayerScreenController {
         thread.start();
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                LevelsScreen levelsScreen = new LevelsScreen(sceneHandler);
+                LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 shouldQueryForRequests = false;
             }
@@ -165,7 +165,7 @@ public class InvitePlayerScreenController {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
                 MainOptions.GAME_TYPE = 2;
-                new LevelsScreen(sceneHandler);
+                new LevelsScreen(sceneHandler, GameType.VS_CPU);
                 shouldQueryForRequests = false;
             }
         });
@@ -260,10 +260,7 @@ public class InvitePlayerScreenController {
         GameLevelService gameLevelService = new GameLevelService();
         gameLevels = gameLevelService.createGameLevels();
         MemoriGameLevel gameLevel = gameLevels.get(gameLevelId -1);
-        MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
-        Thread thread = new Thread(() -> gameLauncher.startNormalGameWithCards(gameLevel, cardsWithPositions));
+        Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();
     }

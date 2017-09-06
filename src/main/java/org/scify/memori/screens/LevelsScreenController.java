@@ -1,6 +1,7 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -27,33 +28,27 @@ public class LevelsScreenController {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private Scene primaryScene;
-    protected FXSceneHandler sceneHandler = new FXSceneHandler();
+    private FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
     private int opponentId;
     private GameRequestManager gameRequestManager = new GameRequestManager();
-    MemoriGameLauncher gameLauncher;
+    private MemoriGameLauncher gameLauncher;
     private Text2Speech text2Speech = new Text2Speech();
+    private GameType gameType;
     @FXML
-    Text messageText;
+    Button messageText;
     @FXML
-    Text infoText;
-    /**
-     * Pauses all sounds and exits the application
-     */
-    private void exitScreen() {
-        audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popScene();
-    }
+    Button infoText;
 
-    public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {
+    public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene, GameType gameType) {
         this.primaryScene = levelsScreenScene;
         this.sceneHandler = sceneHandler;
-        FXRenderingEngine.setGamecoverIcon(levelsScreenScene, "gameCoverImgContainer");
+        this.gameType = gameType;
         gameLauncher = new MemoriGameLauncher(sceneHandler);
         sceneHandler.pushScene(levelsScreenScene);
-        VBox gameLevelsContainer = (VBox) levelsScreenScene.lookup("#gameLevelsDiv");
+        FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
+        VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
-        infoText.setText("Select a Game level and press Space.");
     }
 
     /**
@@ -80,22 +75,36 @@ public class LevelsScreenController {
     }
 
     /**
+     * Pauses all sounds and exits the application
+     */
+    private void exitScreen() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        sceneHandler.popScene();
+    }
+
+    /**
      * When the user clicks on a game level button, a new Game should start
      * @param gameLevelBtn the button clcked
      * @param gameLevel the game level associated with this button
      */
     private void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
-
         gameLevelBtn.setOnKeyPressed(event -> {
+            Thread thread;
             if (event.getCode() == SPACE) {
-                MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
-                MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-                MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
-                if(MainOptions.GAME_TYPE != 3) {
-                    Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
-                    thread.start();
-                } else {
-                    sendGameRequest(gameLevel);
+                switch (gameType) {
+                    case SINGLE_PLAYER:
+                        thread = new Thread(() -> gameLauncher.startSinglePlayerGame(gameLevel));
+                        thread.start();
+                        break;
+                    case VS_CPU:
+                        thread = new Thread(() -> gameLauncher.startPVCPUGame(gameLevel));
+                        thread.start();
+                        break;
+                    case VS_PLAYER:
+                        sendGameRequest(gameLevel);
+                        break;
+                    default:
+                        break;
                 }
             } else if (event.getCode() == ESCAPE) {
                 exitScreen();
@@ -191,7 +200,6 @@ public class LevelsScreenController {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
                 MainOptions.GAME_TYPE = 2;
-                new LevelsScreen(sceneHandler);
             }
         });
     }
@@ -216,14 +224,11 @@ public class LevelsScreenController {
         voiceThread.start();
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == SPACE) {
-                System.out.println("game is about to start");
                 PlayerManager.localPlayerIsInitiator = true;
-                Thread thread = new Thread(() -> gameLauncher.startNormalGame(gameLevel));
+                Thread thread = new Thread(() -> gameLauncher.startPvPGame(gameLevel));
                 thread.start();
             } else if(event.getCode() == ESCAPE) {
-                // TODO send request to server to mark GameRequest as "canceled"
                 System.out.println("game rejected");
-
             }
         });
     }

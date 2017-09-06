@@ -3,6 +3,7 @@ package org.scify.memori.screens;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import org.scify.memori.GameType;
 import org.scify.memori.MainOptions;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
@@ -20,7 +21,7 @@ public class LevelsScreen {
     protected FXSceneHandler sceneHandler;
     LevelsScreenController controller;
 
-    public LevelsScreen(FXSceneHandler shSceneHandler) {
+    public LevelsScreen(FXSceneHandler shSceneHandler, GameType gameType) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = new MemoriConfiguration();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
@@ -36,7 +37,7 @@ public class LevelsScreen {
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
         controller = loader.getController();
 
-        controller.setParameters(sceneHandler, gameLevelsScene);
+        controller.setParameters(sceneHandler, gameLevelsScene, gameType);
     }
 
     public void setOpponentId(int opponentId) {
