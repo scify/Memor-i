@@ -37,8 +37,8 @@ public class MemoriRules extends Observable implements Rules {
     GameLevel currentGameLevel;
 
     @Override
-    public GameState getInitialState() {
-        return new MemoriGameState(currentGameLevel);
+    public GameState getInitialState(GameType gameType) {
+        return new MemoriGameState(currentGameLevel, gameType);
     }
 
     public MemoriRules(GameLevel currentGameLevel) {
@@ -46,8 +46,8 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     @Override
-    public GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards) {
-        return new MemoriGameState(givenGameCards, currentGameLevel);
+    public GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards, GameType gameType) {
+        return new MemoriGameState(givenGameCards, currentGameLevel, gameType);
     }
 
     @Override

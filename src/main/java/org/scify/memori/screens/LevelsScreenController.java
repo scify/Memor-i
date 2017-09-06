@@ -199,7 +199,6 @@ public class LevelsScreenController {
     private void promptToPlayWithCPU() {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                MainOptions.GAME_TYPE = 2;
             }
         });
     }

@@ -164,7 +164,6 @@ public class InvitePlayerScreenController {
     private void promptToPlayWithCPU() {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                MainOptions.GAME_TYPE = 2;
                 new LevelsScreen(sceneHandler, GameType.VS_CPU);
                 shouldQueryForRequests = false;
             }

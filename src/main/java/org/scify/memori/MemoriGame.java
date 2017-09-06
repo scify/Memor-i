@@ -82,9 +82,9 @@ public abstract class MemoriGame implements Game<GameEndState> {
     public GameEndState call() {
         final GameState gsInitialState;
         if(givenGameCards.size() == 0)
-            gsInitialState = rRules.getInitialState();
+            gsInitialState = rRules.getInitialState(gameType);
         else
-            gsInitialState = rRules.getInitialState(givenGameCards);
+            gsInitialState = rRules.getInitialState(givenGameCards, gameType);
         // Initialize UI layout
         reRenderer.drawGameState(gsInitialState);
         // Send cards to server if online game

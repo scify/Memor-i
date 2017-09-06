@@ -17,14 +17,15 @@
 
 package org.scify.memori.interfaces;
 
+import org.scify.memori.GameType;
 import org.scify.memori.card.CategorizedCard;
 
 import java.awt.geom.Point2D;
 import java.util.Map;
 
 public interface Rules {
-    GameState getInitialState();
-    GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards);
+    GameState getInitialState(GameType gameType);
+    GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards, GameType gameType);
     GameState getNextState(GameState gsCurrent, UserAction uaAction);
     boolean isGameFinished(GameState gsCurrent);
 }

@@ -1,5 +1,6 @@
 package org.scify.memori.rules;
 
+import org.scify.memori.GameType;
 import org.scify.memori.MemoriGameState;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.interfaces.GameLevel;
@@ -16,8 +17,8 @@ public class TutorialRules extends MemoriRules {
         super(gameLevel);
     }
 
-    public GameState getInitialState() {
-        return super.getInitialState();
+    public GameState getInitialState(GameType gameType) {
+        return super.getInitialState(gameType);
     }
 
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {

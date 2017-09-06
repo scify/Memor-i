@@ -184,7 +184,6 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializeSinglePlayerGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            MainOptions.GAME_TYPE = 1;
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
         } else if (evt.getCode() == ESCAPE) {
@@ -199,8 +198,6 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvCGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-
-            MainOptions.GAME_TYPE = 2;
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.VS_CPU);
         } else if (evt.getCode() == ESCAPE) {
@@ -215,7 +212,6 @@ public class MainScreenController implements Initializable {
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
-            MainOptions.GAME_TYPE = 3;
             if(RequestManager.networkAvailable())
                 new RegisterOrLoginScreen(sceneHandler);
             else {

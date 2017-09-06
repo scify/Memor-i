@@ -56,38 +56,42 @@ public class MemoriGameState implements GameState {
     private int columnIndex = 0;
     private int rowIndex = 0;
 
-    public MemoriGameState(GameLevel gameLevel) {
+    public MemoriGameState(GameLevel gameLevel, GameType gameType) {
         terrain = new MemoriTerrain(gameLevel.getDimensions());
-        setUpPlayers();
+        setUpPlayers(gameType);
     }
 
-    public MemoriGameState(Map<CategorizedCard, Point2D> givenGameCards, GameLevel gameLevel) {
+    public MemoriGameState(Map<CategorizedCard, Point2D> givenGameCards, GameLevel gameLevel, GameType gameType) {
         terrain = new MemoriTerrain(givenGameCards, gameLevel.getDimensions());
-        setUpPlayers();
+        setUpPlayers(gameType);
     }
 
-    private void setUpPlayers() {
+    private void setUpPlayers(GameType gameType) {
         players = new ArrayList<>();
 
         Player player1 = new Player("player1");
         players.add(player1);
         PlayerManager.setLocalPlayer(player1);
 
-        if(MainOptions.GAME_TYPE == 1) {
-            currentPlayer = player1;
-        } else if (MainOptions.GAME_TYPE == 2) {
-            Player player2 = new Player("player2");
-            PlayerManager.setOpponentPlayer(player2);
-            players.add(player2);
-            currentPlayer = player1;
-        } else {
-            Player onlinePlayer = PlayerManager.getOpponentPlayer();
-            players.add(onlinePlayer);
-            currentPlayer = PlayerManager.getStartingPlayer();
-            if(PlayerManager.localPlayerIsInitiator)
-                PlayerManager.setStartingPlayer(player1);
-            else
-                PlayerManager.setStartingPlayer(onlinePlayer);
+        switch (gameType) {
+            case SINGLE_PLAYER:
+                currentPlayer = player1;
+                break;
+            case VS_CPU:
+                Player player2 = new Player("player2");
+                PlayerManager.setOpponentPlayer(player2);
+                players.add(player2);
+                currentPlayer = player1;
+                break;
+            case VS_PLAYER:
+                Player onlinePlayer = PlayerManager.getOpponentPlayer();
+                players.add(onlinePlayer);
+                currentPlayer = PlayerManager.getStartingPlayer();
+                if(PlayerManager.localPlayerIsInitiator)
+                    PlayerManager.setStartingPlayer(player1);
+                else
+                    PlayerManager.setStartingPlayer(onlinePlayer);
+            break;
         }
 
         iCurrentTurn = 0;
