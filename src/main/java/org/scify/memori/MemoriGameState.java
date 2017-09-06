@@ -18,10 +18,7 @@
 package org.scify.memori;
 
 import org.scify.memori.card.CategorizedCard;
-import org.scify.memori.interfaces.GameEvent;
-import org.scify.memori.interfaces.GameState;
-import org.scify.memori.interfaces.Player;
-import org.scify.memori.interfaces.Terrain;
+import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -59,13 +56,13 @@ public class MemoriGameState implements GameState {
     private int columnIndex = 0;
     private int rowIndex = 0;
 
-    public MemoriGameState() {
-        terrain = new MemoriTerrain();
+    public MemoriGameState(GameLevel gameLevel) {
+        terrain = new MemoriTerrain(gameLevel.getDimensions());
         setUpPlayers();
     }
 
-    public MemoriGameState(Map<CategorizedCard, Point2D> givenGameCards) {
-        terrain = new MemoriTerrain(givenGameCards);
+    public MemoriGameState(Map<CategorizedCard, Point2D> givenGameCards, GameLevel gameLevel) {
+        terrain = new MemoriTerrain(givenGameCards, gameLevel.getDimensions());
         setUpPlayers();
     }
 

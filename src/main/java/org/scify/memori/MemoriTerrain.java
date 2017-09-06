@@ -20,6 +20,7 @@ package org.scify.memori;
 import org.scify.memori.card.Card;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
+import org.scify.memori.interfaces.GameLevel;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 
@@ -43,19 +44,15 @@ public class MemoriTerrain implements Terrain {
     public Map<Point2D, Tile> getTiles() {
         return tiles;
     }
-
+    private int terrainWidth;
+    private int terrainHeight;
     /**
      * Constructs the basic terrain, gets the {@link Card}s from the DB (.json file) and assigns them to a {@link List}.
      */
-    public MemoriTerrain() {
-        tiles = new HashMap<>();
-        openTiles = new ArrayList<>();
+    public MemoriTerrain(Point2D terrainDimensions) {
+        setUpTerrain(terrainDimensions);
         List<Card> shuffledCards = produceDeckOfCards(MainOptions.NUMBER_OF_OPEN_CARDS);
-
         int cardIndex = 0;
-        int terrainWidth = getWidth();
-        int terrainHeight = getHeight();
-
         for (int iX = 0; iX < terrainWidth; iX++) {
             for (int iY = 0; iY < terrainHeight; iY++) {
                 tiles.put(new Point2D.Double(iX, iY), shuffledCards.get(cardIndex));
@@ -64,19 +61,20 @@ public class MemoriTerrain implements Terrain {
         }
     }
 
-    public MemoriTerrain(Map<CategorizedCard, Point2D> givenGameCards) {
-        tiles = new HashMap<>();
-        openTiles = new ArrayList<>();
-        int cardIndex = 0;
-        int terrainWidth = getWidth();
-        int terrainHeight = getHeight();
-
+    public MemoriTerrain(Map<CategorizedCard, Point2D> givenGameCards, Point2D terrainDimensions) {
+        setUpTerrain(terrainDimensions);
         for (int iX = 0; iX < terrainWidth; iX++) {
             for (int iY = 0; iY < terrainHeight; iY++) {
                 tiles.put(new Point2D.Double(iX, iY), getCardAtPosition(givenGameCards, iX, iY));
-                cardIndex++;
             }
         }
+    }
+
+    private void setUpTerrain(Point2D terrainDimensions) {
+        tiles = new HashMap<>();
+        openTiles = new ArrayList<>();
+        terrainWidth = (int) terrainDimensions.getY();
+        terrainHeight = (int) terrainDimensions.getX();
     }
 
     private CategorizedCard getCardAtPosition(Map<CategorizedCard, Point2D> givenGameCards, int xPos, int yPos) {
@@ -99,7 +97,7 @@ public class MemoriTerrain implements Terrain {
         //Preparing the JSON parser class
         MemoriCardService cardDelegator = new MemoriCardService();
         //read the cards from the JSON file
-        int numOfCards = (MainOptions.NUMBER_OF_COLUMNS * MainOptions.NUMBER_OF_ROWS);
+        int numOfCards = (terrainWidth * terrainHeight);
         System.out.println("num of cards needed: " + numOfCards);
         cardsList = cardDelegator.getMemoriCards(numOfCards);
 
@@ -110,12 +108,12 @@ public class MemoriTerrain implements Terrain {
 
     @Override
     public int getWidth() {
-        return MainOptions.NUMBER_OF_COLUMNS;
+        return terrainWidth;
     }
 
     @Override
     public int getHeight() {
-        return MainOptions.NUMBER_OF_ROWS;
+        return terrainHeight;
     }
 
     /**

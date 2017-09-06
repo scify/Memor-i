@@ -1,23 +1,19 @@
 package org.scify.memori.rules;
 
-import javafx.scene.input.KeyCode;
-import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameState;
 import org.scify.memori.interfaces.GameEvent;
+import org.scify.memori.interfaces.GameLevel;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.UserAction;
-
-import java.awt.geom.Point2D;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Class that contains the rules that integrate in the tutorial game.
  */
 public class TutorialRules extends MemoriRules {
 
-    public TutorialRules() {
-        super();
+    public TutorialRules(GameLevel gameLevel) {
+        super(gameLevel);
     }
 
     public GameState getInitialState() {

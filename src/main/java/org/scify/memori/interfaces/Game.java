@@ -20,7 +20,7 @@ package org.scify.memori.interfaces;
 import java.util.concurrent.Callable;
 
 public interface Game<T> extends Callable<T> {
-    void initialize();
+    void initialize(GameLevel gameLevel);
     T call();
     void finalize();
 }

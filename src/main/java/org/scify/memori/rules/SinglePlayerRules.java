@@ -5,6 +5,7 @@ import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameState;
 import org.scify.memori.helper.TimeWatch;
 import org.scify.memori.interfaces.GameEvent;
+import org.scify.memori.interfaces.GameLevel;
 import org.scify.memori.interfaces.GameState;
 import org.scify.memori.interfaces.UserAction;
 
@@ -28,7 +29,8 @@ public class SinglePlayerRules extends MemoriRules {
      */
     private HighScoresHandlerImpl highScore;
 
-    public SinglePlayerRules() {
+    public SinglePlayerRules(GameLevel gameLevel) {
+        super(gameLevel);
         highScore = new HighScoresHandlerImpl();
     }
 

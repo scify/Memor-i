@@ -57,14 +57,14 @@ public class MemoriGameLauncher {
     private void startGameForLevel(MemoriGameLevel gameLevel, GameType gameType) {
         FXMemoriGame game = createNewGame(gameLevel, gameType);
         game.setGameType(gameType);
-        game.initialize();
+        game.initialize(gameLevel);
         startGameThread(game, gameLevel);
     }
 
     public void startGameForLevel(MemoriGameLevel gameLevel, GameType gameType, Map<CategorizedCard, Point2D> cards) {
         FXMemoriGame game = createNewGame(gameLevel, gameType);
         game.setGameType(gameType);
-        game.initialize(cards);
+        game.initialize(cards, gameLevel);
         startGameThread(game, gameLevel);
     }
 

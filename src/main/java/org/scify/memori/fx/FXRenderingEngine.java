@@ -640,8 +640,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * @param columnIndex the Node y position
      */
     private void movementSound(int rowIndex, int columnIndex) {
-        double soundBalance = map(columnIndex, 0.0, (double) MainOptions.NUMBER_OF_COLUMNS, -1.0, 2.0);
-        double rate = map(rowIndex, 0.0, (double) MainOptions.NUMBER_OF_ROWS, 1.5, 1.0);
+        double soundBalance = map(columnIndex, 0.0, gameLevel.getDimensions().getY(), -1.0, 2.0);
+        double rate = map(rowIndex, 0.0, gameLevel.getDimensions().getX(), 1.5, 1.0);
         fxAudioEngine.playMovementSound(soundBalance, rate);
     }
 
@@ -714,8 +714,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * @param isBlocking if the event should block the ui thread
      */
     private void invalidMovementSound(int rowIndex, int columnIndex, boolean isBlocking) {
-        double soundBalance = map(columnIndex, 0.0, (double) MainOptions.NUMBER_OF_COLUMNS, -1.0, 2.0);
-        double rate = map(rowIndex, 0.0, (double) MainOptions.NUMBER_OF_ROWS, 1.5, 1.0);
+        double soundBalance = map(columnIndex, 0.0, (double) gameLevel.getDimensions().getY(), -1.0, 2.0);
+        double rate = map(rowIndex, 0.0, gameLevel.getDimensions().getX(), 1.5, 1.0);
         fxAudioEngine.playInvalidMovementSound(soundBalance, isBlocking);
     }
 

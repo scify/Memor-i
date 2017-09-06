@@ -21,6 +21,7 @@ package org.scify.memori.fx;
 import org.scify.memori.MemoriGame;
 import org.scify.memori.MemoriGameLevel;
 import org.scify.memori.card.CategorizedCard;
+import org.scify.memori.interfaces.GameLevel;
 
 import java.awt.geom.Point2D;
 import java.util.Map;
@@ -35,13 +36,13 @@ public class FXMemoriGame extends MemoriGame {
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
+    public void initialize(GameLevel gameLevel) {
+        super.initialize(gameLevel);
         setUpRenderingEngine();
     }
 
-    public void initialize(Map<CategorizedCard, Point2D> cards) {
-        super.initialize(cards);
+    public void initialize(Map<CategorizedCard, Point2D> cards, GameLevel gameLevel) {
+        super.initialize(cards, gameLevel);
         setUpRenderingEngine();
     }
 

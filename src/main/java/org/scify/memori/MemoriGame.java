@@ -59,22 +59,22 @@ public abstract class MemoriGame implements Game<GameEndState> {
     /**
      * Subclasses should initialize a UI
      */
-    public void initialize() {
-        setUpRules();
+    public void initialize(GameLevel gameLevel) {
+        setUpRules(gameLevel);
     }
 
-    public void initialize(Map<CategorizedCard, Point2D> givenGameCards) {
+    public void initialize(Map<CategorizedCard, Point2D> givenGameCards, GameLevel gameLevel) {
         this.givenGameCards = givenGameCards;
-        setUpRules();
+        setUpRules(gameLevel);
     }
 
-    private void setUpRules() {
+    private void setUpRules(GameLevel gameLevel) {
         if(isTutorial())
-            rRules = new TutorialRules();
+            rRules = new TutorialRules(gameLevel);
         else if(isSinglePlayer()) {
-            rRules = new SinglePlayerRules();
+            rRules = new SinglePlayerRules(gameLevel);
         } else {
-            rRules = new MultiPlayerRules();
+            rRules = new MultiPlayerRules(gameLevel, gameType);
         }
     }
 

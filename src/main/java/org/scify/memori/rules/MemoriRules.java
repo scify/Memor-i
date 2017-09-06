@@ -34,15 +34,20 @@ import java.util.Observable;
  */
 public class MemoriRules extends Observable implements Rules {
 
+    GameLevel currentGameLevel;
 
     @Override
     public GameState getInitialState() {
-        return new MemoriGameState();
+        return new MemoriGameState(currentGameLevel);
+    }
+
+    public MemoriRules(GameLevel currentGameLevel) {
+        this.currentGameLevel = currentGameLevel;
     }
 
     @Override
     public GameState getInitialState(Map<CategorizedCard, Point2D> givenGameCards) {
-        return new MemoriGameState(givenGameCards);
+        return new MemoriGameState(givenGameCards, currentGameLevel);
     }
 
     @Override
@@ -192,12 +197,12 @@ public class MemoriRules extends Observable implements Rules {
     private void createHelpGameEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
         Point2D coords = uaAction.getCoords();
         gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
-        gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", MainOptions.NUMBER_OF_ROWS - ((int)coords.getX()), 0, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", currentGameLevel.getDimensions().getX() - ((int)coords.getX()), 0, true));
         //If in help instructions mode, add appropriate explanation
         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS_EXPLANATION")) {
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_EXPLANATION"));
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_EXPLANATION_ROW", null, 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", MainOptions.NUMBER_OF_ROWS - ((int)coords.getX()), 0, true));
+            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", currentGameLevel.getDimensions().getX() - ((int)coords.getX()), 0, true));
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_EXPLANATION_COLUMN", null, 0, true));
             gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
 
@@ -474,7 +479,7 @@ public class MemoriRules extends Observable implements Rules {
                 }
                 break;
             case "RIGHT":
-                if(memoriGameState.getColumnIndex() == MainOptions.NUMBER_OF_COLUMNS - 1) {
+                if(memoriGameState.getColumnIndex() == currentGameLevel.getDimensions().getY() - 1) {
                     return false;
                 }
                 break;
@@ -484,7 +489,7 @@ public class MemoriRules extends Observable implements Rules {
                 }
                 break;
             case "DOWN":
-                if(memoriGameState.getRowIndex() == MainOptions.NUMBER_OF_ROWS - 1) {
+                if(memoriGameState.getRowIndex() == currentGameLevel.getDimensions().getX() - 1) {
                     return false;
                 }
                 break;

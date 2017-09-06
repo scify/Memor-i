@@ -11,8 +11,9 @@ public class MultiPlayerRules extends MemoriRules {
 
     private MoveFactory opponentMoveFactory;
 
-    public MultiPlayerRules() {
-        if (MainOptions.GAME_TYPE == 2) {
+    public MultiPlayerRules(GameLevel gameLevel, GameType gameType) {
+        super(gameLevel);
+        if (gameType.equals(GameType.VS_CPU)) {
             opponentMoveFactory = new CPUMoveFactory();
         } else {
             opponentMoveFactory = new OnlineMoveFactory();
