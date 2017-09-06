@@ -27,7 +27,6 @@ public class TutorialRules extends MemoriRules {
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
         MemoriGameState gsCurrentState;
-
         gsCurrentState = (MemoriGameState) super.getNextState(gsCurrent, uaAction);
         handleGameStartingGameEvents(gsCurrentState);
         // handle the tutorial game events
@@ -35,7 +34,7 @@ public class TutorialRules extends MemoriRules {
             tutorialRulesSet((MemoriGameState) gsCurrent, uaAction);
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
-            handleLevelFinishGameEvents(gsCurrentState);
+            this.handleTutorialFinishGameEvents(uaAction, gsCurrentState);
         }
         return gsCurrent;
     }
@@ -151,8 +150,11 @@ public class TutorialRules extends MemoriRules {
         }
     }
 
-    private void handleLevelFinishGameEvents(MemoriGameState gsCurrentState) {
-        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
-        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
+    private void handleTutorialFinishGameEvents(UserAction userAction, MemoriGameState gsCurrentState) {
+        super.handleLevelFinishGameEvents(userAction, gsCurrentState);
+        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_END_GAME")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME_UI", null, new Date().getTime() + 6500, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_END_GAME"));
+        }
     }
 }

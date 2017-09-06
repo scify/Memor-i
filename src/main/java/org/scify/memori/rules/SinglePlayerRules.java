@@ -48,7 +48,7 @@ public class SinglePlayerRules extends MemoriRules {
         }
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
-            handleLevelFinishGameEvents(gsCurrentState);
+            this.handleSinglePlayerFinishGameEvents(uaAction, gsCurrentState);
         }
         return gsCurrent;
     }
@@ -87,10 +87,10 @@ public class SinglePlayerRules extends MemoriRules {
         }
     }
 
-    private void handleLevelFinishGameEvents(MemoriGameState gsCurrentState) {
-        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH_TUTORIAL")) {
+    private void handleSinglePlayerFinishGameEvents(UserAction userAction, MemoriGameState gsCurrentState) {
+        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH_GAME")) {
             //add appropriate event
-            gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH_TUTORIAL"));
+            gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH_GAME"));
             //add UI events
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5500, true));
             addTimeGameEvent(watch, gsCurrentState);
@@ -105,8 +105,9 @@ public class SinglePlayerRules extends MemoriRules {
             }
             //update high score
             highScore.updateHighScore(watch);
+        } else {
+            super.handleLevelFinishGameEvents(userAction, gsCurrentState);
         }
-
     }
 
     /**

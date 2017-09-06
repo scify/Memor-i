@@ -34,6 +34,7 @@ import java.util.Observable;
  */
 public class MemoriRules extends Observable implements Rules {
 
+
     @Override
     public GameState getInitialState() {
         return new MemoriGameState();
@@ -64,10 +65,10 @@ public class MemoriRules extends Observable implements Rules {
         }
 
         //if last round, create appropriate READY_TO_FINISH event
-        if(isLastRound(gsCurrent)) {
-            //if ready to finish event already in events queue
-            handleLevelFinishGameEvents(uaAction, gsCurrentState);
-        }
+//        if(isLastRound(gsCurrent)) {
+//            //if ready to finish event already in events queue
+//            handleLevelFinishGameEvents(uaAction, gsCurrentState);
+//        }
 
         return gsCurrentState;
     }
@@ -104,7 +105,7 @@ public class MemoriRules extends Observable implements Rules {
      * @param uaAction the user action (flip, move, help)
      * @param gsCurrentState the current game state
      */
-    private void handleLevelFinishGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
+    protected void handleLevelFinishGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
         if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH")) {
             if(uaAction != null) {
                 //listen for user action indicating game over
@@ -169,12 +170,11 @@ public class MemoriRules extends Observable implements Rules {
             if(MainOptions.TUTORIAL_MODE) {
                 if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
                     performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
-
             }
             else
                 performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
         } else if(uaAction.getActionType().equals("enter")) {
-            if(!MainOptions.TUTORIAL_MODE /*&& eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")*/)
+            if(!MainOptions.TUTORIAL_MODE)
                 createHelpGameEvent(uaAction, gsCurrentState);
         } else if(uaAction.getActionType().equals("escape")) {
             //exit current game
