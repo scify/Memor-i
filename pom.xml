@@ -98,7 +98,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.scify.memori.Launcher</mainClass>
+                            <mainClass>org.scify.memori.ApplicationLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
