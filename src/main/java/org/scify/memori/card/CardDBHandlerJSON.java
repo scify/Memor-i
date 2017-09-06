@@ -46,7 +46,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
     }
 
     @Override
-    public List<Card> getCardsFromDB(int numOfCards) {
+    public List<Card> getCardsFromDB(int numOfCards, int terrainWidth) {
 
         JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
 
@@ -66,7 +66,8 @@ public class CardDBHandlerJSON implements CardDBHandler {
                     (String)currObj.get("category"),
                     (String)currObj.get("equivalenceCardSetHashCode"),
                     (String)currObj.get("description_sound"),
-                    cardDescriptionSoundProbability
+                    cardDescriptionSoundProbability,
+                    terrainWidth
             );
             cardSet.add(newCard);
         }

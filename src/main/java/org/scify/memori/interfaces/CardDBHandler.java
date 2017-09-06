@@ -11,7 +11,7 @@ public interface CardDBHandler {
      * @param numOfCards the desired number of cards
      * @return a set {@link List} of cards
      */
-    List<Card> getCardsFromDB(int numOfCards);
+    List<Card> getCardsFromDB(int numOfCards, int terrainWidth);
 
     /**
      *

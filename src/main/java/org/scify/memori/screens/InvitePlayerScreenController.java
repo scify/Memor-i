@@ -250,16 +250,18 @@ public class InvitePlayerScreenController {
 
     private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {
         Map<CategorizedCard, Point2D> cardsWithPositions = new HashMap<>();
-        MemoriCardService memoriCardService = new MemoriCardService();
-        for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
-            CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString());
-            cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
-        }
-        System.out.println(cardsWithPositions.size());
         List<MemoriGameLevel> gameLevels;
         GameLevelService gameLevelService = new GameLevelService();
         gameLevels = gameLevelService.createGameLevels();
         MemoriGameLevel gameLevel = gameLevels.get(gameLevelId -1);
+
+        MemoriCardService memoriCardService = new MemoriCardService();
+        for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
+            CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString(), (int) gameLevel.getDimensions().getY());
+            cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
+        }
+        System.out.println(cardsWithPositions.size());
+
         Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();

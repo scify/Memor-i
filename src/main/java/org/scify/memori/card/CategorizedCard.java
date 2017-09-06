@@ -32,8 +32,8 @@ public class CategorizedCard extends Card{
         return equivalenceCardSetHashCode;
     }
 
-    public CategorizedCard(String label, String[] images, String[] sounds, String category, String equivalenceCardSetHashCode, String descriptionSound, int descriptionSoundProbability) {
-        super(label, images, sounds, descriptionSound, descriptionSoundProbability);
+    public CategorizedCard(String label, String[] images, String[] sounds, String category, String equivalenceCardSetHashCode, String descriptionSound, int descriptionSoundProbability, int terrainWidth) {
+        super(label, images, sounds, descriptionSound, descriptionSoundProbability, terrainWidth);
         this.category = category;
         this.equivalenceCardSetHashCode = equivalenceCardSetHashCode;
     }

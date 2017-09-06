@@ -128,7 +128,7 @@ public class Card implements Tile{
         return label;
     }
 
-    public Card(String label, String[] images, String[] sounds, String cardDescriptionSound, int cardDescriptionSoundProbability) {
+    public Card(String label, String[] images, String[] sounds, String cardDescriptionSound, int cardDescriptionSoundProbability, int terrainWidth) {
 
         MemoriConfiguration configuration = new MemoriConfiguration();
 
@@ -139,7 +139,7 @@ public class Card implements Tile{
         this.cardDescriptionSoundProbability = cardDescriptionSoundProbability;
         this.button.setId(label);
         // each card takes a dynamic height and width, based on the height and with of the screen
-        double width = MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS - ((MainOptions.mWidth/MainOptions.NUMBER_OF_COLUMNS) * 0.1);
+        double width = MainOptions.mWidth/terrainWidth - ((MainOptions.mWidth/terrainWidth) * 0.1);
         this.button.setPrefHeight(width * 0.6666);
         this.button.setPrefWidth(width);
         // apply the appropriate style classes
