@@ -72,8 +72,6 @@ public class MemoriGameLauncher {
         this.gameType = gameType;
         audioEngine.pauseCurrentlyPlayingAudios();
         MainOptions.GAME_LEVEL_CURRENT = gameLevel.getLevelCode();
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevel.getDimensions().getX();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevel.getDimensions().getY();
         return new FXMemoriGame(sceneHandler, gameLevel);
     }
 
@@ -114,8 +112,6 @@ public class MemoriGameLauncher {
     private void loadNextLevel() {
         MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
         MainOptions.GAME_LEVEL_CURRENT++;
-        MainOptions.NUMBER_OF_ROWS = (int) gameLevelNext.getDimensions().getX();
-        MainOptions.NUMBER_OF_COLUMNS = (int) gameLevelNext.getDimensions().getY();
         startGameForLevel(gameLevelNext, gameType);
     }
 

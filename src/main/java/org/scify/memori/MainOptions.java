@@ -26,8 +26,6 @@ public class MainOptions {
 
     public static int GAME_TYPE = 1;
     public static boolean TUTORIAL_MODE = false;
-    public static int NUMBER_OF_COLUMNS = 4;
-    public static int NUMBER_OF_ROWS = 4;
     public static int NUMBER_OF_OPEN_CARDS = 2;
     public static int GAME_LEVEL_CURRENT;
     public static double mHeight;
