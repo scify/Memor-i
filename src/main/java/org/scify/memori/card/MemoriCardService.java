@@ -22,10 +22,7 @@ public class MemoriCardService {
     private static List<Card> cards = new ArrayList<>();
 
     public List<Card> getMemoriCards(int numOfCards) {
-        if(cards.isEmpty() || cards.size() != numOfCards) {
-            cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
-        }
-
+        cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
         return shuffleCards(cards);
     }
 
