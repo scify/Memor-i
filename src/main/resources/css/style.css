@@ -125,7 +125,7 @@ StackPane {
 }
 
 .welcomeButton {
-    -fx-pref-width: 600px;
+    -fx-pref-width: 800px;
     -fx-pref-height: 70px;
     -fx-font-family: Ubuntu;
     -fx-font-size: 300%;

@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import java.net.URL?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
 <StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.LevelsScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
@@ -22,11 +22,10 @@
         </ImageView>
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" spacing="10.0">
-        <Text styleClass="optionButton, textLabel, invitationText" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="infoText"/>
+        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%select_game_level" fx:id="infoText"/>
         <VBox alignment="center" fx:id="gameLevelsDiv">
-
         </VBox>
-        <Text styleClass="optionButton, textLabel, invitationText" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="messageText"/>
+        <Button contentDisplay="CENTER" styleClass="welcomeButton" fx:id="messageText"/>
     </VBox>
     <stylesheets>
         <URL value="@/css/style.css" />
