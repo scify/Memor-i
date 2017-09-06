@@ -31,20 +31,9 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class MemoriGame implements Game<Integer> {
-    /**
-     * constant defining whether the game is finished
-     */
-    private static final Integer GAME_FINISHED = 1;
-    /**
-     * constant defining whether the game should continue to next level
-     */
-    private static final Integer NEXT_LEVEL = 2;
-    /**
-     * constant defining whether the game should continue to next level
-     */
-    private static final Integer SAME_LEVEL = 3;
-    Rules rRules;
+public abstract class MemoriGame implements Game<GameEndState> {
+
+    protected Rules rRules;
     /**
      * Object responsible for UI events (User actions)
      */
@@ -54,64 +43,58 @@ public abstract class MemoriGame implements Game<Integer> {
      */
     protected RenderingEngine reRenderer;
 
-    Map<CategorizedCard, Point2D> givenGameCards = new HashMap<>();
+    protected Map<CategorizedCard, Point2D> givenGameCards = new HashMap<>();
+
+    protected GameType gameType;
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
     @Override
     /**
      * Subclasses should initialize a UI
      */
     public void initialize() {
-        produceRules();
+        setUpRules();
     }
 
     public void initialize(Map<CategorizedCard, Point2D> givenGameCards) {
         this.givenGameCards = givenGameCards;
-        produceRules();
+        setUpRules();
     }
 
-    private void produceRules() {
-        if(MainOptions.TUTORIAL_MODE)
+    private void setUpRules() {
+        if(isTutorial())
             rRules = new TutorialRules();
-        else {
-            if(MainOptions.GAME_TYPE == 1) {
-                rRules = new SinglePlayerRules();
-            } else {
-                rRules = new MultiPlayerRules();
-            }
+        else if(isSinglePlayer()) {
+            rRules = new SinglePlayerRules();
+        } else {
+            rRules = new MultiPlayerRules();
         }
     }
 
     @Override
-    public Integer call() {
+    public GameEndState call() {
         final GameState gsInitialState;
         if(givenGameCards.size() == 0)
             gsInitialState = rRules.getInitialState();
         else
             gsInitialState = rRules.getInitialState(givenGameCards);
-
-        reRenderer.drawGameState(gsInitialState); // Initialize UI layout
-        // Run asyncronously
-        GameState gsCurrentState = gsInitialState; // Init
-        if(MainOptions.GAME_TYPE == 3 && PlayerManager.localPlayerIsInitiator) {
+        // Initialize UI layout
+        reRenderer.drawGameState(gsInitialState);
+        // Send cards to server if online game
+        GameState gsCurrentState = gsInitialState;
+        if(gameType.equals(GameType.VS_PLAYER) && PlayerManager.localPlayerIsInitiator) {
             sendShuffledDeckToServer((MemoriGameState)gsInitialState);
         }
         // For every cycle
         while (!rRules.isGameFinished(gsCurrentState)) {
-            final GameState toHandle = gsCurrentState;
-            // Ask to draw the state
-            reRenderer.drawGameState(toHandle);
-            // and keep on doing the loop in this thread
-            //get next user action
-            UserAction uaToHandle = uInterface.getNextUserAction(gsCurrentState.getCurrentPlayer());
-
-            //apply it and determine the next state
-            gsCurrentState = rRules.getNextState(gsCurrentState, uaToHandle);
-
-            try {
-                Thread.sleep(50L); // Allow repainting
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            gsCurrentState = doGameLoop(gsCurrentState);
         }
         // the final game state will contain the user input relevant to the future of the game
         // the user can select to
@@ -119,28 +102,49 @@ public abstract class MemoriGame implements Game<Integer> {
         // b) play the same level again
         // c) go to the next level
         MemoriGameState memoriGameState = (MemoriGameState) gsCurrentState;
-
         reRenderer.cancelCurrentRendering();
+        return handleEndGame(memoriGameState);
+    }
+
+    private GameEndState handleEndGame(MemoriGameState memoriGameState) {
         if(memoriGameState.loadNextLevel) {
             if(!MainOptions.TUTORIAL_MODE)
                 MainOptions.storyLineLevel++;
             if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS)
-                return NEXT_LEVEL;
+                return GameEndState.NEXT_LEVEL;
             else
-                return GAME_FINISHED;
+                return GameEndState.GAME_FINISHED;
         }
         else if(memoriGameState.replayLevel) {
             if(!MainOptions.TUTORIAL_MODE)
                 MainOptions.storyLineLevel++;
-            return SAME_LEVEL;
+            return GameEndState.SAME_LEVEL;
         }
         else
-            return GAME_FINISHED;
+            return GameEndState.GAME_FINISHED;
+    }
+
+    private GameState doGameLoop(GameState gsCurrentState) {
+        final GameState toHandle = gsCurrentState;
+        // Ask to draw the state
+        reRenderer.drawGameState(toHandle);
+        // and keep on doing the loop in this thread
+        //get next user action
+        UserAction uaToHandle = uInterface.getNextUserAction(gsCurrentState.getCurrentPlayer());
+
+        //apply it and determine the next state
+        gsCurrentState = rRules.getNextState(gsCurrentState, uaToHandle);
+        try {
+            Thread.sleep(50L); // Allow repainting
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return gsCurrentState;
     }
 
     @Override
     public void finalize() {
-        if(MainOptions.GAME_TYPE == 3)
+        if(gameType.equals(GameType.VS_PLAYER))
             markOnlineGameAsFinished();
         System.err.println("FINALIZE");
     }
@@ -149,7 +153,6 @@ public abstract class MemoriGame implements Game<Integer> {
         MemoriTerrain terrain = (MemoriTerrain) initialGameState.getTerrain();
         MemoriCardService cardService = new MemoriCardService();
         String JSONRepresentationOfTiles = cardService.terrainTilesToJSON(terrain.getTiles());
-        System.out.println(JSONRepresentationOfTiles);
         GameRequestManager gameRequestManager = new GameRequestManager();
         String serverResponse = gameRequestManager.sendShuffledDeckToServer(JSONRepresentationOfTiles);
         if(serverResponse != null) {
@@ -165,7 +168,6 @@ public abstract class MemoriGame implements Game<Integer> {
         switch (code) {
             case 1:
                 // Cards sent successfully
-
                 break;
             case 2:
                 // Error in creating game request
@@ -175,7 +177,7 @@ public abstract class MemoriGame implements Game<Integer> {
             case 3:
                 // Error in server validation rules
                 responseParameters = (String) response.getParameters();
-                System.err.println("ERROR: " + responseParameters);
+                System.err.println("VALIDATION ERROR: " + responseParameters);
                 break;
             default:
                 break;
@@ -185,5 +187,13 @@ public abstract class MemoriGame implements Game<Integer> {
     private void markOnlineGameAsFinished() {
         GameRequestManager gameRequestManager = new GameRequestManager();
         gameRequestManager.endGame();
+    }
+
+    public boolean isTutorial() {
+        return gameType.equals(GameType.TUTORIAL);
+    }
+
+    public boolean isSinglePlayer() {
+        return gameType.equals(GameType.SINGLE_PLAYER);
     }
 }
