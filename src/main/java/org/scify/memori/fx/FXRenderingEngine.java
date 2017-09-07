@@ -450,7 +450,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "STORYLINE_AUDIO_UI":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.storyLineSoundsBasePath + storyLineSounds.get(MainOptions.storyLineLevel - 1), currentGameEvent.blocking);
+                            fxAudioEngine.playSound(this.storyLineSoundsBasePath + storyLineSounds.get(MainOptions.STORY_LINE_LEVEL - 1), currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

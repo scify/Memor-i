@@ -132,7 +132,7 @@ public class SinglePlayerRules extends MemoriRules {
             if(!(MainOptions.GAME_LEVEL_CURRENT == 4)) {
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
-                    if(MainOptions.storyLineLevel % 2 == 1) {
+                    if(MainOptions.STORY_LINE_LEVEL % 2 == 1) {
                         gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 0, true));
                     }
                 }

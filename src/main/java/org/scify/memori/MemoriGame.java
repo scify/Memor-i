@@ -109,7 +109,7 @@ public abstract class MemoriGame implements Game<GameEndState> {
     private GameEndState handleEndGame(MemoriGameState memoriGameState) {
         if(memoriGameState.loadNextLevel) {
             if(!isTutorial())
-                MainOptions.storyLineLevel++;
+                MainOptions.STORY_LINE_LEVEL++;
             if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS)
                 return GameEndState.NEXT_LEVEL;
             else
@@ -117,7 +117,7 @@ public abstract class MemoriGame implements Game<GameEndState> {
         }
         else if(memoriGameState.replayLevel) {
             if(!isTutorial())
-                MainOptions.storyLineLevel++;
+                MainOptions.STORY_LINE_LEVEL++;
             return GameEndState.SAME_LEVEL;
         }
         else

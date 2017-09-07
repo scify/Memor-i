@@ -27,6 +27,6 @@ public class MainOptions {
     public static int GAME_LEVEL_CURRENT;
     public static double mHeight;
     public static double mWidth;
-    public static int storyLineLevel = 1;
+    public static int STORY_LINE_LEVEL = 1;
     public static int MAX_NUM_OF_LEVELS;
 }
