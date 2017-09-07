@@ -25,7 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.scify.memori.MainOptions;
-import org.scify.memori.ResourceLocator;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Tile;
 

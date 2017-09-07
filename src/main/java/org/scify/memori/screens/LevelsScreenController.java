@@ -1,15 +1,14 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import org.json.JSONObject;
 import org.scify.memori.*;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;

@@ -33,6 +33,7 @@ import javafx.stage.Screen;
 import org.scify.memori.*;
 import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;

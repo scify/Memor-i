@@ -17,7 +17,7 @@
 
 package org.scify.memori.interfaces;
 
-import org.scify.memori.GameType;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.card.CategorizedCard;
 
 import java.awt.geom.Point2D;

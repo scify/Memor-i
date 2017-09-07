@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;

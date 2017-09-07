@@ -20,7 +20,7 @@ package org.scify.memori.fx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import org.scify.memori.ResourceLocator;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;

@@ -1,6 +1,7 @@
 package org.scify.memori.rules;
 
 import org.scify.memori.*;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.interfaces.*;
 
 import java.util.ArrayList;

@@ -4,12 +4,8 @@ import com.google.gson.*;
 import org.scify.memori.interfaces.MoveFactory;
 import org.scify.memori.interfaces.UserAction;
 import org.scify.memori.network.GameMovementManager;
+import org.scify.memori.rules.RuleObserverObject;
 
-import java.awt.geom.Point2D;
-import java.io.*;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 

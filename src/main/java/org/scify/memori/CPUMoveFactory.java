@@ -4,6 +4,8 @@ import javafx.util.Pair;
 import org.scify.memori.interfaces.MoveFactory;
 import org.scify.memori.interfaces.Tile;
 import org.scify.memori.interfaces.UserAction;
+import org.scify.memori.rules.RuleObserverObject;
+
 import java.awt.geom.Point2D;
 import java.util.*;
 

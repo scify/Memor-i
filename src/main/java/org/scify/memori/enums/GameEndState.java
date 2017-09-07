@@ -1,4 +1,4 @@
-package org.scify.memori;
+package org.scify.memori.enums;
 
 public enum GameEndState {
     GAME_FINISHED,

@@ -1,4 +1,4 @@
-package org.scify.memori;
+package org.scify.memori.rules;
 
 public class RuleObserverObject {
     public Object parameters;

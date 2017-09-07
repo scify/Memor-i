@@ -92,14 +92,6 @@ public class PlayerManager  implements Runnable {
         return this.requestManager.doGet(url);
     }
 
-    public String getOnlinePlayersFromServer() {
-        String url = "players/online";
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(PlayerManager.getPlayerId())));
-        url += "?player_id=" + PlayerManager.getPlayerId() + "&game_flavor_pack_identifier=" + gameIdentifier;
-        return this.requestManager.doGet(url);
-    }
-
     @Override
     public void run() {
         switch (callIdentifier) {

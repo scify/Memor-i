@@ -2,9 +2,8 @@ package org.scify.memori.card;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.scify.memori.ResourceLocator;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.JSONFileHandler;
-import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.CardDBHandler;
 

@@ -1,4 +1,4 @@
-package org.scify.memori;
+package org.scify.memori.helper;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.helper.MemoriConfiguration;
 import java.io.*;

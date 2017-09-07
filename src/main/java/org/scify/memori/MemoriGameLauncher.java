@@ -1,6 +1,8 @@
 package org.scify.memori;
 
 import org.scify.memori.card.CategorizedCard;
+import org.scify.memori.enums.GameEndState;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
