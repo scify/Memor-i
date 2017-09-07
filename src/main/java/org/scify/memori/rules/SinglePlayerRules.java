@@ -161,12 +161,7 @@ public class SinglePlayerRules extends MemoriRules {
 
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
 
-            if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS) {
-                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, true));
-            } else {
-                gsCurrentState.getEventQueue().add(new GameEvent("GAME_END", null, new Date().getTime() + 8600, true));
-                gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 8600, true));
-            }
+            levelEndUserActions(gsCurrentState);
             //update high score
             highScore.updateHighScore(watch);
         } else {

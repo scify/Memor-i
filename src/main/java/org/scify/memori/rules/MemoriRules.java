@@ -22,7 +22,6 @@ import javafx.util.Pair;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.interfaces.*;
-import org.scify.memori.network.GameRequestManager;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -198,6 +197,15 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
+    protected void levelEndUserActions(MemoriGameState gsCurrentState) {
+        if(MainOptions.GAME_LEVEL_CURRENT < MainOptions.MAX_NUM_OF_LEVELS) {
+            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_END_UNIVERSAL", null, new Date().getTime() + 8600, true));
+        } else {
+            gsCurrentState.getEventQueue().add(new GameEvent("GAME_END", null, new Date().getTime() + 8600, true));
+            gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 8600, true));
+        }
+    }
+
     protected void nextTurn(MemoriGameState gsCurrentState) {
         for(Player player: gsCurrentState.getPlayers()) {
             System.err.println("Score for " + player.getName() + ": " + player.getScore());
@@ -333,7 +341,7 @@ public class MemoriRules extends Observable implements Rules {
      * @param memoriTerrain the terrain holding all the tiles
      * @return a list containing the coordinates of the open tiles
      */
-    public List<Point2D> resetAllOpenTiles(MemoriTerrain memoriTerrain) {
+    private List<Point2D> resetAllOpenTiles(MemoriTerrain memoriTerrain) {
         List<Point2D> openTilesPoints = new ArrayList<>();
         memoriTerrain.getOpenTiles().forEach(Tile::flip);
         for (Tile element : memoriTerrain.getOpenTiles()) {
@@ -355,7 +363,7 @@ public class MemoriRules extends Observable implements Rules {
      * @param memoriGameState the current game state
      * @return true if the user move was valid
      */
-    public boolean movementValid(String direction, MemoriGameState memoriGameState) {
+    protected boolean movementValid(String direction, MemoriGameState memoriGameState) {
         switch(direction) {
             case "LEFT":
                 if(memoriGameState.getColumnIndex() == 0) {
@@ -379,6 +387,24 @@ public class MemoriRules extends Observable implements Rules {
                 break;
         }
         return true;
+    }
+
+    protected boolean gameWasTie(MemoriGameState gsCurrentState, Player playerWithMaxScore) {
+        for(Player player: gsCurrentState.getPlayers()) {
+            if(player.getScore() == playerWithMaxScore.getScore() && !playerWithMaxScore.equals(player))
+                return true;
+        }
+        return false;
+    }
+
+    protected Player getWinnerPlayer(MemoriGameState gsCurrentState) {
+        Player playerWithMaxScore = new Player("default");
+        for(Player player: gsCurrentState.getPlayers()) {
+            System.err.println("Score for " + player.getName() + ": " + player.getScore());
+            if(player.getScore() > playerWithMaxScore.getScore())
+                playerWithMaxScore = player;
+        }
+        return playerWithMaxScore;
     }
 
 }

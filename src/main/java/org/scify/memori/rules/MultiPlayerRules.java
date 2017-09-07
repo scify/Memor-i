@@ -1,7 +1,6 @@
 package org.scify.memori.rules;
 
 import org.scify.memori.*;
-import org.scify.memori.helper.TimeWatch;
 import org.scify.memori.interfaces.*;
 
 import java.util.ArrayList;
@@ -12,9 +11,11 @@ import java.util.concurrent.TimeUnit;
 public class MultiPlayerRules extends MemoriRules {
 
     private MoveFactory opponentMoveFactory;
+    private GameType gameType;
 
     public MultiPlayerRules(GameLevel gameLevel, GameType gameType) {
         super(gameLevel);
+        this.gameType = gameType;
         if (gameType.equals(GameType.VS_CPU)) {
             opponentMoveFactory = new CPUMoveFactory();
         } else {
@@ -40,6 +41,10 @@ public class MultiPlayerRules extends MemoriRules {
             }
         }
 
+        if(isLastRound(gsCurrent)) {
+            //if ready to finish event already in events queue
+            this.handleMultiPlayerFinishGameEvents(uaAction, gsCurrentState);
+        }
         return gsCurrentState;
     }
 
@@ -191,5 +196,61 @@ public class MultiPlayerRules extends MemoriRules {
             e.printStackTrace();
         }
         handleUserActionMultiPlayerGameEvents(opponentMoveFactory.getUserFlip(), gsCurrentState, 1000);
+    }
+
+    private void handleMultiPlayerFinishGameEvents(UserAction userAction, MemoriGameState gsCurrentState) {
+        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH_GAME")) {
+            //add appropriate event
+            gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH_GAME"));
+            Player winnerPlayer = getWinnerPlayer(gsCurrentState);
+            if(gameWasTie(gsCurrentState, winnerPlayer)) {
+                gameWasTieGameEvents(gsCurrentState);
+            } else {
+                winnerPlayerGameEvents(gsCurrentState, winnerPlayer);
+            }
+            multiPLayerGameEndUserActions(gsCurrentState);
+        } else {
+            if(gameType.equals(GameType.VS_CPU))
+                super.handleLevelFinishGameEvents(userAction, gsCurrentState);
+        }
+    }
+
+    private void gameWasTieGameEvents(MemoriGameState gsCurrentState) {
+        System.err.println("Game was a tie!");
+        if(gameType.equals(GameType.VS_CPU)) {
+            // TODO game events for tie with CPU
+        } else {
+            // TODO game events for tie with other player
+        }
+    }
+
+    private void winnerPlayerGameEvents(MemoriGameState gsCurrentState, Player winnerPlayer) {
+        System.err.println("WINNER: " + winnerPlayer.getName());
+        boolean localPlayerWon = true;
+        if(PlayerManager.getOpponentPlayer().equals(winnerPlayer))
+            localPlayerWon = false;
+        if(gameType.equals(GameType.VS_CPU)) {
+            // TODO game events for tie with CPU
+            if(localPlayerWon) {
+                System.err.println("You won!");
+            } else {
+                System.err.println("CPU won!");
+            }
+        } else {
+            // TODO game events for tie with other player
+            if(localPlayerWon) {
+                System.err.println("You won!");
+            } else {
+                System.err.println("The other player won!");
+            }
+        }
+    }
+
+    private void multiPLayerGameEndUserActions(MemoriGameState gsCurrentState) {
+        if(gameType.equals(GameType.VS_CPU)) {
+            levelEndUserActions(gsCurrentState);
+        } else {
+            // TODO prompt only for quitting the game
+        }
     }
 }
