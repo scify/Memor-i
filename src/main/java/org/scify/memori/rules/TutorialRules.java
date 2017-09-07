@@ -1,11 +1,9 @@
 package org.scify.memori.rules;
 
-import org.scify.memori.GameType;
-import org.scify.memori.MemoriGameState;
-import org.scify.memori.interfaces.GameEvent;
-import org.scify.memori.interfaces.GameLevel;
-import org.scify.memori.interfaces.GameState;
-import org.scify.memori.interfaces.UserAction;
+import org.scify.memori.*;
+import org.scify.memori.interfaces.*;
+
+import java.awt.geom.Point2D;
 import java.util.Date;
 
 /**
@@ -23,17 +21,119 @@ public class TutorialRules extends MemoriRules {
 
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
-        MemoriGameState gsCurrentState;
-        gsCurrentState = (MemoriGameState) super.getNextState(gsCurrent, uaAction);
+        MemoriGameState gsCurrentState = (MemoriGameState) gsCurrent;
+        if(eventQueueContainsBlockingEvent(gsCurrentState)) {
+            return gsCurrentState;
+        }
+        //gsCurrentState = (MemoriGameState) super.getNextState(gsCurrent, uaAction);
         handleGameStartingGameEvents(gsCurrentState);
         // handle the tutorial game events
-        if(uaAction != null)
-            tutorialRulesSet((MemoriGameState) gsCurrent, uaAction);
-        if(isLastRound(gsCurrent)) {
+        if(uaAction != null) {
+            handleUserActionTutorialGameEvents(uaAction, gsCurrentState);
+            tutorialRulesSet(gsCurrentState, uaAction);
+        }
+        if(isLastRound(gsCurrentState)) {
             //if ready to finish event already in events queue
             this.handleTutorialFinishGameEvents(uaAction, gsCurrentState);
         }
-        return gsCurrent;
+        return gsCurrentState;
+    }
+
+    private void handleUserActionTutorialGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
+        if(movementValid(uaAction.getDirection(), gsCurrentState)) {
+            handleValidActionTutorialEvent(uaAction, gsCurrentState);
+        } else {
+            gsCurrentState.getEventQueue().add(invalidMovementGameEvent(gsCurrentState));
+        }
+    }
+
+    private void handleValidActionTutorialEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
+        updateGameStateIndexesAndUserActionCoords(uaAction, gsCurrentState);
+
+        MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
+        // currTile is the tile that was moved on or acted upon
+        Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
+        if(uaAction.getActionType().equals("movement")) {
+            movementUI(uaAction, gsCurrentState);
+
+        } else if (uaAction.getActionType().equals("flip")) {
+            if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_2"))
+                performFlipTutorial(currTile, gsCurrentState, uaAction, memoriTerrain);
+        } else if(uaAction.getActionType().equals("enter")) {
+
+        } else if(uaAction.getActionType().equals("escape")) {
+            //exit current game
+            gsCurrentState.setGameFinished(true);
+        }
+
+    }
+
+    /**
+     * Applies the rules and creates the game events relevant to flipping a card
+     * @param currTile the tile that the flip performed on
+     * @param gsCurrentState the current game state
+     * @param uaAction the user action object
+     * @param memoriTerrain the terrain holding all the tiles
+     */
+    protected void performFlipTutorial(Tile currTile, MemoriGameState gsCurrentState, UserAction uaAction, MemoriTerrain memoriTerrain) {
+        // Rule 6: flip
+        // If target card flipped
+        if(isTileFlipped(currTile)) {
+            //if card won
+            if(isTileWon(currTile)) {
+                //play empty sound
+                emptySoundUI(gsCurrentState);
+            } else {
+                //else if card not won
+                // play card sound
+                cardSoundUI(uaAction, gsCurrentState);
+            }
+        } else {
+            // else if not flipped
+            // flip card
+            flipTile(currTile);
+            flipTileUI(uaAction, gsCurrentState);
+            if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
+                //add FLIP_EXPLANATION event to queue
+                gsCurrentState.getEventQueue().add(new GameEvent("FLIP_EXPLANATION"));
+                // add FLIP_EXPLANATION_UI event to queue
+                gsCurrentState.getEventQueue().add(new GameEvent("FLIP_EXPLANATION_UI", null, new Date().getTime() + 4000, true));
+
+            }
+            if(tileIsLastOfTuple(memoriTerrain, currTile)) {
+                // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
+                successUI(uaAction, gsCurrentState);
+                //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
+                cardDescriptionSoundUI(gsCurrentState);
+                //if in tutorial mode, push explaining events
+                if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR"));
+                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR_UI", null, new Date().getTime() + 5000, true));
+                }
+                updateGameStateAndNextTurn(currTile, gsCurrentState, memoriTerrain);
+            } else {
+                // else not last card in tuple
+                if(atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
+                    // Flip card back
+                    flipBackTileAndAddToOpenCards(currTile, gsCurrentState, memoriTerrain);
+                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_WRONG_PAIR")) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR"));
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR_UI", null, new Date().getTime() + 4600, true));
+                    }
+                    doorsShuttingUI(gsCurrentState);
+                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_DOORS_CLOSED")) {
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED"));
+                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED_UI", null, new Date().getTime() + 7000, true));
+                    }
+
+
+                    nextTurn(gsCurrentState);
+                } else {
+                    memoriTerrain.addTileToOpenTiles(currTile);
+                }
+            }
+
+        }
     }
 
     protected void handleGameStartingGameEvents(MemoriGameState gsCurrentState) {
@@ -139,6 +239,13 @@ public class TutorialRules extends MemoriRules {
                                     }
                                 }
                             }
+                        }
+                    } else {
+                        //the invalid movement tutorial event should be emitted only if the tutorial has reached a certain point (step 2 which is go right second time)
+
+                        if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
+                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), new Date().getTime() + 500, true));
+                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT"));
                         }
                     }
                 }

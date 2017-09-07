@@ -1,13 +1,8 @@
 package org.scify.memori.rules;
 
-import org.scify.memori.HighScoresHandlerImpl;
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameState;
+import org.scify.memori.*;
 import org.scify.memori.helper.TimeWatch;
-import org.scify.memori.interfaces.GameEvent;
-import org.scify.memori.interfaces.GameLevel;
-import org.scify.memori.interfaces.GameState;
-import org.scify.memori.interfaces.UserAction;
+import org.scify.memori.interfaces.*;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -36,12 +31,14 @@ public class SinglePlayerRules extends MemoriRules {
 
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
-        MemoriGameState gsCurrentState;
+        MemoriGameState gsCurrentState = (MemoriGameState) gsCurrent;
+        if(eventQueueContainsBlockingEvent(gsCurrentState)) {
+            return gsCurrentState;
+        }
+        handleGameStartingGameEvents(gsCurrentState);
 
-        gsCurrentState = (MemoriGameState) super.getNextState(gsCurrent, uaAction);
-        singlePlayerRulesSet((MemoriGameState) gsCurrent);
         if(uaAction != null) {
-            handleUserActionGameEvents(uaAction);
+            handleUserActionSinglePlayerGameEvents(uaAction, gsCurrentState);
             //After the first user action, start the stopwatch
             if (!watchStarted) {
                 watch = TimeWatch.start();
@@ -55,12 +52,77 @@ public class SinglePlayerRules extends MemoriRules {
         return gsCurrent;
     }
 
-    private void singlePlayerRulesSet(MemoriGameState gsCurrentState) {
-        handleGameStartingGameEvents(gsCurrentState);
+    private void handleUserActionSinglePlayerGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
+        if(movementValid(uaAction.getDirection(), gsCurrentState)) {
+            handleValidActionSinglePlayerEvent(uaAction, gsCurrentState);
+        } else {
+            gsCurrentState.getEventQueue().add(invalidMovementGameEvent(gsCurrentState));
+        }
     }
 
-    private void handleUserActionGameEvents(UserAction userAction) {
+    private void handleValidActionSinglePlayerEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
+        updateGameStateIndexesAndUserActionCoords(uaAction, gsCurrentState);
 
+        MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
+        // currTile is the tile that was moved on or acted upon
+        Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
+        if(uaAction.getActionType().equals("movement")) {
+            movementUI(uaAction, gsCurrentState);
+
+        } else if (uaAction.getActionType().equals("flip")) {
+            performFlipSinglePlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
+        } else if(uaAction.getActionType().equals("enter")) {
+            createHelpGameEvent(uaAction, gsCurrentState);
+        } else if(uaAction.getActionType().equals("escape")) {
+            //exit current game
+            gsCurrentState.setGameFinished(true);
+        }
+    }
+
+    /**
+     * Applies the rules and creates the game events relevant to flipping a card
+     * @param currTile the tile that the flip performed on
+     * @param gsCurrentState the current game state
+     * @param uaAction the user action object
+     * @param memoriTerrain the terrain holding all the tiles
+     */
+    protected void performFlipSinglePlayer(Tile currTile, MemoriGameState gsCurrentState, UserAction uaAction, MemoriTerrain memoriTerrain) {
+        // Rule 6: flip
+        // If target card flipped
+        if(isTileFlipped(currTile)) {
+            //if card won
+            if(isTileWon(currTile)) {
+                //play empty sound
+                gsCurrentState.getEventQueue().add(new GameEvent("EMPTY"));
+            } else {
+                //else if card not won
+                // play card sound
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, true));
+            }
+        } else {
+            // else if not flipped
+            // flip card
+            flipTile(currTile);
+            flipTileUI(uaAction, gsCurrentState);
+
+            if(tileIsLastOfTuple(memoriTerrain, currTile)) {
+                // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
+                successUI(uaAction, gsCurrentState);
+                cardDescriptionSoundUI(gsCurrentState);
+                updateGameStateAndNextTurn(currTile, gsCurrentState, memoriTerrain);
+            } else {
+                // else not last card in tuple
+                if(atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
+                    // Flip card back
+                    flipBackTileAndAddToOpenCards(currTile, gsCurrentState, memoriTerrain);
+                    doorsShuttingUI(gsCurrentState);
+                    nextTurn(gsCurrentState);
+                } else {
+                    memoriTerrain.addTileToOpenTiles(currTile);
+                }
+            }
+
+        }
     }
 
     protected void handleGameStartingGameEvents(MemoriGameState gsCurrentState) {

@@ -52,38 +52,7 @@ public class MemoriRules extends Observable implements Rules {
 
     @Override
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
-
-        MemoriGameState gsCurrentState = (MemoriGameState)gsCurrent;
-
-        //if there is a blocking game event currently being handled by the Rendering engine, return.
-        if(eventQueueContainsBlockingEvent(gsCurrentState)) {
-            return gsCurrentState;
-        }
-
-        handleGameStartingGameEvents(gsCurrentState);
-
-        //if a user action (eg Keyboard event was provided), handle the emitting Game events
-        if (uaAction != null) {
-            handleUserActionGameEvents(uaAction, gsCurrentState);
-            setChanged();
-            this.notifyObservers(new RuleObserverObject(uaAction, "PLAYER_MOVE"));
-        }
-
-        //if last round, create appropriate READY_TO_FINISH event
-//        if(isLastRound(gsCurrent)) {
-//            //if ready to finish event already in events queue
-//            handleLevelFinishGameEvents(uaAction, gsCurrentState);
-//        }
-
-        return gsCurrentState;
-    }
-
-    /**
-     * When a level starts the rules should add the relevant game events
-     * @param gsCurrentState the current game state
-     */
-    protected void handleGameStartingGameEvents(MemoriGameState gsCurrentState) {
-
+        return gsCurrent;
     }
 
     /**
@@ -130,63 +99,83 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
-    protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
-        this.handleUserActionGameEvents(uaAction, gsCurrentState, 0);
-    }
-    /**
-     * Handles the user actions
-     * @param uaAction the user action (flip, move, help)
-     * @param gsCurrentState the current game state
-     */
-    protected void handleUserActionGameEvents(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
-        if(movementValid(uaAction.getDirection(), gsCurrentState)) {
-            this.handleValidActionEvent(uaAction, gsCurrentState, delay);
-        } else {
-            // if invalid movement, return only an invalid game event
-            gsCurrentState.getEventQueue().add(new GameEvent("INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), 0 , false));
-            if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_INVALID_MOVEMENT")) {
-                //the invalid movement tutorial event should be emitted only if the tutorial has reached a certain point (step 2 which is go right second time)
-                if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_1_STEP_2")) {
-                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT_UI", new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()), new Date().getTime() + 500, true));
-                    gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_INVALID_MOVEMENT"));
-                }
-            }
-        }
+    protected GameEvent invalidMovementGameEvent(MemoriGameState gameState) {
+        return new GameEvent("INVALID_MOVEMENT_UI", new Point2D.Double(gameState.getRowIndex(), gameState.getColumnIndex()), 0 , false);
     }
 
-    private void handleValidActionEvent(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
-
+    protected void updateGameStateIndexesAndUserActionCoords(UserAction uaAction, MemoriGameState gsCurrentState) {
         gsCurrentState.updateRowIndex(uaAction.getDirection());
         gsCurrentState.updateColumnIndex(uaAction.getDirection());
 
         uaAction.setCoords(new Point2D.Double(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex()));
+    }
 
-        MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
-        // currTile is the tile that was moved on or acted upon
-        Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
-        // Rules 1-4: Valid movement
-        // type: movement, params: coords
-        // delayed: false (zero), blocking:yes
-        if(uaAction.getActionType().equals("movement")) {
-            gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords()));
+    protected void movementUI(UserAction uaAction, MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords()));
+    }
 
-        } else if (uaAction.getActionType().equals("flip")) {
+    protected void emptySoundUI(MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("EMPTY"));
+    }
 
-            if(MainOptions.TUTORIAL_MODE) {
-                if (eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_0"))
-                    performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
-            }
-            else
-                performFlip(currTile, gsCurrentState, uaAction, memoriTerrain);
-        } else if(uaAction.getActionType().equals("enter")) {
-            if(!MainOptions.TUTORIAL_MODE)
-                createHelpGameEvent(uaAction, gsCurrentState);
-        } else if(uaAction.getActionType().equals("escape")) {
-            //exit current game
-            gsCurrentState.setGameFinished(true);
-        } else if(uaAction.getActionType().equals("opponent_movement")) {
-            gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
+    protected void cardSoundUI(UserAction uaAction, MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, true));
+    }
+
+    protected void notifyObserversForTileFlip(UserAction uaAction, Tile currTile) {
+        setChanged();
+        notifyObservers(new RuleObserverObject(new Pair<>(uaAction, currTile), "TILE_REVEALED"));
+    }
+
+    protected void notifyObserversForPlayerMovement(UserAction uaAction) {
+        setChanged();
+        notifyObservers(new RuleObserverObject(uaAction, "PLAYER_MOVE"));
+    }
+
+    protected void successUI(UserAction uaAction, MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("SUCCESS_UI", uaAction.getCoords(), new Date().getTime() + 5000, true));
+    }
+
+    protected void cardDescriptionSoundUI(MemoriGameState gsCurrentState) {
+        String cardDescriptionSoundFilePath = cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain());
+        if(cardDescriptionSoundFilePath != null)
+            gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFilePath, new Date().getTime() + 6500, true));
+    }
+
+    protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
+        gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
+        gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
+        gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 1800, false));
+    }
+
+    protected void updateGameStateAndNextTurn(Tile currTile, MemoriGameState gsCurrentState, MemoriTerrain memoriTerrain) {
+        // add tile to open tiles
+        memoriTerrain.addTileToOpenTiles(currTile);
+        // set all open cards won
+        setAllOpenTilesWon(memoriTerrain);
+        //reset open tiles
+        memoriTerrain.resetOpenTiles();
+        gsCurrentState.getCurrentPlayer().setScore(gsCurrentState.getCurrentPlayer().getScore() + 1);
+        nextTurn(gsCurrentState);
+    }
+
+    protected void flipBackTileAndAddToOpenCards(Tile currTile, MemoriGameState gsCurrentState, MemoriTerrain memoriTerrain) {
+        memoriTerrain.addTileToOpenTiles(currTile);
+        // Reset all tiles
+        List<Point2D> openTilesPoints = resetAllOpenTiles(memoriTerrain);
+        memoriTerrain.resetOpenTiles();
+        for (Iterator<Point2D> iter = openTilesPoints.iterator(); iter.hasNext(); ) {
+            Point2D position = iter.next();
+            gsCurrentState.getEventQueue().add(new GameEvent("FLIP_BACK_UI", position, new Date().getTime() + 5500, false));
         }
+        gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 5000, true));
+
+    }
+
+    protected void doorsShuttingUI(MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 5000, true));
     }
 
     /**
@@ -194,7 +183,7 @@ public class MemoriRules extends Observable implements Rules {
      * @param uaAction the user action
      * @param gsCurrentState the current game state
      */
-    private void createHelpGameEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
+    protected void createHelpGameEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
         Point2D coords = uaAction.getCoords();
         gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
         gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", currentGameLevel.getDimensions().getX() - ((int)coords.getX()), 0, true));
@@ -209,112 +198,7 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
-
-
-    /**
-     * Applies the rules and creates the game events relevant to flipping a card
-     * @param currTile the tile that the flip performed on
-     * @param gsCurrentState the current game state
-     * @param uaAction the user action object
-     * @param memoriTerrain the terrain holding all the tiles
-     */
-    private void performFlip(Tile currTile, MemoriGameState gsCurrentState, UserAction uaAction, MemoriTerrain memoriTerrain) {
-        // Rule 6: flip
-        // If target card flipped
-        if(isTileFlipped(currTile)) {
-            //if card won
-            if(isTileWon(currTile)) {
-                //play empty sound
-                gsCurrentState.getEventQueue().add(new GameEvent("EMPTY"));
-            } else {
-                //else if card not won
-                // play card sound
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, true));
-            }
-        } else {
-            // else if not flipped
-            // flip card
-            flipTile(currTile);
-            this.setChanged();
-            this.notifyObservers(new RuleObserverObject(new Pair<>(uaAction, currTile), "TILE_REVEALED"));
-
-            // push flip feedback event (delayed: false, blocking: no)
-            gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
-            gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
-            gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
-            //TODO (2): here we emmit the door open sound for the rendering engine
-            gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 1800, false));
-            if(MainOptions.TUTORIAL_MODE){
-                if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FLIP_EXPLANATION")) {
-                    //add FLIP_EXPLANATION event to queue
-                    gsCurrentState.getEventQueue().add(new GameEvent("FLIP_EXPLANATION"));
-                    // add FLIP_EXPLANATION_UI event to queue
-                    gsCurrentState.getEventQueue().add(new GameEvent("FLIP_EXPLANATION_UI", null, new Date().getTime() + 4000, true));
-
-                }
-            }
-            if(tileIsLastOfTuple(memoriTerrain, currTile)) {
-                // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
-                gsCurrentState.getEventQueue().add(new GameEvent("SUCCESS_UI", uaAction.getCoords(), new Date().getTime() + 5000, true));
-                //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));
-                String cardDescriptionSoundFilePath = cardDescriptionSoundFromOpenCardsByChance((MemoriTerrain) gsCurrentState.getTerrain());
-                if(cardDescriptionSoundFilePath != null)
-                    gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", cardDescriptionSoundFilePath, new Date().getTime() + 6500, true));
-                //if in tutorial mode, push explaining events
-                if(MainOptions.TUTORIAL_MODE) {
-                    if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_CORRECT_PAIR")) {
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR"));
-                        gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_CORRECT_PAIR_UI", null, new Date().getTime() + 5000, true));
-                    }
-                }
-                // add tile to open tiles
-                memoriTerrain.addTileToOpenTiles(currTile);
-                // set all open cards won
-                setAllOpenTilesWon(memoriTerrain);
-                //reset open tiles
-                memoriTerrain.resetOpenTiles();
-                gsCurrentState.getCurrentPlayer().setScore(gsCurrentState.getCurrentPlayer().getScore() + 1);
-                nextTurn(gsCurrentState);
-            } else {
-                // else not last card in tuple
-                if(atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
-                    // Flip card back
-                    // flipTile(currTile);
-                    memoriTerrain.addTileToOpenTiles(currTile);
-                    // Reset all tiles
-                    List<Point2D> openTilesPoints = resetAllOpenTiles(memoriTerrain);
-                    memoriTerrain.resetOpenTiles();
-                    for (Iterator<Point2D> iter = openTilesPoints.iterator(); iter.hasNext(); ) {
-                        Point2D position = iter.next();
-                        gsCurrentState.getEventQueue().add(new GameEvent("FLIP_BACK_UI", position, new Date().getTime() + 5500, false));
-                    }
-                    gsCurrentState.getEventQueue().add(new GameEvent("STOP_AUDIOS", null, new Date().getTime() + 5000, true));
-
-                    if(MainOptions.TUTORIAL_MODE) {
-                        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_WRONG_PAIR")) {
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR"));
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_WRONG_PAIR_UI", null, new Date().getTime() + 4600, true));
-                        }
-                    }
-                    gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 5000, true));
-                    if(MainOptions.TUTORIAL_MODE) {
-                        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "TUTORIAL_DOORS_CLOSED")) {
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED"));
-                            gsCurrentState.getEventQueue().add(new GameEvent("TUTORIAL_DOORS_CLOSED_UI", null, new Date().getTime() + 7000, true));
-                        }
-                    }
-
-                    nextTurn(gsCurrentState);
-                } else {
-                    memoriTerrain.addTileToOpenTiles(currTile);
-                }
-            }
-
-        }
-    }
-
-    private void nextTurn(MemoriGameState gsCurrentState) {
+    protected void nextTurn(MemoriGameState gsCurrentState) {
         for(Player player: gsCurrentState.getPlayers()) {
             System.err.println("Score for " + player.getName() + ": " + player.getScore());
         }
@@ -425,7 +309,7 @@ public class MemoriRules extends Observable implements Rules {
         return answer;
     }
 
-    private void flipTile(Tile currTile) {
+    protected void flipTile(Tile currTile) {
         currTile.flip();
     }
 
