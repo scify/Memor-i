@@ -35,22 +35,18 @@ public class MemoriGameLauncher {
         gameLevels = new ArrayList<>();
         gameLevels = gameLevelService.createGameLevels();
         MemoriGameLevel gameLevel = gameLevels.get(0);
-        MainOptions.TUTORIAL_MODE = true;
         startGameForLevel(gameLevel, GameType.TUTORIAL);
     }
 
     public void startSinglePlayerGame(MemoriGameLevel gameLevel) {
-        MainOptions.TUTORIAL_MODE = false;
         startGameForLevel(gameLevel, GameType.SINGLE_PLAYER);
     }
 
     public void startPVCPUGame(MemoriGameLevel gameLevel) {
-        MainOptions.TUTORIAL_MODE = false;
         startGameForLevel(gameLevel, GameType.VS_CPU);
     }
 
     public void startPvPGame(MemoriGameLevel gameLevel) {
-        MainOptions.TUTORIAL_MODE = false;
         startGameForLevel(gameLevel, GameType.VS_PLAYER);
     }
 
@@ -117,8 +113,6 @@ public class MemoriGameLauncher {
 
     private void quitToMainScreen() {
         System.err.println("QUITING TO MAIN SCREEN");
-        if (MainOptions.TUTORIAL_MODE)
-            MainOptions.TUTORIAL_MODE = false;
         sceneHandler.popScene();
     }
 

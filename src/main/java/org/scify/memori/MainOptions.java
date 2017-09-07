@@ -23,7 +23,6 @@ package org.scify.memori;
  * available through all classes.
  */
 public class MainOptions {
-    public static boolean TUTORIAL_MODE = false;
     public static int NUMBER_OF_OPEN_CARDS = 2;
     public static int GAME_LEVEL_CURRENT;
     public static double mHeight;
