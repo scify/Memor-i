@@ -59,6 +59,7 @@ public class MemoriTerrain implements Terrain {
                 cardIndex++;
             }
         }
+        resizeTilesToFitToScreen();
     }
 
     public MemoriTerrain(Map<CategorizedCard, Point2D> givenGameCards, Point2D terrainDimensions) {
@@ -68,6 +69,7 @@ public class MemoriTerrain implements Terrain {
                 tiles.put(new Point2D.Double(iX, iY), getCardAtPosition(givenGameCards, iX, iY));
             }
         }
+        resizeTilesToFitToScreen();
     }
 
     private void setUpTerrain(Point2D terrainDimensions) {
@@ -99,12 +101,17 @@ public class MemoriTerrain implements Terrain {
         //read the cards from the JSON file
         int numOfCards = (terrainWidth * terrainHeight);
         System.out.println("num of cards needed: " + numOfCards);
-        cardsList = cardDelegator.getMemoriCards(numOfCards, getWidth());
-
+        cardsList = cardDelegator.getMemoriCards(numOfCards);
+        // TODO for each card, set width
         return cardsList;
     }
 
-
+    private void resizeTilesToFitToScreen() {
+        for (Map.Entry<Point2D, Tile> currTile: tiles.entrySet()) {
+            Card currCard = (Card) currTile.getValue();
+            currCard.setCardWidth(getWidth());
+        }
+    }
 
     @Override
     public int getWidth() {

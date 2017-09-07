@@ -256,7 +256,7 @@ public class InvitePlayerScreenController {
 
         MemoriCardService memoriCardService = new MemoriCardService();
         for(LinkedTreeMap cardJsonObj: jsonCardsArray) {
-            CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString(), (int) gameLevel.getDimensions().getY());
+            CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString());
             cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
         }
         System.out.println(cardsWithPositions.size());

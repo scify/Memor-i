@@ -20,17 +20,17 @@ public class MemoriCardService {
 
     private static List<Card> cards = new ArrayList<>();
 
-    public List<Card> getMemoriCards(int numOfCards, int terrainWidth) {
-        cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards, terrainWidth);
+    public List<Card> getMemoriCards(int numOfCards) {
+        cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
         return shuffleCards(cards);
     }
 
-    public List<Card> getAllCards(int terrainWidth) {
+    public List<Card> getAllCards() {
         /*
           The number of cards we need depends on the level (number of rows and columns)
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
-        List<Card> cards = this.cardDBHandlerJSON.getCardsFromDB(this.cardDBHandlerJSON.getNumOfCardsInDB(), terrainWidth);
+        List<Card> cards = this.cardDBHandlerJSON.getCardsFromDB(this.cardDBHandlerJSON.getNumOfCardsInDB());
 
         return cards;
     }
@@ -75,9 +75,9 @@ public class MemoriCardService {
         return  jsonInString;
     }
 
-    public CategorizedCard getCardFromLabelAndType(String cardLabel, String cardCategory, int terrainWidth) {
+    public CategorizedCard getCardFromLabelAndType(String cardLabel, String cardCategory) {
         if(cards.isEmpty()) {
-            cards = getAllCards(terrainWidth);
+            cards = getAllCards();
         }
         for(Card card: cards) {
             CategorizedCard categorizedCard = (CategorizedCard) card;
