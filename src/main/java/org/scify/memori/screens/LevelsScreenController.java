@@ -1,6 +1,7 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -101,7 +102,9 @@ public class LevelsScreenController {
                         thread.start();
                         break;
                     case VS_PLAYER:
-                        sendGameRequest(gameLevel);
+                        Platform.runLater(() -> waitForResponseUI());
+                        thread = new Thread(() -> sendGameRequest(gameLevel));
+                        thread.start();
                         break;
                     default:
                         break;
@@ -119,11 +122,11 @@ public class LevelsScreenController {
 
     private void resetUI() {
         setAllLevelButtonsAsEnabled();
-        messageText.setText("Press Space to play with a random player");
+        messageText.setText("Press ENTER to play with a random player");
+        // TODO prompt for playing with CPU
     }
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
-        waitForResponseUI();
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, gameLevel.getLevelCode());
         if(serverResponse != null) {
             parseGameRequestServerResponse(serverResponse, gameLevel);
@@ -177,11 +180,10 @@ public class LevelsScreenController {
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
-                        messageText.setText("Player accepted! Press ENTER");
+                        Platform.runLater(() -> messageText.setText("Player accepted! Press ENTER"));
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
-                        messageText.setText("Player rejected. Press Escape");
-                        resetUI();
+                        Platform.runLater(() -> resetUI());
                         Thread voiceThread = new Thread(() -> text2Speech.speak("The player rejected your request. Press space to go to game level screen and play with a random player."));
                         voiceThread.start();
                         promptToPlayWithCPU();
