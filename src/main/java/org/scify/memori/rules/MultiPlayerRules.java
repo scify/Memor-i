@@ -33,7 +33,7 @@ public class MultiPlayerRules extends MemoriRules {
             return gsCurrentState;
         }
 
-        if(isOpponentPlaying(gsCurrentState)) {
+        if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent)) {
             handleOpponentNextMove(gsCurrentState);
         } else {
             opponentMoveFactory.updateFactoryComponents();
@@ -65,18 +65,21 @@ public class MultiPlayerRules extends MemoriRules {
         // currTile is the tile that was moved on or acted upon
         Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
         if(uaAction.getActionType().equals("movement")) {
+            if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getLocalPlayer()))
+                notifyObserversForPlayerMovement(uaAction);
             movementUI(uaAction, gsCurrentState);
-            notifyObserversForPlayerMovement(uaAction);
         } else if (uaAction.getActionType().equals("flip")) {
+            if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getLocalPlayer()))
+                notifyObserversForPlayerMovement(uaAction);
             performFlipMultiPlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
-            notifyObserversForPlayerMovement(uaAction);
         } else if(uaAction.getActionType().equals("enter")) {
             createHelpGameEvent(uaAction, gsCurrentState);
         } else if(uaAction.getActionType().equals("escape")) {
             //exit current game
             gsCurrentState.setGameFinished(true);
         } else if(uaAction.getActionType().equals("opponent_movement")) {
-            gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
+            if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer()))
+                gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
         }
     }
 
@@ -175,18 +178,26 @@ public class MultiPlayerRules extends MemoriRules {
     private boolean generateOpponentMove(MemoriGameState gsCurrentState) {
 
         ArrayList<UserAction> movements;
-        movements = opponentMoveFactory.getNextUserMovements(gsCurrentState);
-
-        int currentStep = 1;
-        if(!movements.isEmpty()) {
-            for (UserAction movement : movements) {
-                currentStep++;
-                handleUserActionMultiPlayerGameEvents(movement, gsCurrentState, currentStep * opponentMoveFactory.getMovementDelay());
+        try {
+            movements = opponentMoveFactory.getNextUserMovements(gsCurrentState);
+            int currentStep = 1;
+            if(!movements.isEmpty()) {
+                for (UserAction movement : movements) {
+                    currentStep++;
+                    handleUserActionMultiPlayerGameEvents(movement, gsCurrentState, currentStep * opponentMoveFactory.getMovementDelay());
+                }
+                return true;
+            } else {
+                return false;
             }
-            return true;
-        } else {
-            return false;
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            // TODO inform player that the other player abandoned the game and to press ESCAPE
+            System.err.println("ERROR PRESS ESCAPE TO QUIT");
+            multiPlayerGameEndUserActions(gsCurrentState);
+        }
+        return false;
     }
 
     private void generateOpponentFlip(MemoriGameState gsCurrentState) {
@@ -209,7 +220,7 @@ public class MultiPlayerRules extends MemoriRules {
             } else {
                 winnerPlayerGameEvents(gsCurrentState, winnerPlayer);
             }
-            multiPLayerGameEndUserActions(gsCurrentState);
+            multiPlayerGameEndUserActions(gsCurrentState);
         } else {
             if(gameType.equals(GameType.VS_CPU))
                 super.handleLevelFinishGameEvents(userAction, gsCurrentState);
@@ -247,11 +258,12 @@ public class MultiPlayerRules extends MemoriRules {
         }
     }
 
-    private void multiPLayerGameEndUserActions(MemoriGameState gsCurrentState) {
+    private void multiPlayerGameEndUserActions(MemoriGameState gsCurrentState) {
         if(gameType.equals(GameType.VS_CPU)) {
             levelEndUserActions(gsCurrentState);
         } else {
             // TODO prompt only for quitting the game
+            pressExitUI(gsCurrentState);
         }
     }
 }

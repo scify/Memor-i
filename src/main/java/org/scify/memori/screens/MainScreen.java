@@ -42,7 +42,7 @@ public class MainScreen extends Application {
     private double mWidth = Screen.getPrimary().getBounds().getWidth();
     private double mHeight = Screen.getPrimary().getBounds().getHeight();
     private Rectangle graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-
+    public static Scene scene;
 
     public MainScreen() {
         MemoriLogger.initLogger();
@@ -69,6 +69,7 @@ public class MainScreen extends Application {
         // construct the scene (the content of the stage)
         Scene primaryScene = new Scene(root, mWidth, mHeight);
         primaryStage.setTitle("Memor-i");
+        scene = primaryScene;
         controller.setParameters(primaryStage, primaryScene);
     }
 

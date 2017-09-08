@@ -20,10 +20,10 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     }
 
     @Override
-    public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState) {
+    public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState) throws Exception {
         ArrayList<UserAction> actions = new ArrayList<>();
         if(opponentActions.isEmpty()) {
-            getLatestMoveFromServer();
+            getLatestMovementFromServer();
         } else {
             Iterator<UserAction> listIterator = opponentActions.iterator();
             while(listIterator.hasNext()) {
@@ -55,18 +55,26 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         return 0;
     }
 
-    private void getLatestMoveFromServer() {
+    private int timesCalled = 0;
+    private void getLatestMovementFromServer() throws Exception {
         try {
+            timesCalled++;
             TimeUnit.MILLISECONDS.sleep(500);
             UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
-            if(opponentLatestAction != null)
+            if(opponentLatestAction != null) {
+                timesCalled = 0;
                 opponentActions.add(opponentLatestAction);
+            } else {
+                if(timesCalled > 50) {
+                    throw new Exception("Queried too many times for latest movement");
+                }
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private String sendUserMoveToServer(String userActionsParam) {
+    private String sendUserMovementToServer(String userActionsParam) {
         return gameMovementManager.sendMovementToServer(userActionsParam);
     }
 
@@ -76,8 +84,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         String ruleObserverCode = ruleObserverObject.code;
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
             UserAction userAction = (UserAction) ruleObserverObject.parameters;
-            String serverResponse = sendUserMoveToServer(packUserAction(userAction));
-            System.out.println("Sent movement. response: " + serverResponse);
+            String serverResponse = sendUserMovementToServer(packUserAction(userAction));
         }
     }
 

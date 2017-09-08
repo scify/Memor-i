@@ -207,6 +207,10 @@ public class MemoriRules extends Observable implements Rules {
         }
     }
 
+    protected void pressExitUI(MemoriGameState gsCurrentState) {
+        gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 3000, true));
+    }
+
     protected void nextTurn(MemoriGameState gsCurrentState) {
         for(Player player: gsCurrentState.getPlayers()) {
             System.err.println("Score for " + player.getName() + ": " + player.getScore());

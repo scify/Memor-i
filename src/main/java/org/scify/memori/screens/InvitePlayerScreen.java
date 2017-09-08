@@ -17,6 +17,7 @@ import static org.scify.memori.MainOptions.mWidth;
 public class InvitePlayerScreen {
 
     protected FXSceneHandler sceneHandler;
+    public static Scene scene;
 
     public InvitePlayerScreen(FXSceneHandler shSceneHandler) {
         sceneHandler = shSceneHandler;
@@ -33,7 +34,7 @@ public class InvitePlayerScreen {
 
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
         InvitePlayerScreenController controller = loader.getController();
-
+        scene = gameLevelsScene;
         controller.setParameters(sceneHandler, gameLevelsScene);
     }
 }

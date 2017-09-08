@@ -61,6 +61,10 @@ public class PlayerManager  implements Runnable {
         return opponentPlayer;
     }
 
+    public static Player getLocalPlayer() {
+        return localPlayer;
+    }
+
     public static void setPlayerId(int playerId) {
         PlayerManager.playerId = playerId;
     }

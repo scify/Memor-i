@@ -7,6 +7,8 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.screens.InvitePlayerScreen;
+import org.scify.memori.screens.MainScreen;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -90,7 +92,7 @@ public class MemoriGameLauncher {
                     startGameForLevel(gameLevel, gameType);
                     break;
                 case GAME_FINISHED:
-                    quitToMainScreen();
+                    quit();
                     break;
                 case NEXT_LEVEL:
                     playNextLevel(gameLevel);
@@ -113,9 +115,11 @@ public class MemoriGameLauncher {
         startGameForLevel(gameLevelNext, gameType);
     }
 
-    private void quitToMainScreen() {
-        System.err.println("QUITING TO MAIN SCREEN");
-        sceneHandler.popScene();
+    private void quit() {
+        if(gameType.equals(GameType.VS_PLAYER))
+            sceneHandler.popToScene(InvitePlayerScreen.scene);
+        else
+            sceneHandler.popToScene(MainScreen.scene);
     }
 
     private void playNextLevel(MemoriGameLevel gameLevel) {
