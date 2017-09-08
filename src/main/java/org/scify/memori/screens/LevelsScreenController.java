@@ -15,6 +15,7 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
@@ -122,9 +123,8 @@ public class LevelsScreenController {
     }
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
-        Thread thread = new Thread(() -> waitForResponseUI());
-        thread.start();
-        String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, MainOptions.GAME_LEVEL_CURRENT);
+        waitForResponseUI();
+        String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, gameLevel.getLevelCode());
         if(serverResponse != null) {
             parseGameRequestServerResponse(serverResponse, gameLevel);
         }
@@ -162,7 +162,9 @@ public class LevelsScreenController {
 
     private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
         ServerOperationResponse serverOperationResponse = null;
+        int timesCalled = 0;
         while (serverOperationResponse == null) {
+            timesCalled ++;
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
             ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
@@ -175,12 +177,11 @@ public class LevelsScreenController {
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
-                        messageText.setText("Player accepted! Press Space");
+                        messageText.setText("Player accepted! Press ENTER");
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         messageText.setText("Player rejected. Press Escape");
-                        Thread thread = new Thread(() -> resetUI());
-                        thread.start();
+                        resetUI();
                         Thread voiceThread = new Thread(() -> text2Speech.speak("The player rejected your request. Press space to go to game level screen and play with a random player."));
                         voiceThread.start();
                         promptToPlayWithCPU();
@@ -189,10 +190,19 @@ public class LevelsScreenController {
                         // or to press escape and select another opponent
                     }
                 }
+                if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                    cancelGameRequest();
+                    break;
+                }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void cancelGameRequest() {
+        // TODO inform player that something went wrong
+        // TODO send request to server to cancel the game request
     }
 
     private void promptToPlayWithCPU() {
@@ -218,10 +228,10 @@ public class LevelsScreenController {
 
     private void promptToStartGame(MemoriGameLevel gameLevel) {
         // Inform the player that the opponent accepted
-        Thread voiceThread = new Thread(() -> text2Speech.speak("The player accepted your request. Press space to start the game!"));
+        Thread voiceThread = new Thread(() -> text2Speech.speak("The player accepted your request. Press ENTER to start the game!"));
         voiceThread.start();
         primaryScene.setOnKeyReleased(event -> {
-            if(event.getCode() == SPACE) {
+            if(event.getCode() == ENTER) {
                 PlayerManager.localPlayerIsInitiator = true;
                 Thread thread = new Thread(() -> gameLauncher.startPvPGame(gameLevel));
                 thread.start();

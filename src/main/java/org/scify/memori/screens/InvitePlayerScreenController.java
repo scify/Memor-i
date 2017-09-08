@@ -18,6 +18,7 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 
 import java.awt.geom.Point2D;
@@ -230,6 +231,7 @@ public class InvitePlayerScreenController {
         int timesCalled = 0;
         while (serverResponse == null) {
             timesCalled ++;
+
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
             ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
@@ -240,12 +242,20 @@ public class InvitePlayerScreenController {
                     ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
                     System.out.println("Got cards!");
                     parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
-                    // TODO inform player that the cards are ready and should press enter
+                }
+                if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                    cancelGameRequest();
+                    break;
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void cancelGameRequest() {
+        // TODO inform player that something went wrong
+        // TODO send request to server to cancel the game request
     }
 
     private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {
