@@ -57,20 +57,16 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
 
     private int timesCalled = 0;
     private void getLatestMovementFromServer() throws Exception {
-        try {
-            timesCalled++;
-            TimeUnit.MILLISECONDS.sleep(500);
-            UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
-            if(opponentLatestAction != null) {
-                timesCalled = 0;
-                opponentActions.add(opponentLatestAction);
-            } else {
-                if(timesCalled > 50) {
-                    throw new Exception("Queried too many times for latest movement");
-                }
+        timesCalled++;
+        TimeUnit.MILLISECONDS.sleep(500);
+        UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
+        if(opponentLatestAction != null) {
+            timesCalled = 0;
+            opponentActions.add(opponentLatestAction);
+        } else {
+            if(timesCalled > 50) {
+                throw new Exception("Queried too many times for latest movement");
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 

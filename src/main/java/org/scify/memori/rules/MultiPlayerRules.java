@@ -13,6 +13,7 @@ public class MultiPlayerRules extends MemoriRules {
 
     private MoveFactory opponentMoveFactory;
     private GameType gameType;
+    private boolean gameInterrupted = false;
 
     public MultiPlayerRules(GameLevel gameLevel, GameType gameType) {
         super(gameLevel);
@@ -33,7 +34,7 @@ public class MultiPlayerRules extends MemoriRules {
             return gsCurrentState;
         }
 
-        if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent)) {
+        if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent) && !gameInterrupted) {
             handleOpponentNextMove(gsCurrentState);
         } else {
             opponentMoveFactory.updateFactoryComponents();
@@ -195,6 +196,7 @@ public class MultiPlayerRules extends MemoriRules {
             e.printStackTrace();
             // TODO inform player that the other player abandoned the game and to press ESCAPE
             System.err.println("ERROR PRESS ESCAPE TO QUIT");
+            gameInterrupted = true;
             multiPlayerGameEndUserActions(gsCurrentState);
         }
         return false;
