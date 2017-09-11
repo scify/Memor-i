@@ -30,7 +30,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
                 UserAction currentAction = listIterator.next();
                 if(currentAction.getActionType().equals("movement")) {
                     actions.add(new UserAction("opponent_movement", currentAction.getDirection()));
-                } else {
+                } else if (!currentAction.getActionType().equals("escape") && !currentAction.getActionType().equals("enter")) {
                     actions.add(new UserAction(currentAction.getActionType(), currentAction.getDirection()));
                 }
                 GameMovementManager.setTimestampOfLastOpponentMovement(currentAction.getTimestamp());

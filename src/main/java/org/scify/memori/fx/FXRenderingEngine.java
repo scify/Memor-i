@@ -366,7 +366,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "NUMERIC":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            int number = (int)currentGameEvent.parameters;
+                            int number = (Integer) currentGameEvent.parameters;
                             fxAudioEngine.playNumSound(number);
                             listIterator.remove();
                         }
@@ -374,7 +374,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "LETTER":
                         //check if the event should happen after some time
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            int number = (int)currentGameEvent.parameters;
+                            int number = (Integer) currentGameEvent.parameters;
                             fxAudioEngine.playLetterSound(number);
                             listIterator.remove();
                         }

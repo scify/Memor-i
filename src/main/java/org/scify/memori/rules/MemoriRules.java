@@ -185,15 +185,15 @@ public class MemoriRules extends Observable implements Rules {
      */
     protected void createHelpGameEvent(UserAction uaAction, MemoriGameState gsCurrentState) {
         Point2D coords = uaAction.getCoords();
-        gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
-        gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", currentGameLevel.getDimensions().getX() - ((int)coords.getX()), 0, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getX() + 1, 0, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC",  (int)coords.getY() + 1, 0, true));
         //If in help instructions mode, add appropriate explanation
         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS_EXPLANATION")) {
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_EXPLANATION"));
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_EXPLANATION_ROW", null, 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", currentGameLevel.getDimensions().getX() - ((int)coords.getX()), 0, true));
+            gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int) coords.getX() + 1, 0, true));
             gsCurrentState.getEventQueue().add(new GameEvent("HELP_EXPLANATION_COLUMN", null, 0, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("LETTER", (int)coords.getY() + 1, 0, true));
+            gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", (int) coords.getY() + 1, 0, true));
 
         }
     }
