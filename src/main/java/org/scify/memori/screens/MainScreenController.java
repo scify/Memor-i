@@ -94,7 +94,7 @@ public class MainScreenController implements Initializable {
         sceneHandler.pushScene(primaryScene);
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
+                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
         attachButtonClickHandlers();

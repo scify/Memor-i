@@ -125,7 +125,6 @@ public class InvitePlayerScreenController {
         if(!response.getParameters().equals(""))
             response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
-        System.out.println("game request reply response code: " + code);
         switch (code) {
             case 1:
                 String playerStatus = response.getMessage();

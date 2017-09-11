@@ -65,7 +65,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
             timesCalled = 0;
             opponentActions.add(opponentLatestAction);
         } else {
-            if(timesCalled > 100) {
+            if(timesCalled > 70) {
                 throw new Exception("Queried too many times for latest movement");
             }
         }

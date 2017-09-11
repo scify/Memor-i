@@ -52,7 +52,6 @@ public class GameMovementManager {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
-        System.out.println("game request reply response code: " + code);
         switch (code) {
             case 1:
                 // game request was either accepted or rejected
