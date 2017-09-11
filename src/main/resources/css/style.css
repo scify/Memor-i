@@ -73,13 +73,12 @@ StackPane {
     -fx-pref-height: 50px;
     -fx-font-family: Ubuntu;
     -fx-font-size: 250%;
-    -fx-padding: 4px;
     -fx-border-insets: 4px;
     -fx-background-insets: 4px;
     -fx-border-radius: 10 10 10 10;
     -fx-background-radius: 10 10 10 10;
     -fx-font-weight: bold;
-
+    -fx-padding: 10px;
 }
 
 .textField {

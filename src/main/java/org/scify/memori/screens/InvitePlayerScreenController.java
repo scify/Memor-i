@@ -2,6 +2,7 @@ package org.scify.memori.screens;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -101,13 +102,16 @@ public class InvitePlayerScreenController {
 
             boolean valid = cleanString.matches("\\w+");
             if (valid) {
-                getPlayerAvailability(cleanString);
+                evt.consume();
+                Thread thread = new Thread(() -> getPlayerAvailability(cleanString));
+                thread.start();
             } else {
                 //TODO: play sound informing the player that only english characters are allowed
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
+
     }
 
     private void getPlayerAvailability(String playerUserName) {
@@ -137,7 +141,7 @@ public class InvitePlayerScreenController {
                     // TODO inform that player is NOT available
                     System.out.println("Player not available");
                     // TODO prompt user to press space and play with CPU
-                    invitationText.setText("Player not available. Press space to play with a random player.");
+                    Platform.runLater(() -> promptToPlayWithCPUUI());
                     Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
                     thread.start();
                     promptToPlayWithCPU();
@@ -161,6 +165,10 @@ public class InvitePlayerScreenController {
                 shouldQueryForRequests = false;
             }
         });
+    }
+
+    private void promptToPlayWithCPUUI() {
+        invitationText.setText("Player not available. Press space to play with a random player.");
     }
 
     private void promptToPlayWithCPU() {
@@ -195,7 +203,8 @@ public class InvitePlayerScreenController {
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
                     Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
                     thread.start();
-                    answerToGameRequest();
+                    Thread answerThread = new Thread(() -> answerToGameRequest());
+                    answerThread.start();
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -215,10 +224,17 @@ public class InvitePlayerScreenController {
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
-                username.setDisable(false);
+                Platform.runLater(() -> resetUI());
+                // re-check for requests
+                queryServerForGameRequests();
                 gameRequestManager.sendGameRequestAnswerToServer(false);
             }
         });
+    }
+
+    private void resetUI() {
+        username.setDisable(false);
+        invitationText.setText("");
     }
 
     private void markPlayerActive() {

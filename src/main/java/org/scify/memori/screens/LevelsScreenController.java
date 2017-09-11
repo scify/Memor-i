@@ -83,6 +83,7 @@ public class LevelsScreenController {
         sceneHandler.popScene();
     }
 
+    private Button btnClicked;
     /**
      * When the user clicks on a game level button, a new Game should start
      * @param gameLevelBtn the button clcked
@@ -103,6 +104,7 @@ public class LevelsScreenController {
                         break;
                     case VS_PLAYER:
                         Platform.runLater(() -> waitForResponseUI());
+                        btnClicked = gameLevelBtn;
                         thread = new Thread(() -> sendGameRequest(gameLevel));
                         thread.start();
                         break;
@@ -122,8 +124,8 @@ public class LevelsScreenController {
 
     private void resetUI() {
         setAllLevelButtonsAsEnabled();
-        messageText.setText("Press ENTER to play with a random player");
-        // TODO prompt for playing with CPU
+        messageText.setText("Press SPACE to play with a random player");
+        gameType = GameType.VS_CPU;
     }
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
@@ -146,7 +148,9 @@ public class LevelsScreenController {
                 int gameRequestId = paramsObj.getInt("game_request_id");
                 GameRequestManager.setGameRequestId(gameRequestId);
                 System.err.println("Success. Game request id: " + gameRequestId);
-                queryServerForGameRequestReply(gameLevel);
+                Thread thread = new Thread(() -> queryServerForGameRequestReply(gameLevel));
+                thread.start();
+
                 break;
             case 2:
                 // Error in creating game request
@@ -205,6 +209,8 @@ public class LevelsScreenController {
     private void cancelGameRequest() {
         // TODO inform player that something went wrong
         // TODO send request to server to cancel the game request
+        Platform.runLater(() -> resetUI());
+        Platform.runLater(() -> messageText.setText("Player not replying"));
     }
 
     private void promptToPlayWithCPU() {
@@ -226,6 +232,8 @@ public class LevelsScreenController {
         for(Node node: gameLevelsContainer.getChildren()) {
             node.setDisable(false);
         }
+        if(btnClicked != null)
+            btnClicked.requestFocus();
     }
 
     private void promptToStartGame(MemoriGameLevel gameLevel) {
