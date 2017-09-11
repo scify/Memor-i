@@ -20,10 +20,13 @@ package org.scify.memori.fx;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.screens.InvitePlayerScreen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Handles the scenes changing across the application.
@@ -91,7 +94,10 @@ public class FXSceneHandler {
      * Removes the last scene from the scenes list and sets the previous one as active
      */
     public void popToScene(Scene scene) {
-        for (Scene currScene: allScenes) {
+        List<Scene> eventsList = Collections.synchronizedList(allScenes);
+        ListIterator<Scene> listIterator = eventsList.listIterator();
+        while (listIterator.hasNext()) {
+           Scene currScene = listIterator.next();
             if(currScene.equals(scene)) {
                 Platform.runLater(new Runnable() {
                     @Override
@@ -101,7 +107,7 @@ public class FXSceneHandler {
                 });
                 break;
             } else {
-                popScene();
+                listIterator.remove();
             }
         }
     }

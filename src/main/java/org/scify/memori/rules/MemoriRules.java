@@ -208,7 +208,7 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void pressExitUI(MemoriGameState gsCurrentState) {
-        gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 3000, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("PRESS_EXIT", null, new Date().getTime() + 8600, true));
     }
 
     protected void nextTurn(MemoriGameState gsCurrentState) {

@@ -163,6 +163,7 @@ public class InvitePlayerScreenController {
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 shouldQueryForRequests = false;
+                Platform.runLater(() -> resetUI());
             }
         });
     }
@@ -220,7 +221,9 @@ public class InvitePlayerScreenController {
                 // TODO: accept game request
                 System.out.println("game request accepted");
                 gameRequestManager.sendGameRequestAnswerToServer(true);
-                queryForGameRequestShuffledCards();
+                Thread thread = new Thread(() ->  queryForGameRequestShuffledCards());
+                thread.start();
+                Platform.runLater(() -> waitForReponseUI());
             } else if(event.getCode() == BACK_SPACE) {
                 // TODO: reject game request
                 System.out.println("game request rejected");
@@ -235,6 +238,12 @@ public class InvitePlayerScreenController {
     private void resetUI() {
         username.setDisable(false);
         invitationText.setText("");
+    }
+
+    private void waitForReponseUI() {
+        // TODO sound waiting for response
+        username.setDisable(true);
+        invitationText.setText("Waiting for response");
     }
 
     private void markPlayerActive() {
