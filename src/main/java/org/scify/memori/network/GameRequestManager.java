@@ -149,6 +149,13 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         return this.requestManager.doPost(url, urlParameters);
     }
 
+    public String cancelGame() {
+        String url = "gameRequest/cancel";
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(getGameRequestId())));
+        return this.requestManager.doPost(url, urlParameters);
+    }
+
     public String sendGameRequestAnswerToServer(boolean gameRequestAccepted) {
         String url = "gameRequest/reply";
         System.out.println("answer: " + String.valueOf(gameRequestAccepted));

@@ -211,6 +211,8 @@ public class LevelsScreenController {
         // TODO send request to server to cancel the game request
         Platform.runLater(() -> resetUI());
         Platform.runLater(() -> messageText.setText("Player not replying"));
+        Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
+        cancelThread.start();
     }
 
     private void promptToPlayWithCPU() {

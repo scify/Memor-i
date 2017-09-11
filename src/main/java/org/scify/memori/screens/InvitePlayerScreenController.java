@@ -271,7 +271,9 @@ public class InvitePlayerScreenController {
 
     private void cancelGameRequest() {
         // TODO inform player that something went wrong
-        // TODO send request to server to cancel the game request
+        Platform.runLater(() -> resetUI());
+        Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
+        cancelThread.start();
     }
 
     private void parseShuffledCardsFromServerAndStartGame(ArrayList<LinkedTreeMap> jsonCardsArray) {

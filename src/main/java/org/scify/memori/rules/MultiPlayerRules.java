@@ -3,6 +3,7 @@ package org.scify.memori.rules;
 import org.scify.memori.*;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.interfaces.*;
+import org.scify.memori.network.GameRequestManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -197,6 +198,8 @@ public class MultiPlayerRules extends MemoriRules {
             // TODO inform player that the other player abandoned the game and to press ESCAPE
             System.err.println("ERROR PRESS ESCAPE TO QUIT");
             gameInterrupted = true;
+            GameRequestManager gameRequestManager = new GameRequestManager();
+            gameRequestManager.cancelGame();
             multiPlayerGameEndUserActions(gsCurrentState);
         }
         return false;
@@ -222,6 +225,8 @@ public class MultiPlayerRules extends MemoriRules {
             } else {
                 winnerPlayerGameEvents(gsCurrentState, winnerPlayer);
             }
+            GameRequestManager gameRequestManager = new GameRequestManager();
+            gameRequestManager.endGame();
             multiPlayerGameEndUserActions(gsCurrentState);
         } else {
             if(gameType.equals(GameType.VS_CPU))
