@@ -35,20 +35,16 @@ import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static javafx.scene.input.KeyCode.*;
 
 public class MainScreenController implements Initializable {
 
-
-    private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
     private Stage primaryStage;
-    private Scene primaryScene;
+    private static Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
 
@@ -98,13 +94,11 @@ public class MainScreenController implements Initializable {
         sceneHandler.pushScene(primaryScene);
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
         attachButtonClickHandlers();
         primaryStage.show();
-//        Thread gameRequestsThread = new Thread(this::queryServerForGameRequests);
-//        gameRequestsThread.start();
 
     }
 
@@ -114,6 +108,10 @@ public class MainScreenController implements Initializable {
         //set the "favicon"
         Image faviconImage = new Image(gameCoverImgPath);
         primaryStage.getIcons().add(faviconImage);
+    }
+
+    public static void screenPoppedUI() {
+        primaryScene.lookup("#welcome").requestFocus();
     }
 
 

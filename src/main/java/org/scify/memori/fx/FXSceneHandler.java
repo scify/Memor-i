@@ -93,7 +93,7 @@ public class FXSceneHandler {
     /**
      * Removes the last scene from the scenes list and sets the previous one as active
      */
-    public void popToScene(Scene scene) {
+    public Scene popToScene(Scene scene) {
         List<Scene> eventsList = Collections.synchronizedList(allScenes);
         ListIterator<Scene> listIterator = eventsList.listIterator();
         while (listIterator.hasNext()) {
@@ -105,11 +105,12 @@ public class FXSceneHandler {
                         mainWindow.setScene(currScene);
                     }
                 });
-                break;
+                return scene;
             } else {
                 listIterator.remove();
             }
         }
+        return null;
     }
 
     /**

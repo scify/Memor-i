@@ -235,6 +235,12 @@ public class InvitePlayerScreenController {
         });
     }
 
+    public static void screenPoppedUI() {
+        // TODO play sound to inform player that they are back to this screen
+        FXAudioEngine audioEngine = new FXAudioEngine();
+        audioEngine.pauseCurrentlyPlayingAudios();
+    }
+
     private void resetUI() {
         username.setDisable(false);
         invitationText.setText("");

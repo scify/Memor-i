@@ -8,7 +8,9 @@ import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.screens.InvitePlayerScreen;
+import org.scify.memori.screens.InvitePlayerScreenController;
 import org.scify.memori.screens.MainScreen;
+import org.scify.memori.screens.MainScreenController;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -116,10 +118,14 @@ public class MemoriGameLauncher {
     }
 
     private void quit() {
-        if(gameType.equals(GameType.VS_PLAYER))
+        if(gameType.equals(GameType.VS_PLAYER)) {
             sceneHandler.popToScene(InvitePlayerScreen.scene);
-        else
+            InvitePlayerScreenController.screenPoppedUI();
+        }
+        else {
             sceneHandler.popToScene(MainScreen.scene);
+            MainScreenController.screenPoppedUI();
+        }
     }
 
     private void playNextLevel(MemoriGameLevel gameLevel) {
