@@ -137,7 +137,7 @@ public abstract class MemoriGame implements Game<GameEndState> {
         //apply it and determine the next state
         gsCurrentState = rRules.getNextState(gsCurrentState, uaToHandle);
         try {
-            Thread.sleep(50L); // Allow repainting
+            Thread.sleep(20L); // Allow repainting
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
