@@ -96,6 +96,9 @@ public class MemoriGameLauncher {
                 case GAME_FINISHED:
                     quit();
                     break;
+                case GAME_INTERRUPTED:
+                    quitToMainScreen();
+                    break;
                 case NEXT_LEVEL:
                     playNextLevel(gameLevel);
                     break;
@@ -126,6 +129,11 @@ public class MemoriGameLauncher {
             sceneHandler.popToScene(MainScreen.scene);
             MainScreenController.screenPoppedUI();
         }
+    }
+
+    private void quitToMainScreen() {
+        sceneHandler.popToScene(MainScreen.scene);
+        MainScreenController.screenPoppedUI();
     }
 
     private void playNextLevel(MemoriGameLevel gameLevel) {

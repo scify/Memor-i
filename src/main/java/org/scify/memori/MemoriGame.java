@@ -122,6 +122,8 @@ public abstract class MemoriGame implements Game<GameEndState> {
                 MainOptions.STORY_LINE_LEVEL++;
             return GameEndState.SAME_LEVEL;
         }
+        else if(memoriGameState.gameInterrupted)
+            return GameEndState.GAME_INTERRUPTED;
         else
             return GameEndState.GAME_FINISHED;
     }

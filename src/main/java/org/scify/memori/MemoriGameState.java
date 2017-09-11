@@ -56,6 +56,7 @@ public class MemoriGameState implements GameState {
      */
     private int columnIndex = 0;
     private int rowIndex = 0;
+    public boolean gameInterrupted = false;
 
     public MemoriGameState(GameLevel gameLevel, GameType gameType) {
         terrain = new MemoriTerrain(gameLevel.getDimensions());

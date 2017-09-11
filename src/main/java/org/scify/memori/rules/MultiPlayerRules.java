@@ -199,7 +199,9 @@ public class MultiPlayerRules extends MemoriRules {
             System.err.println("ERROR PRESS ESCAPE TO QUIT");
             gameInterrupted = true;
             GameRequestManager gameRequestManager = new GameRequestManager();
-            gameRequestManager.cancelGame();
+            Thread thread = new Thread(() -> gameRequestManager.cancelGame());
+            thread.start();
+            gsCurrentState.gameInterrupted = true;
             multiPlayerGameEndUserActions(gsCurrentState);
         }
         return false;

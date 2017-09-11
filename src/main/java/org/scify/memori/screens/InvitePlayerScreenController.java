@@ -303,7 +303,7 @@ public class InvitePlayerScreenController {
             cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
         }
         System.out.println(cardsWithPositions.size());
-
+        Platform.runLater(() -> resetUI());
         Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();
