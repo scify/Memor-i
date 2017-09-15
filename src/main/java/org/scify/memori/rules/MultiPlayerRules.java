@@ -78,6 +78,9 @@ public class MultiPlayerRules extends MemoriRules {
             createHelpGameEvent(uaAction, gsCurrentState);
         } else if(uaAction.getActionType().equals("escape")) {
             //exit current game
+            if(!gsCurrentState.isGameFinished()) {
+                gsCurrentState.gameInterrupted = true;
+            }
             gsCurrentState.setGameFinished(true);
         } else if(uaAction.getActionType().equals("opponent_movement")) {
             if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer()))

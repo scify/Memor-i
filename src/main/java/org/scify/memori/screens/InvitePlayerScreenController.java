@@ -98,20 +98,54 @@ public class InvitePlayerScreenController {
     @FXML
     protected void submitUsername(KeyEvent evt) {
         if (evt.getCode() == ENTER){
+            evt.consume();
+            Thread thread;
             String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-            boolean valid = cleanString.matches("\\w+");
-            if (valid) {
-                evt.consume();
-                Thread thread = new Thread(() -> getPlayerAvailability(cleanString));
+            if(cleanString.length() == 0) {
+                thread = new Thread(() -> searchForRandomPlayer());
                 thread.start();
             } else {
-                //TODO: play sound informing the player that only english characters are allowed
+                boolean valid = cleanString.matches("\\w+");
+                if (valid) {
+                    thread = new Thread(() -> getPlayerAvailability(cleanString));
+                    thread.start();
+                } else {
+                    //TODO: play sound informing the player that only english characters are allowed
+                }
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
 
+    }
+
+    private void searchForRandomPlayer() {
+        String serverResponse = playerManager.searchForRandomPlayer();
+        Gson g = new Gson();
+        ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
+        if(!response.getParameters().equals(""))
+            response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
+        int code = response.getCode();
+        switch (code) {
+            case 1:
+                // found a player
+                JsonObject parametersObject = (JsonObject) response.getParameters();
+                int playerId = parametersObject.get("player_id").getAsInt();
+                promptToGoToLevelsPage(playerId);
+                break;
+            case 2:
+                // error
+                break;
+            case 3:
+                // server validation not passed
+                break;
+            case 4:
+                // player not found
+                noAvailablePlayerFound();
+                break;
+            default:
+                break;
+        }
     }
 
     private void getPlayerAvailability(String playerUserName) {
@@ -139,11 +173,7 @@ public class InvitePlayerScreenController {
                 } else if(playerStatus.equals("player_not_available")) {
                     // TODO inform that player is NOT available
                     System.out.println("Player not available");
-                    // TODO prompt user to press space and play with CPU
-                    Platform.runLater(() -> promptToPlayWithCPUUI());
-                    Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
-                    thread.start();
-                    promptToPlayWithCPU();
+                    playerNotAvailable();
                 }
             case 2:
                 // error
@@ -152,6 +182,20 @@ public class InvitePlayerScreenController {
             case 4:
                 // player not found
         }
+    }
+
+    private void playerNotAvailable() {
+        Platform.runLater(() -> promptToPlayWithCPUUI());
+        Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
+        thread.start();
+        promptToPlayWithCPU();
+    }
+
+    private void noAvailablePlayerFound() {
+        Platform.runLater(() -> promptToPlayWithCPUUI());
+        Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
+        thread.start();
+        promptToPlayWithCPU();
     }
 
     private void promptToGoToLevelsPage(int opponentId) {

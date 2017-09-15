@@ -96,6 +96,11 @@ public class PlayerManager  implements Runnable {
         return this.requestManager.doGet(url);
     }
 
+    public String searchForRandomPlayer() {
+        String url = "player/random?player_id=" + getPlayerId() + "&game_flavor_pack_identifier=" + gameIdentifier;
+        return this.requestManager.doGet(url);
+    }
+
     @Override
     public void run() {
         switch (callIdentifier) {
