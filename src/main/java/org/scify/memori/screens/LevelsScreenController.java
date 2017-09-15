@@ -201,6 +201,7 @@ public class LevelsScreenController {
                     break;
                 }
             } catch (InterruptedException | ExecutionException e) {
+                cancelGameRequest();
                 e.printStackTrace();
             }
         }

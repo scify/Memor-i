@@ -7,6 +7,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.screens.InvitePlayerScreen;
 import org.scify.memori.screens.InvitePlayerScreenController;
 import org.scify.memori.screens.MainScreen;
@@ -107,6 +108,9 @@ public class MemoriGameLauncher {
             }
         } catch (InterruptedException | ExecutionException e) {
             MemoriLogger.LOGGER.log(Level.SEVERE, "Game exception: " + e.getMessage());
+            GameRequestManager gameRequestManager = new GameRequestManager();
+            Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
+            cancelThread.start();
             e.printStackTrace();
         }
     }
