@@ -5,11 +5,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.RequestManager;
+import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class PlayerManager  implements Runnable {
+public class PlayerManager  implements Callable<String> {
 
     private RequestManager requestManager;
 
@@ -34,11 +36,13 @@ public class PlayerManager  implements Runnable {
     }
 
 
-    private void markPlayerActive() {
+    private String markPlayerActive() {
         String url = "player/markActive";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
         String response = requestManager.doPost(url, urlParameters);
+        System.out.println("player/markActive");
+        return response;
     }
 
     public static void setLocalPlayer(Player localPlayer) {
@@ -102,12 +106,13 @@ public class PlayerManager  implements Runnable {
     }
 
     @Override
-    public void run() {
+    public String call() throws Exception {
         switch (callIdentifier) {
             case "PLAYER_ACTIVE":
-                markPlayerActive();
+                return markPlayerActive();
             default:
                 break;
         }
+        return null;
     }
 }

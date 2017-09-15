@@ -52,6 +52,7 @@ public class InvitePlayerScreenController {
     private ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
     private int gameLevelId;
     private ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
+    private ScheduledFuture<String> playerActiveFuture;
     private static boolean shouldQueryForRequests = true;
     private static boolean shouldQueryForMarkingPlayerActive = true;
 
@@ -96,6 +97,8 @@ public class InvitePlayerScreenController {
     private void exitScreen() {
         audioEngine.pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();
+        shouldQueryForMarkingPlayerActive = false;
+        shouldQueryForRequests = false;
     }
 
     @FXML
@@ -302,8 +305,16 @@ public class InvitePlayerScreenController {
 
     private void markPlayerActive() {
         while(shouldQueryForMarkingPlayerActive) {
-            markPlayerActiveExecutorService.schedule(
+            playerActiveFuture = markPlayerActiveExecutorService.schedule(
                     new PlayerManager("PLAYER_ACTIVE"), 10, TimeUnit.SECONDS);
+            try {
+                String response = playerActiveFuture.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
