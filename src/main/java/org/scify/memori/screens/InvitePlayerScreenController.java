@@ -52,7 +52,8 @@ public class InvitePlayerScreenController {
     private ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
     private int gameLevelId;
     private ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
-    private boolean shouldQueryForRequests = true;
+    private static boolean shouldQueryForRequests = true;
+    private static boolean shouldQueryForMarkingPlayerActive = true;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
@@ -63,6 +64,8 @@ public class InvitePlayerScreenController {
         sceneHandler.pushScene(userNameScreenScene);
         text2Speech = new Text2Speech();
         gameLauncher = new MemoriGameLauncher(sceneHandler);
+        shouldQueryForRequests = true;
+        shouldQueryForMarkingPlayerActive = true;
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -206,6 +209,7 @@ public class InvitePlayerScreenController {
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 shouldQueryForRequests = false;
+                shouldQueryForMarkingPlayerActive = false;
                 Platform.runLater(() -> resetUI());
             }
         });
@@ -218,8 +222,9 @@ public class InvitePlayerScreenController {
     private void promptToPlayWithCPU() {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                new LevelsScreen(sceneHandler, GameType.VS_CPU);
                 shouldQueryForRequests = false;
+                shouldQueryForMarkingPlayerActive = false;
+                new LevelsScreen(sceneHandler, GameType.VS_CPU);
             }
         });
     }
@@ -296,8 +301,11 @@ public class InvitePlayerScreenController {
     }
 
     private void markPlayerActive() {
-        markPlayerActiveExecutorService.scheduleAtFixedRate(
-                new PlayerManager("PLAYER_ACTIVE"), 5, 5, TimeUnit.MINUTES);
+        while(shouldQueryForMarkingPlayerActive) {
+            markPlayerActiveExecutorService.schedule(
+                    new PlayerManager("PLAYER_ACTIVE"), 10, TimeUnit.SECONDS);
+        }
+
     }
 
     private void queryForGameRequestShuffledCards() {
