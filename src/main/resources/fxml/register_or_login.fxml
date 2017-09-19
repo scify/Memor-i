@@ -24,8 +24,8 @@
     <VBox alignment="center" styleClass="optionButtonContainer">
         <VBox alignment="center" fx:id="actionsContainer" spacing="10.0">
             <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%select_action" fx:id="welcome" />
-            <Button contentDisplay="CENTER" styleClass="optionButton" text="%register" onKeyPressed="#goToRegisterScreen"/>
-            <Button contentDisplay="CENTER" styleClass="optionButton" text="%login" onKeyPressed="#goToLoginScreen"/>
+            <Button contentDisplay="CENTER" styleClass="optionButton" text="%register" fx:id="register" onKeyPressed="#goToRegisterScreen"/>
+            <Button contentDisplay="CENTER" styleClass="optionButton" text="%login" fx:id="login" onKeyPressed="#goToLoginScreen"/>
         </VBox>
     </VBox>
     <stylesheets>

@@ -16,6 +16,7 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
@@ -55,6 +56,13 @@ public class InvitePlayerScreenController {
     private ScheduledFuture<String> playerActiveFuture;
     private static boolean shouldQueryForRequests = true;
     private static boolean shouldQueryForMarkingPlayerActive = true;
+    private String miscellaneousSoundsBasePath;
+    private MemoriConfiguration configuration;
+
+    public InvitePlayerScreenController() {
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+    }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
         this.primaryScene = userNameScreenScene;
@@ -85,6 +93,8 @@ public class InvitePlayerScreenController {
                 },
                 5000
         );
+
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
     }
 
     @FXML
@@ -116,7 +126,9 @@ public class InvitePlayerScreenController {
                     thread = new Thread(() -> getPlayerAvailability(cleanString));
                     thread.start();
                 } else {
-                    //TODO: play sound informing the player that only english characters are allowed
+                    thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false));
+                    thread.start();
+                    Platform.runLater(() -> username.setText(""));
                 }
             }
         } else if (evt.getCode() == ESCAPE) {
@@ -169,7 +181,6 @@ public class InvitePlayerScreenController {
             case 1:
                 String playerStatus = response.getMessage();
                 if(playerStatus.equals("player_available")) {
-                    // TODO inform that player is available and prompt to go to levels page
                     JsonObject parametersObject = (JsonObject) response.getParameters();
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
@@ -177,7 +188,6 @@ public class InvitePlayerScreenController {
                     promptToGoToLevelsPage(playerId);
                     username.setDisable(true);
                 } else if(playerStatus.equals("player_not_available")) {
-                    // TODO inform that player is NOT available
                     System.out.println("Player not available");
                     playerNotAvailable();
                 }
@@ -187,25 +197,40 @@ public class InvitePlayerScreenController {
                 // server validation not passed
             case 4:
                 // player not found
+                playerNotFound();
+                break;
         }
     }
 
+    private void playerNotFound() {
+        Platform.runLater(() -> {
+            invitationText.setText("Player not found. Press space to play with a random player.");
+            username.setText("");
+        });
+        Thread thread = new Thread(() -> {
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_found.mp3", true);
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "press_space_to_play_with_cpu.mp3", true);
+        });
+        thread.start();
+        promptToPlayWithCPU();
+    }
+
     private void playerNotAvailable() {
-        Platform.runLater(() -> promptToPlayWithCPUUI());
-        Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
+        Platform.runLater(() -> invitationText.setText("Player not available. Press space to play with a random player."));
+        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_available.mp3", false));
         thread.start();
         promptToPlayWithCPU();
     }
 
     private void noAvailablePlayerFound() {
-        Platform.runLater(() -> promptToPlayWithCPUUI());
-        Thread thread = new Thread(() -> text2Speech.speak("Player not available. Press space to play with a random player."));
+        Platform.runLater(() -> invitationText.setText("No available player found. Press space to play with the Computer!"));
+        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_player_available.mp3", false));
         thread.start();
         promptToPlayWithCPU();
     }
 
     private void promptToGoToLevelsPage(int opponentId) {
-        Thread thread = new Thread(() -> text2Speech.speak("Player available. Press space."));
+        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false));
         thread.start();
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
@@ -216,10 +241,6 @@ public class InvitePlayerScreenController {
                 Platform.runLater(() -> resetUI());
             }
         });
-    }
-
-    private void promptToPlayWithCPUUI() {
-        invitationText.setText("Player not available. Press space to play with a random player.");
     }
 
     private void promptToPlayWithCPU() {
@@ -249,12 +270,12 @@ public class InvitePlayerScreenController {
                     String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
                     int initiatorId = parametersObject.get("initiator_id").getAsInt();
                     gameLevelId = parametersObject.get("game_level_id").getAsInt();
-                    System.out.println("You have a new request from " +initiatorUserName + "!");
                     invitationText.setText("You have a new request from " +initiatorUserName + "! Press Enter to Accept.");
                     username.setDisable(true);
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
-                    Thread thread = new Thread(() -> text2Speech.speak("You have a new request from " +initiatorUserName + "!"));
+                    Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false));
                     thread.start();
+
                     Thread answerThread = new Thread(() -> answerToGameRequest());
                     answerThread.start();
                 }
@@ -269,15 +290,14 @@ public class InvitePlayerScreenController {
         // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
-                // TODO: accept game request
-                System.out.println("game request accepted");
+
                 gameRequestManager.sendGameRequestAnswerToServer(true);
-                Thread thread = new Thread(() ->  queryForGameRequestShuffledCards());
+                Thread queryThread = new Thread(() ->  queryForGameRequestShuffledCards());
+                queryThread.start();
+                Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false));
                 thread.start();
                 Platform.runLater(() -> waitForReponseUI());
             } else if(event.getCode() == BACK_SPACE) {
-                // TODO: reject game request
-                System.out.println("game request rejected");
                 Platform.runLater(() -> resetUI());
                 // re-check for requests
                 queryServerForGameRequests();
@@ -298,7 +318,6 @@ public class InvitePlayerScreenController {
     }
 
     private void waitForReponseUI() {
-        // TODO sound waiting for response
         username.setDisable(true);
         invitationText.setText("Waiting for response");
     }

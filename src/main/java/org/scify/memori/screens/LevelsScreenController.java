@@ -13,6 +13,7 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
@@ -36,10 +37,17 @@ public class LevelsScreenController {
     private MemoriGameLauncher gameLauncher;
     private Text2Speech text2Speech = new Text2Speech();
     private GameType gameType;
+    private String miscellaneousSoundsBasePath;
+    private MemoriConfiguration configuration;
     @FXML
     Button messageText;
     @FXML
     Button infoText;
+
+    public LevelsScreenController() {
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+    }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene, GameType gameType) {
         this.primaryScene = levelsScreenScene;
@@ -50,6 +58,18 @@ public class LevelsScreenController {
         FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
         VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
+
+        primaryScene.lookup("#infoText").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "levels_screen_welcome.mp3", false);
+            }
+        });
+
+        primaryScene.lookup("#infoText").setOnKeyPressed(event -> {
+            if (event.getCode() == ESCAPE) {
+                exitScreen();
+            }
+        });
     }
 
     /**
@@ -148,8 +168,10 @@ public class LevelsScreenController {
                 int gameRequestId = paramsObj.getInt("game_request_id");
                 GameRequestManager.setGameRequestId(gameRequestId);
                 System.err.println("Success. Game request id: " + gameRequestId);
-                Thread thread = new Thread(() -> queryServerForGameRequestReply(gameLevel));
+                Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_sent.mp3", false));
                 thread.start();
+                Thread queryThread = new Thread(() -> queryServerForGameRequestReply(gameLevel));
+                queryThread.start();
 
                 break;
             case 2:
@@ -182,13 +204,12 @@ public class LevelsScreenController {
                     // we got a reply
 
                     if(serverOperationResponse.getMessage().equals("accepted")) {
-                        // TODO inform user that the request was accepted and prompt
                         // to press enter to start the game
                         Platform.runLater(() -> messageText.setText("Player accepted! Press ENTER"));
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         Platform.runLater(() -> resetUI());
-                        Thread voiceThread = new Thread(() -> text2Speech.speak("The player rejected your request. Press space to go to game level screen and play with a random player."));
+                        Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", false));
                         voiceThread.start();
                         promptToPlayWithCPU();
                         // TODO inform user that the request was rejected and prompt
@@ -241,7 +262,7 @@ public class LevelsScreenController {
 
     private void promptToStartGame(MemoriGameLevel gameLevel) {
         // Inform the player that the opponent accepted
-        Thread voiceThread = new Thread(() -> text2Speech.speak("The player accepted your request. Press ENTER to start the game!"));
+        Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_accepted.mp3", false));
         voiceThread.start();
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {

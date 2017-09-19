@@ -92,12 +92,8 @@ public class MainScreenController implements Initializable {
         setStageFavicon(primaryStage);
         sceneHandler.setMainWindow(primaryStage);
         sceneHandler.pushScene(primaryScene);
-        primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
-            }
-        });
-        attachButtonClickHandlers();
+
+        attachButtonFocusHandlers();
         primaryStage.show();
 
     }
@@ -116,18 +112,43 @@ public class MainScreenController implements Initializable {
 
 
     /**
-     * Attaches click handlers to fixed buttons (tutorial, exit, etc)
+     * Attaches focus handlers to fixed buttons (tutorial, exit, etc)
      */
-    private void attachButtonClickHandlers() {
+    private void attachButtonFocusHandlers() {
+
+        primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
+            }
+        });
+
         primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
             }
         });
 
         primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
-                //audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
+            }
+        });
+
+        primaryScene.lookup("#single_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "single_player.mp3", false);
+            }
+        });
+
+        primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
+            }
+        });
+
+        primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
             }
         });
 
@@ -211,6 +232,7 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void initializePvPGame(KeyEvent evt) {
+        audioEngine.pauseCurrentlyPlayingAudios();
         if (evt.getCode() == SPACE) {
             if(RequestManager.networkAvailable())
                 new RegisterOrLoginScreen(sceneHandler);

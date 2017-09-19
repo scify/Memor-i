@@ -1,6 +1,7 @@
 package org.scify.memori.screens;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -10,6 +11,7 @@ import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.network.ServerOperationResponse;
 
 import java.text.Normalizer;
@@ -24,13 +26,19 @@ public class RegisterLoginFormScreenController {
     TextField username;
     @FXML
     TextField password;
-
+    private String miscellaneousSoundsBasePath;
+    private MemoriConfiguration configuration;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
     private PlayerManager playerManager;
     private String userNameStr;
     private String passwordStr;
     private boolean isRegister;
+
+    public RegisterLoginFormScreenController() {
+        configuration = new MemoriConfiguration();
+        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+    }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
         this.primaryScene = userNameScreenScene;
@@ -41,6 +49,7 @@ public class RegisterLoginFormScreenController {
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
         sceneHandler.pushScene(userNameScreenScene);
         password.setDisable(true);
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", false);
     }
 
     @FXML
@@ -54,15 +63,15 @@ public class RegisterLoginFormScreenController {
     protected void submitUserName(KeyEvent evt) {
         if (evt.getCode() == ENTER) {
             String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-            System.out.println(cleanString);
             boolean valid = cleanString.matches("\\w+");
             if (valid) {
                 password.setDisable(false);
                 password.requestFocus();
                 username.setDisable(true);
                 userNameStr = cleanString;
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "password.mp3", false);
             } else {
-                //TODO: play sound informing the player that only english characters are allowed
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
@@ -78,7 +87,7 @@ public class RegisterLoginFormScreenController {
             if (valid) {
                 sendRequestToServer();
             } else {
-                //TODO: play sound informing the player that only english characters are allowed
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
@@ -107,20 +116,39 @@ public class RegisterLoginFormScreenController {
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
                 int newPlayerId = paramsObj.getInt("player_id");
                 PlayerManager.setPlayerId(newPlayerId);
+                audioEngine.pauseCurrentlyPlayingAudios();
                 new InvitePlayerScreen(sceneHandler);
                 break;
             case 2:
                 // Player with username exists
-                // TODO play appropriate sound
+                // TODO play sound
                 System.out.println("Player with username " + userNameStr + " exists");
+                Platform.runLater(() -> resetUI());
                 break;
             case 3:
                 // Validation error
-                // TODO play appropriate sound
                 System.out.println("Validation error: " + response.getParameters());
+                Platform.runLater(() -> resetUI());
+                break;
+            case 4:
+                // Wrong login credentials
+                Platform.runLater(() -> resetUI());
+                Thread thread = new Thread(() -> {
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials.mp3", true);
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", true);
+                });
+                thread.start();
                 break;
         }
 
+    }
+
+    private void resetUI() {
+        username.setText("");
+        password.setText("");
+        password.setDisable(true);
+        username.setDisable(false);
+        username.requestFocus();
     }
 
     private void exitScreen() {
