@@ -191,6 +191,7 @@ public class InvitePlayerScreenController {
                     System.out.println("Player not available");
                     playerNotAvailable();
                 }
+                break;
             case 2:
                 // error
             case 3:
@@ -234,6 +235,7 @@ public class InvitePlayerScreenController {
         thread.start();
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
+                audioEngine.pauseCurrentlyPlayingAudios();
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 shouldQueryForRequests = false;
