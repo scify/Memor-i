@@ -289,7 +289,6 @@ public class InvitePlayerScreenController {
         // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
-
                 gameRequestManager.sendGameRequestAnswerToServer(true);
                 Thread queryThread = new Thread(() ->  queryForGameRequestShuffledCards());
                 queryThread.start();

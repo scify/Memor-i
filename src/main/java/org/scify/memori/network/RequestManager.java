@@ -24,7 +24,7 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 public class RequestManager {
 
     private static String SERVER_URL;
-    public static int MAX_REQUEST_TRIES = 5;
+    public static int MAX_REQUEST_TRIES = 15;
     public RequestManager() {
         MemoriConfiguration configuration = new MemoriConfiguration();
         SERVER_URL = configuration.getProjectProperty("SERVER_URL");
