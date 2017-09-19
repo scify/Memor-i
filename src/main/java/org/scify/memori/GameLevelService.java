@@ -15,7 +15,7 @@ public class GameLevelService {
     private ArrayList<Point2D> gameDimensionsPlayable = new ArrayList<>();
     private ArrayList<String> gameLevelNames = new ArrayList<>();
     private ArrayList<String> gameLevelIntroSounds = new ArrayList<>();
-
+    private ArrayList<String> gameLevelDescriptionSounds = new ArrayList<>();
     public GameLevelService() {
         MemoriCardService cardService = new MemoriCardService();
         ArrayList<Point2D> gameDimensions = new ArrayList<>();
@@ -40,9 +40,10 @@ public class GameLevelService {
 
         //the max number of levels is the size of the game levels list
         MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
-        for(int i = 1; i <= MainOptions.MAX_NUM_OF_LEVELS ; i++) {
+        for(int i = 1; i <= gameDimensionsPlayable.size() ; i++) {
             gameLevelNames.add("level" + i + ".mp3");
             gameLevelIntroSounds.add("level" + i + ".mp3");
+            gameLevelDescriptionSounds.add("level" + i + ".mp3");
         }
     }
 
@@ -56,6 +57,7 @@ public class GameLevelService {
         MemoriConfiguration configuration = new MemoriConfiguration();
         String levelIntroSoundPath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
         String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
+        String levelDescriptionSoundPath = configuration.getProjectProperty("LEVEL_DESCRIPTION_SOUNDS");
         int levelIndex = 0;
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
         for(Point2D levelDimensions : gameDimensionsPlayable) {
@@ -64,7 +66,8 @@ public class GameLevelService {
                     levelDimensions,
                     (int) levelDimensions.getX() + "x" + (int) levelDimensions.getY(),
                     levelNameSoundPath + gameLevelNames.get(levelIndex),
-                    levelIntroSoundPath + gameLevelIntroSounds.get(levelIndex)
+                    levelIntroSoundPath + gameLevelIntroSounds.get(levelIndex),
+                    levelDescriptionSoundPath + gameLevelDescriptionSounds.get(levelIndex)
             );
             gameLevels.add(memoriGameLevel);
             levelIndex++;

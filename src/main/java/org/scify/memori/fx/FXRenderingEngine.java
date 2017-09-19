@@ -37,6 +37,7 @@ import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -92,7 +93,9 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * Fun factor sounds occur every 3 levels
      */
     protected List<String> funFactorSounds = new ArrayList<>();
-
+    protected List<String> cpuIntroMessages = new ArrayList<>();
+    protected List<String> playerWonRoundMessages = new ArrayList<>();
+    protected List<String> playerLostRoundMessages = new ArrayList<>();
     protected String packageName;
     protected String storyLineSoundsBasePath;
 
@@ -107,6 +110,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     protected String endLevelEndingSoundsBasePath;
 
+    protected String multiPlayerSoundsBasePath;
     /**
      * Every time a level ends, we should construct the end level Sound which consists of:
      * 1) starting sound 2) the time in which the player finished the level 3) an ending sound
@@ -128,7 +132,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         this.funFactorSoundsBasePath = configuration.getProjectProperty("FUN_FACTOR_SOUNDS");
         this.endLevelStartingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_STARTING_SOUNDS");
         this.endLevelEndingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_ENDING_SOUNDS");
-        
+        this.multiPlayerSoundsBasePath = configuration.getProjectProperty("MULTIPLAYER_SOUNDS_BASE_PATH");
+
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));
         } catch (IOException e) {
@@ -136,7 +141,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             return;
         }
         this.initialiseGameSoundLists();
-        
+
         //initialize the audio engine object
         fxAudioEngine = new FXAudioEngine();
         /**
@@ -163,6 +168,19 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         for(int i = 1; i < 11 ; i++) {
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             funFactorSounds.add(i + ".mp3");
+        }
+
+        for(int i = 1; i < 3 ; i++) {
+            //TODO: should poll from fun factor sounds that exist in the additional pack only?
+            cpuIntroMessages.add("vs_cpu_intro_" + i + ".mp3");
+        }
+        for(int i = 1; i < 3 ; i++) {
+            //TODO: should poll from fun factor sounds that exist in the additional pack only?
+            playerLostRoundMessages.add("vs_cpu_lost_" + i + ".mp3");
+        }
+        for(int i = 1; i < 5 ; i++) {
+            //TODO: should poll from fun factor sounds that exist in the additional pack only?
+            playerWonRoundMessages.add("vs_cpu_won_" + i + ".mp3");
         }
     }
 
@@ -591,6 +609,36 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     case "STOP_AUDIOS":
                         if (new Date().getTime() > currentGameEvent.delay) {
                             fxAudioEngine.pauseCurrentlyPlayingAudios();
+                            listIterator.remove();
+                        }
+                        break;
+                    case "LEVEL_DESCRIPTION":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.pauseAndPlaySound(gameLevel.getDescriptionSound(), currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "CPU_INTRO_MESSAGE":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int idx = new Random().nextInt(cpuIntroMessages.size());
+                            String randomSound = (cpuIntroMessages.get(idx));
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "game_starting_sounds" + File.separator + randomSound, currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "PLAYER_WON_ROUND_MESSAGE":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int idx = new Random().nextInt(playerWonRoundMessages.size());
+                            String randomSound = (playerWonRoundMessages.get(idx));
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "player_won_round" + File.separator + randomSound, currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "CPU_WON_ROUND_MESSAGE":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            int idx = new Random().nextInt(playerLostRoundMessages.size());
+                            String randomSound = (playerLostRoundMessages.get(idx));
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "cpu_won_round" + File.separator + randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

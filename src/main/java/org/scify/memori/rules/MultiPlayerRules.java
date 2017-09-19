@@ -8,6 +8,7 @@ import org.scify.memori.network.GameRequestManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Observer;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class MultiPlayerRules extends MemoriRules {
@@ -34,7 +35,11 @@ public class MultiPlayerRules extends MemoriRules {
         if(eventQueueContainsBlockingEvent(gsCurrentState)) {
             return gsCurrentState;
         }
-
+        try {
+            handleMultiPlayerGameStartingGameEvents(gsCurrentState);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent) && !gameInterrupted) {
             handleOpponentNextMove(gsCurrentState);
         } else {
@@ -49,6 +54,40 @@ public class MultiPlayerRules extends MemoriRules {
             this.handleMultiPlayerFinishGameEvents(uaAction, gsCurrentState);
         }
         return gsCurrentState;
+    }
+
+    protected void handleMultiPlayerGameStartingGameEvents(MemoriGameState gsCurrentState) throws Exception {
+        switch (gameType){
+            case VS_CPU:
+                playerVSCPUGameStartingGameEvents(gsCurrentState);
+                break;
+            case VS_PLAYER:
+                playerVSPlayerGameStartingGameEvents(gsCurrentState);
+                break;
+            default:
+                throw new Exception("Unsupported Game type: " + gameType.toString());
+        }
+
+    }
+
+    protected void playerVSCPUGameStartingGameEvents(MemoriGameState gsCurrentState) {
+        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "GAME_VS_CPU_STARTED")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_CPU_STARTED"));
+            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION", null, new Date().getTime(), true));
+            gsCurrentState.getEventQueue().add(new GameEvent("CPU_INTRO_MESSAGE", null, new Date().getTime() + 1000, true));
+        }
+    }
+
+    protected void playerVSPlayerGameStartingGameEvents(MemoriGameState gsCurrentState) {
+        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "GAME_VS_PLAYER_STARTED")) {
+            gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_PLAYER_STARTED"));
+            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION"));
+            if(PlayerManager.getLocalPlayer().equals(gsCurrentState.getCurrentPlayer()))
+                gsCurrentState.getEventQueue().add(new GameEvent("LOCAL_PLAYER_IS_INITIATOR"));
+            else
+                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_IS_INITIATOR"));
+
+        }
     }
 
     private void handleUserActionMultiPlayerGameEvents(UserAction uaAction, MemoriGameState gsCurrentState, int delay) {
@@ -118,6 +157,7 @@ public class MultiPlayerRules extends MemoriRules {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 successUI(uaAction, gsCurrentState);
                 cardDescriptionSoundUI(gsCurrentState);
+                roundWonGameEvents(gsCurrentState);
                 updateGameStateAndNextTurn(currTile, gsCurrentState, memoriTerrain);
             } else {
                 // else not last card in tuple
@@ -131,6 +171,16 @@ public class MultiPlayerRules extends MemoriRules {
                 }
             }
 
+        }
+    }
+
+    private void roundWonGameEvents(MemoriGameState gsCurrentState) {
+        Random rand = new Random();
+        if (rand.nextDouble() < 0.65) {
+            if (PlayerManager.getLocalPlayer().equals(gsCurrentState.getCurrentPlayer()))
+                gsCurrentState.getEventQueue().add(new GameEvent("PLAYER_WON_ROUND_MESSAGE", null, new Date().getTime() + 7000, true));
+            else
+                gsCurrentState.getEventQueue().add(new GameEvent("CPU_WON_ROUND_MESSAGE", null, new Date().getTime() + 7000, true));
         }
     }
 

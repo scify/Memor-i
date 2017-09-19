@@ -32,12 +32,15 @@ public class MemoriGameLevel implements GameLevel{
      */
     protected String introSound;
 
-    public MemoriGameLevel(int levelCode, Point2D dimensions, String levelName, String introScreenSound, String introSound) {
+    protected String descriptionSound;
+
+    public MemoriGameLevel(int levelCode, Point2D dimensions, String levelName, String introScreenSound, String introSound, String descriptionSound) {
         this.levelCode = levelCode;
         this.dimensions = dimensions;
         this.levelName = levelName;
         this.introScreenSound = introScreenSound;
         this.introSound = introSound;
+        this.descriptionSound = descriptionSound;
     }
 
     public int getLevelCode() {
@@ -60,5 +63,9 @@ public class MemoriGameLevel implements GameLevel{
 
     public String getIntroSound() {
         return introSound;
+    }
+
+    public String getDescriptionSound() {
+        return descriptionSound;
     }
 }

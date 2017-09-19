@@ -115,10 +115,12 @@ public class LevelsScreenController {
             if (event.getCode() == SPACE) {
                 switch (gameType) {
                     case SINGLE_PLAYER:
+                        audioEngine.pauseCurrentlyPlayingAudios();
                         thread = new Thread(() -> gameLauncher.startSinglePlayerGame(gameLevel));
                         thread.start();
                         break;
                     case VS_CPU:
+                        audioEngine.pauseCurrentlyPlayingAudios();
                         thread = new Thread(() -> gameLauncher.startPVCPUGame(gameLevel));
                         thread.start();
                         break;
@@ -267,6 +269,7 @@ public class LevelsScreenController {
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 PlayerManager.localPlayerIsInitiator = true;
+                audioEngine.pauseCurrentlyPlayingAudios();
                 Thread thread = new Thread(() -> gameLauncher.startPvPGame(gameLevel));
                 thread.start();
             } else if(event.getCode() == ESCAPE) {
