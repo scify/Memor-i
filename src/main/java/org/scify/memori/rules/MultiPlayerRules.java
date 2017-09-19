@@ -83,10 +83,9 @@ public class MultiPlayerRules extends MemoriRules {
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_PLAYER_STARTED"));
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION"));
             if(PlayerManager.getLocalPlayer().equals(gsCurrentState.getCurrentPlayer()))
-                gsCurrentState.getEventQueue().add(new GameEvent("LOCAL_PLAYER_IS_INITIATOR"));
+                gsCurrentState.getEventQueue().add(new GameEvent("LOCAL_PLAYER_IS_INITIATOR", null, new Date().getTime() + 1000, true));
             else
-                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_IS_INITIATOR"));
-
+                gsCurrentState.getEventQueue().add(new GameEvent("OPPONENT_IS_INITIATOR", null, new Date().getTime() + 1000, true));
         }
     }
 
@@ -157,7 +156,8 @@ public class MultiPlayerRules extends MemoriRules {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 successUI(uaAction, gsCurrentState);
                 cardDescriptionSoundUI(gsCurrentState);
-                roundWonGameEvents(gsCurrentState);
+                if(gameType.equals(GameType.VS_CPU))
+                    roundWonGameEvents(gsCurrentState);
                 updateGameStateAndNextTurn(currTile, gsCurrentState, memoriTerrain);
             } else {
                 // else not last card in tuple
@@ -255,7 +255,8 @@ public class MultiPlayerRules extends MemoriRules {
             Thread thread = new Thread(() -> gameRequestManager.cancelGame());
             thread.start();
             gsCurrentState.gameInterrupted = true;
-            multiPlayerGameEndUserActions(gsCurrentState);
+            gsCurrentState.getEventQueue().add(new GameEvent("PLAYER_ABANDONED", null, new Date().getTime() + 1000, true));
+            levelEndUserActions(gsCurrentState);
         }
         return false;
     }
@@ -291,11 +292,8 @@ public class MultiPlayerRules extends MemoriRules {
 
     private void gameWasTieGameEvents(MemoriGameState gsCurrentState) {
         System.err.println("Game was a tie!");
-        if(gameType.equals(GameType.VS_CPU)) {
-            // TODO game events for tie with CPU
-        } else {
-            // TODO game events for tie with other player
-        }
+        // TODO game events for tie with CPU
+        gsCurrentState.getEventQueue().add(new GameEvent("GAME_TIE", null, new Date().getTime() + 7500, true));
     }
 
     private void winnerPlayerGameEvents(MemoriGameState gsCurrentState, Player winnerPlayer) {
@@ -307,15 +305,18 @@ public class MultiPlayerRules extends MemoriRules {
             // TODO game events for tie with CPU
             if(localPlayerWon) {
                 System.err.println("You won!");
+                gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_CPU", null, new Date().getTime() + 7500, true));
             } else {
                 System.err.println("CPU won!");
+                gsCurrentState.getEventQueue().add(new GameEvent("GAME_LOST_VS_CPU", null, new Date().getTime() + 7500, true));
             }
         } else {
             // TODO game events for tie with other player
             if(localPlayerWon) {
                 System.err.println("You won!");
+                gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_PLAYER", null, new Date().getTime() + 7500, true));
             } else {
-                System.err.println("The other player won!");
+                gsCurrentState.getEventQueue().add(new GameEvent("GAME_LOST_VS_PLAYER", null, new Date().getTime() + 7500, true));
             }
         }
     }
@@ -324,8 +325,7 @@ public class MultiPlayerRules extends MemoriRules {
         if(gameType.equals(GameType.VS_CPU)) {
             levelEndUserActions(gsCurrentState);
         } else {
-            // TODO prompt only for quitting the game
-            pressExitUI(gsCurrentState);
+            gsCurrentState.getEventQueue().add(new GameEvent("PRESS_ESCAPE_TO_QUIT", null, new Date().getTime() + 8600, true));
         }
     }
 }

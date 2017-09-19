@@ -642,6 +642,60 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
+                    case "GAME_TIE":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "game_tie.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "GAME_WON_VS_CPU":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_cpu_game_won.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "GAME_LOST_VS_CPU":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_cpu_game_lost.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "LOCAL_PLAYER_IS_INITIATOR":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_player_game_started_initiator.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "OPPONENT_IS_INITIATOR":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_player_game_started_guest.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "GAME_WON_VS_PLAYER":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_player_game_won.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "GAME_LOST_VS_PLAYER":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "vs_player_game_lost.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "PRESS_ESCAPE_TO_QUIT":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.miscellaneousSoundsBasePath + "press_escape.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "PLAYER_ABANDONED":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "player_abandoned.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
                     default:
                         break;
                 }
