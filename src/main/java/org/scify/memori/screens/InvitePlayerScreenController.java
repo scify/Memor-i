@@ -218,15 +218,13 @@ public class InvitePlayerScreenController {
 
     private void playerNotAvailable() {
         Platform.runLater(() -> invitationText.setText("Player not available. Press space to play with a random player."));
-        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_available.mp3", false));
-        thread.start();
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_available.mp3", false);
         promptToPlayWithCPU();
     }
 
     private void noAvailablePlayerFound() {
         Platform.runLater(() -> invitationText.setText("No available player found. Press space to play with the Computer!"));
-        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_player_available.mp3", false));
-        thread.start();
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_player_available.mp3", false);
         promptToPlayWithCPU();
     }
 
@@ -275,8 +273,7 @@ public class InvitePlayerScreenController {
                     invitationText.setText("You have a new request from " +initiatorUserName + "! Press Enter to Accept.");
                     username.setDisable(true);
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
-                    Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false));
-                    thread.start();
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
 
                     Thread answerThread = new Thread(() -> answerToGameRequest());
                     answerThread.start();
@@ -296,8 +293,7 @@ public class InvitePlayerScreenController {
                 gameRequestManager.sendGameRequestAnswerToServer(true);
                 Thread queryThread = new Thread(() ->  queryForGameRequestShuffledCards());
                 queryThread.start();
-                Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false));
-                thread.start();
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false);
                 Platform.runLater(() -> waitForReponseUI());
             } else if(event.getCode() == BACK_SPACE) {
                 Platform.runLater(() -> resetUI());
