@@ -12,6 +12,7 @@ import java.util.List;
 
 public class GameMovementManager {
 
+    public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 70;
     private RequestManager requestManager;
     private static long timestampOfLastOpponentMovement;
 
@@ -29,6 +30,7 @@ public class GameMovementManager {
     }
 
     public String sendMovementToServer(String movementJson) {
+        System.err.println("sending movement to server: " + movementJson);
         String url = "gameMovement/create";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(GameRequestManager.getGameRequestId())));
@@ -39,6 +41,7 @@ public class GameMovementManager {
     }
 
     public UserAction getLatestMovementFromToServer() {
+        System.err.println("get latest movement from server: " + String.valueOf(timestampOfLastOpponentMovement));
         String url = "gameMovement/latest";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(GameRequestManager.getGameRequestId())));

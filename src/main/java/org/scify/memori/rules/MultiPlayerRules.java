@@ -94,7 +94,8 @@ public class MultiPlayerRules extends MemoriRules {
             handleValidActionMultiPlayerEvent(uaAction, gsCurrentState, delay);
         } else {
             gsCurrentState.getEventQueue().add(invalidMovementGameEvent(gsCurrentState));
-            notifyObserversForPlayerMovement(uaAction);
+            if(!isOpponentPlaying(gsCurrentState))
+                notifyObserversForPlayerMovement(uaAction);
         }
     }
 
@@ -109,7 +110,7 @@ public class MultiPlayerRules extends MemoriRules {
                 notifyObserversForPlayerMovement(uaAction);
             movementUI(uaAction, gsCurrentState);
         } else if (uaAction.getActionType().equals("flip")) {
-            if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getLocalPlayer()))
+            if(!isOpponentPlaying(gsCurrentState))
                 notifyObserversForPlayerMovement(uaAction);
             performFlipMultiPlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
         } else if(uaAction.getActionType().equals("enter")) {
@@ -248,8 +249,6 @@ public class MultiPlayerRules extends MemoriRules {
         }
         catch (Exception e) {
             e.printStackTrace();
-            // TODO inform player that the other player abandoned the game and to press ESCAPE
-            System.err.println("ERROR PRESS ESCAPE TO QUIT");
             gameInterrupted = true;
             GameRequestManager gameRequestManager = new GameRequestManager();
             Thread thread = new Thread(() -> gameRequestManager.cancelGame());
