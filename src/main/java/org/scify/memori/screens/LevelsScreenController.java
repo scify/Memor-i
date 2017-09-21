@@ -39,6 +39,7 @@ public class LevelsScreenController {
     private GameType gameType;
     private String miscellaneousSoundsBasePath;
     private MemoriConfiguration configuration;
+    private int currentGameRequestId = 0;
     @FXML
     Button messageText;
     @FXML
@@ -86,7 +87,7 @@ public class LevelsScreenController {
             gameLevelBtn.getStyleClass().add("optionButton");
             gameLevelBtn.setId(String.valueOf(currLevel.getLevelCode()));
             gameLevelBtn.focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-                if (newPropertyValue) {
+                if (newPropertyValue && !gameLevelBtn.isDisabled()) {
                     audioEngine.pauseAndPlaySound(currLevel.getIntroScreenSound(), false);
                 }
             });
@@ -99,8 +100,10 @@ public class LevelsScreenController {
      * Pauses all sounds and exits the application
      */
     private void exitScreen() {
+        if(currentGameRequestId != 0)
+            cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popScene();
+        sceneHandler.popToScene(MainScreen.scene);
     }
 
     private Button btnClicked;
@@ -146,8 +149,6 @@ public class LevelsScreenController {
 
     private void resetUI() {
         setAllLevelButtonsAsEnabled();
-        messageText.setText("Press SPACE to play with a random player");
-        gameType = GameType.VS_CPU;
     }
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
@@ -169,6 +170,7 @@ public class LevelsScreenController {
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
                 int gameRequestId = paramsObj.getInt("game_request_id");
                 GameRequestManager.setGameRequestId(gameRequestId);
+                this.currentGameRequestId = gameRequestId;
                 System.err.println("Success. Game request id: " + gameRequestId);
                 Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_sent.mp3", false));
                 thread.start();
@@ -210,16 +212,16 @@ public class LevelsScreenController {
                         Platform.runLater(() -> messageText.setText("Player accepted! Press ENTER"));
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
+                        cancelGameRequest();
                         Platform.runLater(() -> resetUI());
-                        Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", false));
+                        Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                         voiceThread.start();
                         promptToPlayWithCPU();
-                        // TODO inform user that the request was rejected and prompt
-                        // either to select another level
-                        // or to press escape and select another opponent
                     }
                 }
                 if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                    Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
+                    voiceThread.start();
                     cancelGameRequest();
                     break;
                 }
@@ -231,8 +233,6 @@ public class LevelsScreenController {
     }
 
     private void cancelGameRequest() {
-        // TODO inform player that something went wrong
-        // TODO send request to server to cancel the game request
         Platform.runLater(() -> resetUI());
         Platform.runLater(() -> messageText.setText("Player not replying"));
         Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
@@ -242,6 +242,8 @@ public class LevelsScreenController {
     private void promptToPlayWithCPU() {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
+                gameType = GameType.VS_CPU;
+                new LevelsScreen(sceneHandler, gameType);
             }
         });
     }
@@ -274,6 +276,7 @@ public class LevelsScreenController {
                 thread.start();
             } else if(event.getCode() == ESCAPE) {
                 System.out.println("game rejected");
+                exitScreen();
             }
         });
     }

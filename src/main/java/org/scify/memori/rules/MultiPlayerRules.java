@@ -81,7 +81,7 @@ public class MultiPlayerRules extends MemoriRules {
     protected void playerVSPlayerGameStartingGameEvents(MemoriGameState gsCurrentState) {
         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "GAME_VS_PLAYER_STARTED")) {
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_PLAYER_STARTED"));
-            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION"));
+            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION", null, new Date().getTime(), true));
             if(PlayerManager.getLocalPlayer().equals(gsCurrentState.getCurrentPlayer()))
                 gsCurrentState.getEventQueue().add(new GameEvent("LOCAL_PLAYER_IS_INITIATOR", null, new Date().getTime() + 1000, true));
             else

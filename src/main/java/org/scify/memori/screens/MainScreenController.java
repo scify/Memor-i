@@ -234,8 +234,12 @@ public class MainScreenController implements Initializable {
     protected void initializePvPGame(KeyEvent evt) {
         audioEngine.pauseCurrentlyPlayingAudios();
         if (evt.getCode() == SPACE) {
-            if(RequestManager.networkAvailable())
-                new RegisterOrLoginScreen(sceneHandler);
+            if(RequestManager.networkAvailable()) {
+                if(PlayerManager.getLocalPlayer() == null)
+                    new RegisterOrLoginScreen(sceneHandler);
+                else
+                    new InvitePlayerScreen(sceneHandler);
+            }
             else {
                 // TODO: play appropriate sound
             }

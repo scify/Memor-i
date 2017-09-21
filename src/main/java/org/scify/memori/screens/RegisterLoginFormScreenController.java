@@ -72,6 +72,7 @@ public class RegisterLoginFormScreenController {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "password.mp3", false);
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
+                username.setText("");
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();
@@ -88,6 +89,7 @@ public class RegisterLoginFormScreenController {
                 sendRequestToServer();
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
+                password.setText("");
             }
         } else if (evt.getCode() == ESCAPE) {
             exitScreen();

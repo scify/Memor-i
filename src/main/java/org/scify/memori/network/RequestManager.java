@@ -44,9 +44,9 @@ public class RequestManager {
             post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
             HttpResponse response = client.execute(post);
-//            System.out.println("\nSending 'POST' request to URL : " + urlEndpoint);
-//            System.out.println("Response Code : " +
-//                    response.getStatusLine().getStatusCode());
+            System.out.println("\nSending 'POST' request to URL : " + urlEndpoint);
+            System.out.println("Response Code : " +
+                    response.getStatusLine().getStatusCode());
 
             BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));

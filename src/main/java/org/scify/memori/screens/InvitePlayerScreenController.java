@@ -57,11 +57,13 @@ public class InvitePlayerScreenController {
     private static boolean shouldQueryForRequests = true;
     private static boolean shouldQueryForMarkingPlayerActive = true;
     private String miscellaneousSoundsBasePath;
+    private String multiPlayerSoundsBasePath;
     private MemoriConfiguration configuration;
 
     public InvitePlayerScreenController() {
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.multiPlayerSoundsBasePath = configuration.getProjectProperty("MULTIPLAYER_SOUNDS_BASE_PATH");
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
@@ -113,17 +115,20 @@ public class InvitePlayerScreenController {
 
     @FXML
     protected void submitUsername(KeyEvent evt) {
+        String opponentUsername = username.getText().trim();
         if (evt.getCode() == ENTER){
             evt.consume();
             Thread thread;
-            String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            String cleanString = Normalizer.normalize(opponentUsername, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            cleanString = cleanString.trim();
             if(cleanString.length() == 0) {
                 thread = new Thread(() -> searchForRandomPlayer());
                 thread.start();
             } else {
                 boolean valid = cleanString.matches("\\w+");
                 if (valid) {
-                    thread = new Thread(() -> getPlayerAvailability(cleanString));
+                    String finalCleanString = cleanString;
+                    thread = new Thread(() -> getPlayerAvailability(finalCleanString));
                     thread.start();
                 } else {
                     thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false));
@@ -149,6 +154,8 @@ public class InvitePlayerScreenController {
                 // found a player
                 JsonObject parametersObject = (JsonObject) response.getParameters();
                 int playerId = parametersObject.get("player_id").getAsInt();
+                Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "random_player_found.mp3", false));
+                thread.start();
                 promptToGoToLevelsPage(playerId);
                 break;
             case 2:
@@ -185,6 +192,8 @@ public class InvitePlayerScreenController {
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
                     invitationText.setText("Player available. Press space to continue.");
+                    Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false));
+                    thread.start();
                     promptToGoToLevelsPage(playerId);
                     username.setDisable(true);
                 } else if(playerStatus.equals("player_not_available")) {
@@ -229,8 +238,6 @@ public class InvitePlayerScreenController {
     }
 
     private void promptToGoToLevelsPage(int opponentId) {
-        Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false));
-        thread.start();
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
                 audioEngine.pauseCurrentlyPlayingAudios();
@@ -285,20 +292,27 @@ public class InvitePlayerScreenController {
     }
 
     private void answerToGameRequest() {
-        // TODO tell player that in order to accept the request they click enter
-        // or click back space to reject it
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 gameRequestManager.sendGameRequestAnswerToServer(true);
                 Thread queryThread = new Thread(() ->  queryForGameRequestShuffledCards());
                 queryThread.start();
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false);
-                Platform.runLater(() -> waitForReponseUI());
+                Platform.runLater(() -> waitForResponseUI());
             } else if(event.getCode() == BACK_SPACE) {
                 Platform.runLater(() -> resetUI());
-                // re-check for requests
-                queryServerForGameRequests();
-                gameRequestManager.sendGameRequestAnswerToServer(false);
+                Thread answerThread = new Thread(() ->  gameRequestManager.sendGameRequestAnswerToServer(false));
+                answerThread.start();
+                // re-check for requests after 10 seconds
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                queryServerForGameRequests();
+                            }
+                        },
+                        10000
+                );
             }
         });
     }
@@ -314,7 +328,7 @@ public class InvitePlayerScreenController {
         invitationText.setText("");
     }
 
-    private void waitForReponseUI() {
+    private void waitForResponseUI() {
         username.setDisable(true);
         invitationText.setText("Waiting for response");
     }
@@ -353,6 +367,7 @@ public class InvitePlayerScreenController {
                     parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
                 }
                 if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                    audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
                     cancelGameRequest();
                     break;
                 }
