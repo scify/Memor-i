@@ -90,7 +90,7 @@ limitations under the License.
 
 ### Memor-i Player VS Player Sponsor
 <br>
-Η έκδοση Memori PvP του έργου Memori υλοποιείται με χρηματοδότηση από το Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση.
+Η έκδοση Memori PvP του έργου Memori υλοποιείται με χρηματοδότηση από το <a href="http://www.latsis-foundation.org/">Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση.</a>
 <br><br><br>
 <table>
 <tr>
