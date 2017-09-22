@@ -11,7 +11,7 @@
     <VBox alignment="TOP_CENTER" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../img/logo-latsis2.png"/>
+                <Image url="@../img/logo-latsis.png"/>
             </image>
         </ImageView>
         <Label styleClass="sponsorLabel" text="Memori PvP of Memori project is developed"/>
