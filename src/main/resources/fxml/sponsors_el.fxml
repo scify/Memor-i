@@ -8,6 +8,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
+    <VBox alignment="TOP_CENTER" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/logo-latsis2.png"/>
+            </image>
+        </ImageView>
+        <Label styleClass="sponsorLabel" text="Η έκδοση Memori PvP του έργου Memori υλοποιείται"/>
+        <Label styleClass="sponsorLabel" text="με χρηματοδότηση από το Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση."/>
+
+        <HBox alignment="CENTER" spacing="5" styleClass="logoContainer">
+            <Label styleClass="sponsorLabel" text="Crowdfunding  χορηγοί της έκδοσης v1 του Memor-i:"/>
+        </HBox>
+    </VBox>
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage">
             <image>

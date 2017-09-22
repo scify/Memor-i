@@ -8,6 +8,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
+    <VBox alignment="TOP_CENTER" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/logo-latsis2.png"/>
+            </image>
+        </ImageView>
+        <Label styleClass="sponsorLabel" text="Memori PvP of Memori project is developed"/>
+        <Label styleClass="sponsorLabel" text="with the sponsorship of John S. Latsis Public Benefit Foundation"/>
+
+        <HBox alignment="CENTER" spacing="5" styleClass="logoContainer">
+            <Label styleClass="sponsorLabel" text="Memori v1 crowdfunding donors:"/>
+        </HBox>
+    </VBox>
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage">
             <image>
@@ -22,6 +35,7 @@
             </image>
         </ImageView>
     </HBox>
+
     <VBox alignment="CENTER_LEFT" styleClass="sponsorsContainer" style="-fx-padding: 50px">
         <Label styleClass="sponsorLabel" text="Elina Makri"/>
         <Label styleClass="sponsorLabel" text="Akrotiri Women's Group"/>
