@@ -88,6 +88,21 @@ limitations under the License.
 
 * [Crowdfunding campaign](http://www.giveandfund.com/giveandfund/project/games-for-the-blind)
 
+### Memor-i Player VS Player Sponsor
+<br>
+Η έκδοση Memori PvP του έργου Memori υλοποιείται με χρηματοδότηση από το Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση.
+<br><br><br>
+<table>
+<tr>
+<td>
+<a href="http://www.scify.gr/site/en/"><img src="http://www.scify.gr/site/images/scify/scify_logo_108.png"></a>
+</td>
+<td>
+<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img src="http://www.latsis-foundation.org/img/iePngs/logoEll.png" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
+</td>
+</tr>
+</table>
+<br><br>
 ## Acknowledgments
 
 * [Maven plugin for parsing JSON files](https://mvnrepository.com/artifact/org.json/json)
