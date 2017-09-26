@@ -42,18 +42,31 @@ public class MultiPlayerRules extends MemoriRules {
         }
         if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent) && !gameInterrupted) {
             handleOpponentNextMove(gsCurrentState);
+
         } else {
             opponentMoveFactory.updateFactoryComponents();
             if(uaAction != null) {
                 handleUserActionMultiPlayerGameEvents(uaAction, gsCurrentState, 0);
             }
         }
+        if(uaAction != null)
+            handleUserExitAction(uaAction, gsCurrentState);
 
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             this.handleMultiPlayerFinishGameEvents(uaAction, gsCurrentState);
         }
         return gsCurrentState;
+    }
+
+    private void handleUserExitAction(UserAction uaAction, MemoriGameState gsCurrentState) {
+        if(uaAction.getActionType().equals("escape")) {
+            //exit current game
+            if(!gsCurrentState.isGameFinished()) {
+                gsCurrentState.gameInterrupted = true;
+            }
+            gsCurrentState.setGameFinished(true);
+        }
     }
 
     protected void handleMultiPlayerGameStartingGameEvents(MemoriGameState gsCurrentState) throws Exception {
@@ -115,12 +128,6 @@ public class MultiPlayerRules extends MemoriRules {
             performFlipMultiPlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
         } else if(uaAction.getActionType().equals("enter")) {
             createHelpGameEvent(uaAction, gsCurrentState);
-        } else if(uaAction.getActionType().equals("escape")) {
-            //exit current game
-            if(!gsCurrentState.isGameFinished()) {
-                gsCurrentState.gameInterrupted = true;
-            }
-            gsCurrentState.setGameFinished(true);
         } else if(uaAction.getActionType().equals("opponent_movement")) {
             if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer()))
                 gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
@@ -248,14 +255,14 @@ public class MultiPlayerRules extends MemoriRules {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
             gameInterrupted = true;
             GameRequestManager gameRequestManager = new GameRequestManager();
             Thread thread = new Thread(() -> gameRequestManager.cancelGame());
             thread.start();
             gsCurrentState.gameInterrupted = true;
             gsCurrentState.getEventQueue().add(new GameEvent("PLAYER_ABANDONED", null, new Date().getTime() + 1000, true));
-            levelEndUserActions(gsCurrentState);
+            System.err.println("You won!");
+            gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_PLAYER", null, new Date().getTime() + 2000, true));
         }
         return false;
     }
