@@ -128,8 +128,16 @@ public class InvitePlayerScreenController {
                 boolean valid = cleanString.matches("\\w+");
                 if (valid) {
                     String finalCleanString = cleanString;
-                    thread = new Thread(() -> getPlayerAvailability(finalCleanString));
-                    thread.start();
+                    // if username is the same as the logged in player username, cancel
+                    if(cleanString.equals(PlayerManager.getLocalPlayer().getName())) {
+                        System.out.println("Same username");
+                        // TODO play appropriate sound
+                        Platform.runLater(() -> resetUI());
+                        Platform.runLater(() -> username.setText(""));
+                    } else {
+                        thread = new Thread(() -> getPlayerAvailability(finalCleanString));
+                        thread.start();
+                    }
                 } else {
                     thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false));
                     thread.start();

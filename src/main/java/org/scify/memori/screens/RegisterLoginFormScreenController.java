@@ -12,6 +12,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.ServerOperationResponse;
 
 import java.text.Normalizer;
@@ -118,6 +119,7 @@ public class RegisterLoginFormScreenController {
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
                 int newPlayerId = paramsObj.getInt("player_id");
                 PlayerManager.setPlayerId(newPlayerId);
+                PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
                 audioEngine.pauseCurrentlyPlayingAudios();
                 new InvitePlayerScreen(sceneHandler);
                 break;
