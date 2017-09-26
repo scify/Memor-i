@@ -144,7 +144,7 @@ public class LevelsScreenController {
 
     private void waitForResponseUI() {
         setAllLevelButtonsAsDisabled();
-        messageText.setText("Waiting for Response...");
+        messageText.setText("Περίμενε...");
     }
 
     private void resetUI() {
@@ -209,7 +209,7 @@ public class LevelsScreenController {
 
                     if(serverOperationResponse.getMessage().equals("accepted")) {
                         // to press enter to start the game
-                        Platform.runLater(() -> messageText.setText("Player accepted! Press ENTER"));
+                        Platform.runLater(() -> messageText.setText("Ο παίκτης δέχθηκε! Πάτησε ENTER"));
                         promptToStartGame(gameLevel);
                     } else if(serverOperationResponse.getMessage().equals("rejected")) {
                         cancelGameRequest();
@@ -234,7 +234,7 @@ public class LevelsScreenController {
 
     private void cancelGameRequest() {
         Platform.runLater(() -> resetUI());
-        Platform.runLater(() -> messageText.setText("Player not replying"));
+        Platform.runLater(() -> messageText.setText("Ο παίκτης δεν απαντάει"));
         Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
         cancelThread.start();
     }
