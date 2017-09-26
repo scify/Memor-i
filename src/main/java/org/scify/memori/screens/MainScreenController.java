@@ -17,6 +17,8 @@
 
 package org.scify.memori.screens;
 
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -25,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.scify.memori.*;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
@@ -32,6 +35,7 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.ResourceLocator;
+import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
@@ -69,15 +73,12 @@ public class MainScreenController implements Initializable {
     public void setParameters(Stage primaryStage, Scene primaryScene) {
         this.primaryScene = primaryScene;
         this.primaryStage = primaryStage;
-
+        addCloseHandlerOnStage();
         primaryScene.getStylesheets().add("css/style.css");
         primaryStage.show();
         primaryStage.requestFocus();
         primaryStage.sizeToScene();
         primaryStage.setFullScreen(true);
-        primaryStage.setOnCloseRequest(we -> {
-            System.exit(0);
-        });
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
@@ -279,5 +280,20 @@ public class MainScreenController implements Initializable {
         }
     }
 
-
+    private void addCloseHandlerOnStage() {
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                System.out.println("Stage is closing");
+                // if player has logged in, perform call to mark them as non-active
+                Player player = PlayerManager.getLocalPlayer();
+                if(player != null) {
+                    System.err.println(player.getName());
+                    // TODO call server
+                }
+                Platform.exit();
+                System.exit(0);
+            }
+        });
+    }
 }
