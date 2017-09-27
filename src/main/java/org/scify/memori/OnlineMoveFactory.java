@@ -58,9 +58,10 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     private int timesCalled = 0;
     private void getLatestMovementFromServer() throws Exception {
         System.out.println("timesCalled: " + timesCalled);
-        timesCalled++;
-        TimeUnit.MILLISECONDS.sleep(400);
+
+        TimeUnit.MILLISECONDS.sleep(500);
         UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
+        timesCalled++;
         if(opponentLatestAction != null) {
             timesCalled = 0;
             opponentActions.add(opponentLatestAction);

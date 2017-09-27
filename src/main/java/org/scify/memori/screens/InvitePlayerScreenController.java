@@ -84,7 +84,7 @@ public class InvitePlayerScreenController {
                         queryServerForGameRequests();
                     }
                 },
-                5000
+                GameRequestManager.GAME_REQUESTS_CALL_INTERVAL
         );
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
@@ -93,7 +93,7 @@ public class InvitePlayerScreenController {
                         markPlayerActive();
                     }
                 },
-                5000
+                PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL
         );
 
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
@@ -176,6 +176,10 @@ public class InvitePlayerScreenController {
                 // player not found
                 noAvailablePlayerFound();
                 break;
+            case 5:
+                // an opponent player has already sent a request
+                openRequestExistsFromRandomPlayer();
+                break;
             default:
                 break;
         }
@@ -217,7 +221,25 @@ public class InvitePlayerScreenController {
                 // player not found
                 playerNotFound();
                 break;
+            case 5:
+                // opponent player has already sent a request
+                openRequestExistsFromOpponent();
+                break;
         }
+    }
+
+    private void openRequestExistsFromOpponent() {
+        Platform.runLater(() -> {
+            invitationText.setText("Αυτός ο παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.");
+        });
+        // TODO add appropriate sound
+    }
+
+    private void openRequestExistsFromRandomPlayer() {
+        Platform.runLater(() -> {
+            invitationText.setText("Ένας παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.");
+        });
+        // TODO add appropriate sound
     }
 
     private void playerNotFound() {

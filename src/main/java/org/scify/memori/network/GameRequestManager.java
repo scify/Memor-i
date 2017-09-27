@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 
 public class GameRequestManager implements Callable<ServerOperationResponse> {
 
+    public static final int GAME_REQUESTS_CALL_INTERVAL = 3000;
     private RequestManager requestManager;
     private MemoriConfiguration configuration;
     private static int gameRequestId;
