@@ -95,7 +95,7 @@ public class MemoriGameLauncher {
                     startGameForLevel(gameLevel, gameType);
                     break;
                 case GAME_FINISHED:
-                    quit();
+                    quitToMainScreen();
                     break;
                 case GAME_INTERRUPTED:
                     quitToMainScreen();
@@ -119,19 +119,13 @@ public class MemoriGameLauncher {
      * Gets the next level and starts a new game on this level.
      */
     private void loadNextLevel() {
-        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
-        MainOptions.GAME_LEVEL_CURRENT++;
-        startGameForLevel(gameLevelNext, gameType);
-    }
-
-    private void quit() {
         if(gameType.equals(GameType.VS_PLAYER)) {
-            sceneHandler.popToScene(InvitePlayerScreen.scene);
-            InvitePlayerScreenController.screenPoppedUI();
-        }
-        else {
-            sceneHandler.popToScene(MainScreen.scene);
-            MainScreenController.screenPoppedUI();
+            // TODO push invite player screen with opponent id and re-invite player
+            // invite player screen should inform player that the opponent is being re-invited
+        } else {
+            MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
+            MainOptions.GAME_LEVEL_CURRENT++;
+            startGameForLevel(gameLevelNext, gameType);
         }
     }
 

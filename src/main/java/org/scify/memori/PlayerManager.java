@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 
 public class PlayerManager  implements Callable<String> {
 
-    public static final int MARK_PLAYER_ACTIVE_CALL_INTERVAL = 3000;
+    public static final int MARK_PLAYER_ACTIVE_CALL_INTERVAL = 3;
     private RequestManager requestManager;
 
     private static int playerId;

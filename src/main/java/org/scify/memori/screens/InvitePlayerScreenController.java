@@ -3,12 +3,15 @@ package org.scify.memori.screens;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import com.google.gson.JsonObject;
 import javafx.scene.text.Text;
+import javafx.stage.WindowEvent;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
@@ -84,7 +87,7 @@ public class InvitePlayerScreenController {
                         queryServerForGameRequests();
                     }
                 },
-                GameRequestManager.GAME_REQUESTS_CALL_INTERVAL
+                0
         );
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
@@ -93,10 +96,21 @@ public class InvitePlayerScreenController {
                         markPlayerActive();
                     }
                 },
-                PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL
+                0
         );
-
+        addSceneExitHandler();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
+    }
+
+    private void addSceneExitHandler() {
+        primaryScene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent evt) {
+                if(evt.getCode() == ESCAPE) {
+                    exitScreen();
+                }
+            }
+        });
     }
 
     @FXML
@@ -297,7 +311,7 @@ public class InvitePlayerScreenController {
             timesCalled ++;
 
             gameRequestsFuture = gameRequestsExecutorService.schedule(
-                    new GameRequestManager("GET_REQUESTS"), 5, TimeUnit.SECONDS);
+                    new GameRequestManager("GET_REQUESTS"), GameRequestManager.GAME_REQUESTS_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
                 serverResponse = gameRequestsFuture.get();
                 if(serverResponse != null) {
@@ -341,16 +355,10 @@ public class InvitePlayerScreenController {
                                 queryServerForGameRequests();
                             }
                         },
-                        10000
+                        0
                 );
             }
         });
-    }
-
-    public static void screenPoppedUI() {
-        // TODO play sound to inform player that they are back to this screen
-        FXAudioEngine audioEngine = new FXAudioEngine();
-        audioEngine.pauseCurrentlyPlayingAudios();
     }
 
     private void resetUI() {
@@ -366,7 +374,7 @@ public class InvitePlayerScreenController {
     private void markPlayerActive() {
         while(shouldQueryForMarkingPlayerActive) {
             playerActiveFuture = markPlayerActiveExecutorService.schedule(
-                    new PlayerManager("PLAYER_ACTIVE"), 10, TimeUnit.SECONDS);
+                    new PlayerManager("PLAYER_ACTIVE"), PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
                 String response = playerActiveFuture.get();
             } catch (InterruptedException e) {
@@ -374,7 +382,6 @@ public class InvitePlayerScreenController {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-
         }
 
     }
@@ -388,7 +395,7 @@ public class InvitePlayerScreenController {
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
             ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
-                    new GameRequestManager("GET_SHUFFLED_CARDS"), 3, TimeUnit.SECONDS);
+                    new GameRequestManager("GET_SHUFFLED_CARDS"), 0, TimeUnit.SECONDS);
             try {
                 serverResponse = future.get();
                 if(serverResponse != null) {
