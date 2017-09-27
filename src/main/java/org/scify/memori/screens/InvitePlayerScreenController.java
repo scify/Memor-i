@@ -288,7 +288,6 @@ public class InvitePlayerScreenController {
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 shouldQueryForRequests = false;
-                shouldQueryForMarkingPlayerActive = false;
                 Platform.runLater(() -> resetUI());
             }
         });

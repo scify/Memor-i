@@ -60,6 +60,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         System.out.println("timesCalled: " + timesCalled);
 
         TimeUnit.MILLISECONDS.sleep(500);
+        // TODO Functionality to be informed whether the player is still online
         UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
         timesCalled++;
         if(opponentLatestAction != null) {
