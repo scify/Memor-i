@@ -40,7 +40,7 @@ public class GameMovementManager {
         return this.requestManager.doPost(url, urlParameters);
     }
 
-    public UserAction getLatestMovementFromToServer() {
+    public UserAction getLatestMovementFromToServer() throws Exception {
         System.err.println("get latest movement from server: " + String.valueOf(timestampOfLastOpponentMovement));
         String url = "gameMovement/latest";
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -51,12 +51,12 @@ public class GameMovementManager {
         return parseGameRequestResponse(serverResponse);
     }
 
-    private UserAction parseGameRequestResponse(String serverResponse) {
+    private UserAction parseGameRequestResponse(String serverResponse) throws Exception {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // game request was either accepted or rejected
                 LinkedTreeMap parameters = (LinkedTreeMap) response.getParameters();
                 LinkedTreeMap movement = (LinkedTreeMap) parameters.get("game_movement_json");
@@ -66,15 +66,16 @@ public class GameMovementManager {
                 UserAction action = new UserAction(movement.get("actionType").toString(), movement.get("direction").toString(), timestamp);
 
                 return action;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // error
                 return null;
-            case 3:
+            case ServerResponse.VALIDATION_ERROR:
                 // server validation not passed
                 return null;
-            case 4:
-                // reply is "empty" (should not be passed back)
-                return null;
+            case ServerResponse.OPPONENT_OFFLINE:
+                // opponent went offline.
+                // throw an Exception to let rules know that the game Ended.
+                throw new Exception("Opponent offline!");
         }
         return null;
     }
