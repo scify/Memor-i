@@ -49,12 +49,14 @@ public class MultiPlayerRules extends MemoriRules {
                 handleUserActionMultiPlayerGameEvents(uaAction, gsCurrentState, 0);
             }
         }
-        if(uaAction != null)
-            handleUserExitAction(uaAction, gsCurrentState);
+
 
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             this.handleMultiPlayerFinishGameEvents(uaAction, gsCurrentState);
+        } else {
+            if(uaAction != null)
+                handleUserExitAction(uaAction, gsCurrentState);
         }
         return gsCurrentState;
     }
