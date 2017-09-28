@@ -3,9 +3,11 @@ package org.scify.memori.screens;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 import org.json.JSONObject;
 import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
@@ -15,18 +17,22 @@ import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.ServerOperationResponse;
 
+import java.net.URL;
 import java.text.Normalizer;
+import java.util.ResourceBundle;
 
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
 
-public class RegisterLoginFormScreenController {
+public class RegisterLoginFormScreenController implements Initializable {
 
     private Scene primaryScene;
     @FXML
     TextField username;
     @FXML
     TextField password;
+    @FXML
+    Text infoText;
     private String miscellaneousSoundsBasePath;
     private MemoriConfiguration configuration;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
@@ -35,10 +41,15 @@ public class RegisterLoginFormScreenController {
     private String userNameStr;
     private String passwordStr;
     private boolean isRegister;
-
+    private ResourceBundle bundle;
     public RegisterLoginFormScreenController() {
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        bundle = resources;
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
@@ -49,7 +60,10 @@ public class RegisterLoginFormScreenController {
 
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
         sceneHandler.pushScene(userNameScreenScene);
-        password.setDisable(true);
+
+        Platform.runLater(() -> {
+            resetUI();
+        });
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", false);
     }
 
@@ -71,6 +85,12 @@ public class RegisterLoginFormScreenController {
                 username.setDisable(true);
                 userNameStr = cleanString;
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "password.mp3", false);
+                Platform.runLater(() -> {
+                    if(isRegister)
+                        infoText.setText(bundle.getString("register_form_hint2"));
+                    else
+                        infoText.setText(bundle.getString("login_form_hint2"));
+                });
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
                 username.setText("");
@@ -153,6 +173,12 @@ public class RegisterLoginFormScreenController {
         password.setDisable(true);
         username.setDisable(false);
         username.requestFocus();
+        Platform.runLater(() -> {
+            if(isRegister)
+                infoText.setText(bundle.getString("register_form_hint1"));
+            else
+                infoText.setText(bundle.getString("login_form_hint1"));
+        });
     }
 
     private void exitScreen() {
