@@ -285,7 +285,7 @@ public class MainScreenController implements Initializable {
             @Override
             public void handle(WindowEvent t) {
                 System.out.println("Stage is closing");
-                // if player has logged in, perform call to mark them as non-active
+                // if player has logged in, perform call to set them as non-active
                 Player player = PlayerManager.getLocalPlayer();
                 if(player != null) {
                     System.err.println(player.getName());

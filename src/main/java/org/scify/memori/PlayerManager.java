@@ -5,7 +5,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.RequestManager;
-import org.scify.memori.network.ServerOperationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +36,12 @@ public class PlayerManager  implements Callable<String> {
     }
 
 
-    private String markPlayerActive() {
-        String url = "player/markActive";
+    private String setPlayerOnline() {
+        String url = "player/setOnline";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
         String response = requestManager.doPost(url, urlParameters);
-        System.out.println("player/markActive");
+        System.out.println("player/setOnline");
         return response;
     }
 
@@ -117,7 +116,7 @@ public class PlayerManager  implements Callable<String> {
     public String call() throws Exception {
         switch (callIdentifier) {
             case "PLAYER_ACTIVE":
-                return markPlayerActive();
+                return setPlayerOnline();
             default:
                 break;
         }

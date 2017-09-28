@@ -52,7 +52,7 @@ public class InvitePlayerScreenController {
     private MemoriGameLauncher gameLauncher;
     private Player candidateOpponent;
     private ScheduledExecutorService gameRequestsExecutorService = Executors.newScheduledThreadPool(1);
-    private ScheduledExecutorService markPlayerActiveExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService setPlayerOnlineExecutorService = Executors.newScheduledThreadPool(1);
     private int gameLevelId;
     private ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
     private ScheduledFuture<String> playerActiveFuture;
@@ -80,18 +80,18 @@ public class InvitePlayerScreenController {
         shouldQueryForRequests = true;
         shouldQueryForMarkingPlayerActive = true;
         queryServerForGameRequestsThread();
-        markPlayerActiveThread();
-        markPlayerAsNotInGameThread();
+        setPlayerOnlineThread();
+        setPlayerAsNotInGameThread();
         addSceneExitHandler();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
     }
 
-    private void markPlayerActiveThread() {
-        Thread thread = new Thread(() -> setPlayerActive());
+    private void setPlayerOnlineThread() {
+        Thread thread = new Thread(() -> setPlayerOnline());
         thread.start();
     }
 
-    private void markPlayerAsNotInGameThread() {
+    private void setPlayerAsNotInGameThread() {
         Thread thread = new Thread(() -> setPlayerNotInGame());
         thread.start();
     }
@@ -367,9 +367,9 @@ public class InvitePlayerScreenController {
         invitationText.setText("Περίμενε...");
     }
 
-    private void setPlayerActive() {
+    private void setPlayerOnline() {
         while(shouldQueryForMarkingPlayerActive) {
-            playerActiveFuture = markPlayerActiveExecutorService.schedule(
+            playerActiveFuture = setPlayerOnlineExecutorService.schedule(
                     new PlayerManager("PLAYER_ACTIVE"), PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
                 String response = playerActiveFuture.get();
