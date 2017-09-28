@@ -242,7 +242,7 @@ public class MultiPlayerRules extends MemoriRules {
 
         ArrayList<UserAction> movements;
         try {
-            movements = opponentMoveFactory.getNextUserMovements(gsCurrentState);
+            movements = opponentMoveFactory.getNextUserMovement(gsCurrentState);
             int currentStep = 1;
             if(!movements.isEmpty()) {
                 for (UserAction movement : movements) {

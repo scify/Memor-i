@@ -20,7 +20,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     }
 
     @Override
-    public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState) throws Exception {
+    public ArrayList<UserAction> getNextUserMovement(MemoriGameState memoriGameState) throws Exception {
         ArrayList<UserAction> actions = new ArrayList<>();
         if(opponentActions.isEmpty()) {
             getLatestMovementFromServer();

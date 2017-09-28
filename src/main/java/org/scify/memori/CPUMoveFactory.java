@@ -16,7 +16,7 @@ public class CPUMoveFactory implements Observer, MoveFactory {
     private static Map<Point2D, Tile> visitedTilesWithPositions = new HashMap<>();
 
     @Override
-    public ArrayList<UserAction> getNextUserMovements(MemoriGameState memoriGameState) {
+    public ArrayList<UserAction> getNextUserMovement(MemoriGameState memoriGameState) {
         boolean tileFound = false;
         MemoriTerrain memoriTerrain = (MemoriTerrain) memoriGameState.getTerrain();
         Point2D currentPlayerPosition = new Point2D.Double(memoriGameState.getRowIndex(), memoriGameState.getColumnIndex());
