@@ -292,17 +292,16 @@ public class InvitePlayerScreenController {
             if (event.getCode() == SPACE) {
                 shouldQueryForRequests = false;
                 shouldQueryForMarkingPlayerActive = false;
+                audioEngine.pauseCurrentlyPlayingAudios();
                 new LevelsScreen(sceneHandler, GameType.VS_CPU);
+                Platform.runLater(() -> resetUI());
             }
         });
     }
 
     private void queryServerForGameRequests() {
         ServerOperationResponse serverResponse = null;
-        int timesCalled = 0;
         while (serverResponse == null && shouldQueryForRequests) {
-            timesCalled ++;
-
             gameRequestsFuture = gameRequestsExecutorService.schedule(
                     new GameRequestManager("GET_REQUESTS"), GameRequestManager.GAME_REQUESTS_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
