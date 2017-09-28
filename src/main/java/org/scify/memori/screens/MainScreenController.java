@@ -19,6 +19,7 @@ package org.scify.memori.screens;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -62,13 +63,6 @@ public class MainScreenController implements Initializable {
 
     }
 
-    /**
-     * Pauses all sounds and exits the application
-     */
-    private void exitScreen() {
-        audioEngine.pauseCurrentlyPlayingAudios();
-        System.exit(0);
-    }
 
     public void setParameters(Stage primaryStage, Scene primaryScene) {
         this.primaryScene = primaryScene;
@@ -179,8 +173,8 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void exitGame(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            exitScreen();
+        if (evt.getCode() == SPACE || evt.getCode() == ESCAPE) {
+            exitApplication();
         }
     }
 
@@ -195,7 +189,7 @@ public class MainScreenController implements Initializable {
             Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
             thread.start();
         } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
+            exitApplication();
         }
     }
 
@@ -209,7 +203,7 @@ public class MainScreenController implements Initializable {
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
         } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
+            exitApplication();
         }
     }
 
@@ -223,7 +217,7 @@ public class MainScreenController implements Initializable {
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.VS_CPU);
         } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
+            exitApplication();
         }
     }
 
@@ -245,7 +239,7 @@ public class MainScreenController implements Initializable {
                 // TODO: play appropriate sound
             }
         } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
+            exitApplication();
         }
     }
 
@@ -256,7 +250,7 @@ public class MainScreenController implements Initializable {
             audioEngine.pauseCurrentlyPlayingAudios();
             new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
         } else if (evt.getCode() == ESCAPE) {
-            System.exit(0);
+            exitApplication();
         }
     }
 
@@ -265,7 +259,7 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
         } else if (evt.getCode() == ESCAPE) {
-            System.exit(0);
+            exitApplication();
         }
     }
 
@@ -276,7 +270,7 @@ public class MainScreenController implements Initializable {
             audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
             audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
         } else if (evt.getCode() == ESCAPE) {
-            System.exit(0);
+            exitApplication();
         }
     }
 
@@ -284,16 +278,25 @@ public class MainScreenController implements Initializable {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
-                System.out.println("Stage is closing");
-                // if player has logged in, perform call to set them as non-active
-                Player player = PlayerManager.getLocalPlayer();
-                if(player != null) {
-                    System.err.println(player.getName());
-                    // TODO call server
-                }
-                Platform.exit();
-                System.exit(0);
+                exitApplication();
             }
         });
+    }
+
+    private void exitApplication() {
+        System.out.println("Stage is closing");
+        audioEngine.pauseCurrentlyPlayingAudios();
+        // if player has logged in, perform call to set them as non-active
+        Player player = PlayerManager.getLocalPlayer();
+        PlayerManager playerManager = new PlayerManager();
+        if(player != null) {
+            System.err.println(player.getName());
+            playerManager.setPlayerAsNotInGame();
+            System.out.println("player set not in game. Closing...");
+        } else {
+            System.out.println("no local player. Closing...");
+        }
+        Platform.exit();
+        System.exit(0);
     }
 }
