@@ -97,7 +97,7 @@ public class PlayerManager  implements Callable<String> {
     }
 
     public String getPlayerAvailability(String userName) {
-        String url = "player/availability?user_name=" + userName + "&game_flavor_pack_identifier=" + gameIdentifier + "&player_initiator_id" + String.valueOf(getPlayerId());
+        String url = "player/availability?user_name=" + userName + "&game_flavor_pack_identifier=" + gameIdentifier + "&player_initiator_id=" + String.valueOf(getPlayerId());
         return this.requestManager.doGet(url);
     }
 
