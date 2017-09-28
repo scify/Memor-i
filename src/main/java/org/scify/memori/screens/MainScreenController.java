@@ -236,7 +236,7 @@ public class MainScreenController implements Initializable {
                     new InvitePlayerScreen(sceneHandler);
             }
             else {
-                // TODO: play appropriate sound
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_network.mp3", false);
             }
         } else if (evt.getCode() == ESCAPE) {
             exitApplication();

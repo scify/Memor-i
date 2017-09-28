@@ -152,7 +152,7 @@ public class RegisterLoginFormScreenController implements Initializable {
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Player with username exists
-                // TODO play sound
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username_taken.mp3", true);
                 System.out.println("Player with username " + userNameStr + " exists");
                 Platform.runLater(() -> resetUI());
                 break;
@@ -164,11 +164,8 @@ public class RegisterLoginFormScreenController implements Initializable {
             case ServerResponse.RESPONSE_EMPTY:
                 // Wrong login credentials
                 Platform.runLater(() -> resetUI());
-                Thread thread = new Thread(() -> {
-                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials.mp3", true);
-                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", true);
-                });
-                thread.start();
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials.mp3", true);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", true);
                 break;
         }
 

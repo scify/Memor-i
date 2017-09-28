@@ -144,7 +144,7 @@ public class InvitePlayerScreenController {
                     // if username is the same as the logged in player username, cancel
                     if(cleanString.equals(PlayerManager.getLocalPlayer().getName())) {
                         System.out.println("Same username");
-                        // TODO play appropriate sound
+                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "cannot_invite_self.mp3", false);
                         Platform.runLater(() -> resetUI());
                         Platform.runLater(() -> username.setText(""));
                     } else {
@@ -228,7 +228,7 @@ public class InvitePlayerScreenController {
                     // player is online and playing this game, but plays another game
                     System.out.println("Player available but in other game");
                     Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι σε παιχνίδι. Δοκίμασε αργότερα"));
-                    // TODO Play appropriate sound
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_in_game.mp3", false);
                 }
                 break;
             case ServerResponse.RESPONSE_ERROR:
@@ -252,14 +252,14 @@ public class InvitePlayerScreenController {
         Platform.runLater(() -> {
             invitationText.setText("Αυτός ο παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.");
         });
-        // TODO add appropriate sound
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited_by_opponent.mp3", false);
     }
 
     private void openRequestExistsFromRandomPlayer() {
         Platform.runLater(() -> {
             invitationText.setText("Ένας παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.");
         });
-        // TODO add appropriate sound
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited.mp3", false);
     }
 
     private void playerNotFound() {
@@ -415,7 +415,6 @@ public class InvitePlayerScreenController {
     }
 
     private void cancelGameRequest() {
-        // TODO inform player that something went wrong
         Platform.runLater(() -> resetUI());
         Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
         cancelThread.start();
