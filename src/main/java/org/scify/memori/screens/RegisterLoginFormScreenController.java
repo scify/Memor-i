@@ -65,7 +65,10 @@ public class RegisterLoginFormScreenController implements Initializable {
         Platform.runLater(() -> {
             resetUI();
         });
-        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", false);
+        if(isRegister)
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "register_username.mp3", false);
+        else
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "login_username.mp3", false);
     }
 
     @FXML
@@ -85,7 +88,10 @@ public class RegisterLoginFormScreenController implements Initializable {
                 password.requestFocus();
                 username.setDisable(true);
                 userNameStr = cleanString;
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "password.mp3", false);
+                if(isRegister)
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "register_password.mp3", false);
+                else
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "login_password.mp3", false);
                 Platform.runLater(() -> {
                     if(isRegister)
                         infoText.setText(bundle.getString("register_form_hint2"));
