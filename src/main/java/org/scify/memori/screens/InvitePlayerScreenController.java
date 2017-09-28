@@ -212,7 +212,7 @@ public class InvitePlayerScreenController {
                     JsonObject parametersObject = (JsonObject) response.getParameters();
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
-                    invitationText.setText("Ο παίκτης είναι διαθέσιμος. Πάτησε SPACE για να συνεχίσεις.");
+                    Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι διαθέσιμος. Πάτησε SPACE για να συνεχίσεις."));
                     Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false));
                     thread.start();
                     promptToGoToLevelsPage(playerId);
@@ -220,6 +220,11 @@ public class InvitePlayerScreenController {
                 } else if(playerStatus.equals("player_not_available")) {
                     System.out.println("Player not available");
                     playerNotAvailable();
+                } else if(playerStatus.equals("player_in_game")) {
+                    // player is online and playing this game, but plays another game
+                    System.out.println("Player available but in other game");
+                    Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι σε παιχνίδι. Δοκίμασε αργότερα"));
+                    // TODO Play appropriate sound
                 }
                 break;
             case ServerResponse.RESPONSE_ERROR:
