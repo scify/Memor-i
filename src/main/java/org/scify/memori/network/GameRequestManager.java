@@ -105,34 +105,24 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 return response;
-            case 2:
+            default:
                 return null;
         }
-        return null;
     }
 
     private ServerOperationResponse parseGameRequestResponse(String serverResponse) {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
-        System.out.println("game request reply response code: " + code);
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // game request was either accepted or rejected
                 return response;
-            case 2:
-                // error
-                return null;
-            case 3:
-                // server validation not passed
-                return null;
-            case 4:
-                // reply is "empty" (should not be passed back)
+            default:
                 return null;
         }
-        return null;
     }
 
     public String sendShuffledDeckToServer(String jsonRepresentationOfTiles) {

@@ -25,6 +25,7 @@ import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
+import org.scify.memori.network.ServerResponse;
 
 import java.awt.geom.Point2D;
 import java.text.Normalizer;
@@ -166,7 +167,7 @@ public class InvitePlayerScreenController {
             response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // found a player
                 JsonObject parametersObject = (JsonObject) response.getParameters();
                 int playerId = parametersObject.get("player_id").getAsInt();
@@ -174,17 +175,17 @@ public class InvitePlayerScreenController {
                 thread.start();
                 promptToGoToLevelsPage(playerId);
                 break;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // error
                 break;
-            case 3:
+            case ServerResponse.VALIDATION_ERROR:
                 // server validation not passed
                 break;
-            case 4:
+            case ServerResponse.RESPONSE_EMPTY:
                 // player not found
                 noAvailablePlayerFound();
                 break;
-            case 5:
+            case ServerResponse.OPPONENT_HAS_ALREADY_SENT_REQUEST:
                 // an opponent player has already sent a request
                 openRequestExistsFromRandomPlayer();
                 break;
@@ -205,7 +206,7 @@ public class InvitePlayerScreenController {
             response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 String playerStatus = response.getMessage();
                 if(playerStatus.equals("player_available")) {
                     JsonObject parametersObject = (JsonObject) response.getParameters();
@@ -221,15 +222,17 @@ public class InvitePlayerScreenController {
                     playerNotAvailable();
                 }
                 break;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // error
-            case 3:
+                break;
+            case ServerResponse.VALIDATION_ERROR:
                 // server validation not passed
-            case 4:
+                break;
+            case ServerResponse.RESPONSE_EMPTY:
                 // player not found
                 playerNotFound();
                 break;
-            case 5:
+            case ServerResponse.OPPONENT_HAS_ALREADY_SENT_REQUEST:
                 // opponent player has already sent a request
                 openRequestExistsFromOpponent();
                 break;

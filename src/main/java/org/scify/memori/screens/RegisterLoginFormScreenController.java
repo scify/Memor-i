@@ -16,6 +16,7 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.ServerOperationResponse;
+import org.scify.memori.network.ServerResponse;
 
 import java.net.URL;
 import java.text.Normalizer;
@@ -133,7 +134,7 @@ public class RegisterLoginFormScreenController implements Initializable {
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // New player created
                 JSONObject responseObj = new JSONObject(serverResponse);
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
@@ -143,18 +144,18 @@ public class RegisterLoginFormScreenController implements Initializable {
                 audioEngine.pauseCurrentlyPlayingAudios();
                 new InvitePlayerScreen(sceneHandler);
                 break;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // Player with username exists
                 // TODO play sound
                 System.out.println("Player with username " + userNameStr + " exists");
                 Platform.runLater(() -> resetUI());
                 break;
-            case 3:
+            case ServerResponse.VALIDATION_ERROR:
                 // Validation error
                 System.out.println("Validation error: " + response.getParameters());
                 Platform.runLater(() -> resetUI());
                 break;
-            case 4:
+            case ServerResponse.RESPONSE_EMPTY:
                 // Wrong login credentials
                 Platform.runLater(() -> resetUI());
                 Thread thread = new Thread(() -> {

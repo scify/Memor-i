@@ -19,6 +19,7 @@ import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
+import org.scify.memori.network.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,7 +165,7 @@ public class LevelsScreenController {
         int code = response.getCode();
         String responseParameters;
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // Game Request sent
                 JSONObject responseObj = new JSONObject(serverResponse);
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
@@ -178,12 +179,12 @@ public class LevelsScreenController {
                 queryThread.start();
 
                 break;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // Error in creating game request
                 responseParameters = (String) response.getParameters();
                 System.err.println("ERROR: " + responseParameters);
                 break;
-            case 3:
+            case ServerResponse.VALIDATION_ERROR:
                 // Error in server validation rules
                 responseParameters = (String) response.getParameters();
                 System.err.println("ERROR: " + responseParameters);

@@ -25,6 +25,7 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.interfaces.*;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
+import org.scify.memori.network.ServerResponse;
 import org.scify.memori.rules.MultiPlayerRules;
 import org.scify.memori.rules.SinglePlayerRules;
 import org.scify.memori.rules.TutorialRules;
@@ -170,15 +171,15 @@ public abstract class MemoriGame implements Game<GameEndState> {
         int code = response.getCode();
         String responseParameters;
         switch (code) {
-            case 1:
+            case ServerResponse.RESPONSE_SUCCESSFUL:
                 // Cards sent successfully
                 break;
-            case 2:
+            case ServerResponse.RESPONSE_ERROR:
                 // Error in creating game request
                 responseParameters = (String) response.getParameters();
                 System.err.println("ERROR: " + responseParameters);
                 break;
-            case 3:
+            case ServerResponse.VALIDATION_ERROR:
                 // Error in server validation rules
                 responseParameters = (String) response.getParameters();
                 System.err.println("VALIDATION ERROR: " + responseParameters);
