@@ -80,26 +80,20 @@ public class InvitePlayerScreenController {
         gameLauncher = new MemoriGameLauncher(sceneHandler);
         shouldQueryForRequests = true;
         shouldQueryForMarkingPlayerActive = true;
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        queryServerForGameRequests();
-                    }
-                },
-                0
-        );
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        markPlayerActive();
-                    }
-                },
-                0
-        );
+        queryServerForGameRequestsThread();
+        markPlayerActiveThread();
         addSceneExitHandler();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
+    }
+
+    private void markPlayerActiveThread() {
+        Thread thread = new Thread(() -> markPlayerActive());
+        thread.start();
+    }
+
+    private void queryServerForGameRequestsThread() {
+        Thread thread = new Thread(() -> queryServerForGameRequests());
+        thread.start();
     }
 
     private void addSceneExitHandler() {
@@ -346,16 +340,8 @@ public class InvitePlayerScreenController {
                 Platform.runLater(() -> resetUI());
                 Thread answerThread = new Thread(() ->  gameRequestManager.sendGameRequestAnswerToServer(false));
                 answerThread.start();
-                // re-check for requests after 10 seconds
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                queryServerForGameRequests();
-                            }
-                        },
-                        0
-                );
+                // re-check for requests
+                queryServerForGameRequestsThread();
             }
         });
     }
