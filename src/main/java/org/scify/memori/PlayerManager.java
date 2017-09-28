@@ -106,6 +106,13 @@ public class PlayerManager  implements Callable<String> {
         return this.requestManager.doGet(url);
     }
 
+    public String setPlayerAsNotInGame() {
+        String url = "player/notInGame";
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
+        return this.requestManager.doPost(url, urlParameters);
+    }
+
     @Override
     public String call() throws Exception {
         switch (callIdentifier) {

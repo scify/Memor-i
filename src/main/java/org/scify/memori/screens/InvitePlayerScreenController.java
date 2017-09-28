@@ -4,14 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import com.google.gson.JsonObject;
 import javafx.scene.text.Text;
-import javafx.stage.WindowEvent;
 import org.scify.memori.*;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
@@ -83,12 +81,18 @@ public class InvitePlayerScreenController {
         shouldQueryForMarkingPlayerActive = true;
         queryServerForGameRequestsThread();
         markPlayerActiveThread();
+        markPlayerAsNotInGameThread();
         addSceneExitHandler();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
     }
 
     private void markPlayerActiveThread() {
-        Thread thread = new Thread(() -> markPlayerActive());
+        Thread thread = new Thread(() -> setPlayerActive());
+        thread.start();
+    }
+
+    private void markPlayerAsNotInGameThread() {
+        Thread thread = new Thread(() -> setPlayerNotInGame());
         thread.start();
     }
 
@@ -363,7 +367,7 @@ public class InvitePlayerScreenController {
         invitationText.setText("Περίμενε...");
     }
 
-    private void markPlayerActive() {
+    private void setPlayerActive() {
         while(shouldQueryForMarkingPlayerActive) {
             playerActiveFuture = markPlayerActiveExecutorService.schedule(
                     new PlayerManager("PLAYER_ACTIVE"), PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL, TimeUnit.SECONDS);
@@ -376,6 +380,10 @@ public class InvitePlayerScreenController {
             }
         }
 
+    }
+
+    private void setPlayerNotInGame() {
+        String response = playerManager.setPlayerAsNotInGame();
     }
 
     private void queryForGameRequestShuffledCards() {
