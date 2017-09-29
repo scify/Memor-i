@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 import org.scify.memori.*;
@@ -67,11 +68,6 @@ public class LevelsScreenController {
             }
         });
 
-        primaryScene.lookup("#infoText").setOnKeyPressed(event -> {
-            if (event.getCode() == ESCAPE) {
-                exitScreen();
-            }
-        });
     }
 
     /**
@@ -97,6 +93,13 @@ public class LevelsScreenController {
         }
     }
 
+    @FXML
+    private void exitIfEsc(KeyEvent evt) {
+        if(evt.getCode() == ESCAPE) {
+            exitScreen();
+        }
+    }
+
     /**
      * Pauses all sounds and exits the application
      */
@@ -104,7 +107,7 @@ public class LevelsScreenController {
         if(currentGameRequestId != 0)
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popToScene(MainScreen.scene);
+        sceneHandler.popScene();
     }
 
     private Button btnClicked;
@@ -137,8 +140,6 @@ public class LevelsScreenController {
                     default:
                         break;
                 }
-            } else if (event.getCode() == ESCAPE) {
-                exitScreen();
             }
         });
     }
@@ -275,9 +276,6 @@ public class LevelsScreenController {
                 audioEngine.pauseCurrentlyPlayingAudios();
                 Thread thread = new Thread(() -> gameLauncher.startPvPGame(gameLevel));
                 thread.start();
-            } else if(event.getCode() == ESCAPE) {
-                System.out.println("game rejected");
-                exitScreen();
             }
         });
     }

@@ -74,7 +74,8 @@ public class RegisterLoginFormScreenController implements Initializable {
     @FXML
     private void exitIfEsc(KeyEvent evt) {
         if(evt.getCode() == ESCAPE) {
-            sceneHandler.popScene();
+            exitScreen();
+            evt.consume();
         }
     }
 
@@ -102,8 +103,6 @@ public class RegisterLoginFormScreenController implements Initializable {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
                 username.setText("");
             }
-        } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
         }
     }
 
@@ -119,8 +118,6 @@ public class RegisterLoginFormScreenController implements Initializable {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
                 password.setText("");
             }
-        } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
         }
     }
 

@@ -188,8 +188,6 @@ public class MainScreenController implements Initializable {
             MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
             Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
             thread.start();
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -202,8 +200,6 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -216,8 +212,6 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
             new LevelsScreen(sceneHandler, GameType.VS_CPU);
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -238,8 +232,6 @@ public class MainScreenController implements Initializable {
             else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_network.mp3", false);
             }
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -249,8 +241,6 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
             new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -258,8 +248,6 @@ public class MainScreenController implements Initializable {
     protected void goToSponsorsPage(KeyEvent evt) {
         if (evt.getCode() == SPACE) {
             new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
@@ -269,18 +257,11 @@ public class MainScreenController implements Initializable {
         if (evt.getCode() == SPACE) {
             audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
             audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
-        } else if (evt.getCode() == ESCAPE) {
-            exitApplication();
         }
     }
 
     private void addCloseHandlerOnStage() {
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent t) {
-                exitApplication();
-            }
-        });
+        primaryStage.setOnCloseRequest(t -> exitApplication());
     }
 
     private void exitApplication() {

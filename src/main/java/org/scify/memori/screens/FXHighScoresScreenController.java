@@ -29,9 +29,9 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
 
 public class FXHighScoresScreenController {
@@ -43,27 +43,10 @@ public class FXHighScoresScreenController {
     private FXAudioEngine audioEngine;
     protected FXSceneHandler sceneHandler;
 
-    @FXML
-    private Button level1;
-    @FXML
-    private Button level2;
-    @FXML
-    private Button level3;
-    @FXML
-    private Button level4;
-    @FXML
-    private Button level5;
-    @FXML
-    private Button level6;
-    @FXML
-    private Button level7;
+    private String miscellaneousSoundsBasePath;
 
-    private MemoriConfiguration configuration;
-    protected String miscellaneousSoundsBasePath;
-    private List<MemoriGameLevel> gameLevels = new ArrayList<>();
-    
     public void setParameters(FXSceneHandler sHandler, Scene scoresScene) {
-        configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = new FXAudioEngine();
@@ -71,67 +54,20 @@ public class FXHighScoresScreenController {
         highScoreHandler = new HighScoresHandlerImpl();
         sceneHandler = sHandler;
         sceneHandler.pushScene(scoresScene);
-        scoresScene.setOnKeyReleased(event -> {
-            switch (event.getCode()) {
-                case ESCAPE:
-                    exitScreen();
-                    break;
-            }
-        });
 
         FXRenderingEngine.setGamecoverIcon(scoresScene, "gameCoverImgContainer");
 
         VBox gameLevelsContainer = (VBox) scoresScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
 
+    }
 
-//        scoresScene.lookup("#level1").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level1.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level2").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level2.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level3").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level3.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level4").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level4.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level5").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level5.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level6").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level6.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#level7").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "level7.mp3", false);
-//            }
-//        });
-//
-//        scoresScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-//            if (newPropertyValue) {
-//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "back.mp3", false);
-//            }
-//        });
+    @FXML
+    private void exitIfEsc(KeyEvent evt) {
+        if(evt.getCode() == ESCAPE) {
+            exitScreen();
+            evt.consume();
+        }
     }
 
     /**
@@ -140,7 +76,7 @@ public class FXHighScoresScreenController {
      */
     private void addGameLevelButtons(VBox buttonsContainer) {
         GameLevelService gameLevelService = new GameLevelService();
-        gameLevels = new ArrayList<>();
+        List<MemoriGameLevel> gameLevels;
         gameLevels = gameLevelService.createGameLevels();
         for (MemoriGameLevel currLevel : gameLevels) {
             Button gameLevelBtn = new Button();
@@ -200,18 +136,7 @@ public class FXHighScoresScreenController {
         });
     }
 
-    /**
-     * Goes back to main screen
-     * @param evt the keyboard event
-     */
-    @FXML
-    protected void backToMainScreen(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            exitScreen();
-        }
-    }
-
-    protected void exitScreen() {
+    private void exitScreen() {
         audioEngine.pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();
     }

@@ -23,10 +23,7 @@ import javafx.stage.Stage;
 import org.scify.memori.interfaces.GameEvent;
 import org.scify.memori.screens.InvitePlayerScreen;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Handles the scenes changing across the application.
@@ -42,7 +39,7 @@ public class FXSceneHandler {
     /**
      * History af scenes created and used in the application (ability to go back to a certain scene)
      */
-    private List<Scene> allScenes = new ArrayList<>();
+    private Stack<Scene> allScenes = new Stack<>();
 
     public Stage getMainWindow() {
         return mainWindow;
@@ -57,7 +54,7 @@ public class FXSceneHandler {
      * @param sToPush the scene we want to make active
      */
     public void pushScene(Scene sToPush) {
-        allScenes.add(sToPush);
+        allScenes.push(sToPush);
         // Set the added scene as active
 
         Platform.runLater(new Runnable() {
@@ -72,21 +69,18 @@ public class FXSceneHandler {
      * Removes the last scene from the scenes list and sets the previous one as active
      * @return the last scene from the scenes list
      */
-    public Scene  popScene() {
-        Scene sToPop = allScenes.get(allScenes.size() - 1); // Get last added
-        allScenes.remove(allScenes.size() - 1); // and pop it
-        // update active scene IN FX ΤΗΕΜΕ
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                mainWindow.setScene(allScenes.get(allScenes.size() - 1));
-            }
-        });
-        // WARNING: The above call is asynchronous, so we are not CERTAIN that
-        // the mainWindow has already switched to the previous scene, at this point
-        // in time.
+    public Scene popScene() {
+        Scene sToPop = allScenes.pop(); // Get last added
+        if(sToPop != null) {
+            // update active scene IN FX ΤΗΕΜΕ
+            Scene lastSceneInStack = allScenes.peek();
+            Platform.runLater(() -> mainWindow.setScene(lastSceneInStack));
+            // WARNING: The above call is asynchronous, so we are not CERTAIN that
+            // the mainWindow has already switched to the previous scene, at this point
+            // in time.
 
-        // return removed scene
+            // return removed scene
+        }
         return sToPop;
     }
 
@@ -99,12 +93,7 @@ public class FXSceneHandler {
         while (listIterator.hasNext()) {
            Scene currScene = listIterator.next();
             if(currScene.equals(scene)) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainWindow.setScene(currScene);
-                    }
-                });
+                Platform.runLater(() -> mainWindow.setScene(currScene));
                 return scene;
             } else {
                 listIterator.remove();
@@ -117,6 +106,6 @@ public class FXSceneHandler {
      * Removes the last scene from the scenes list
      */
     public void simplePopScene() {
-        allScenes.remove(allScenes.size() - 1);
+        allScenes.pop();
     }
 }

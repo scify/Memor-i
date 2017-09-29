@@ -82,7 +82,6 @@ public class InvitePlayerScreenController {
         queryServerForGameRequestsThread();
         setPlayerOnlineThread();
         setPlayerAsNotInGameThread();
-        addSceneExitHandler();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
     }
 
@@ -99,17 +98,6 @@ public class InvitePlayerScreenController {
     private void queryServerForGameRequestsThread() {
         Thread thread = new Thread(() -> queryServerForGameRequests());
         thread.start();
-    }
-
-    private void addSceneExitHandler() {
-        primaryScene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent evt) {
-                if(evt.getCode() == ESCAPE) {
-                    exitScreen();
-                }
-            }
-        });
     }
 
     @FXML
@@ -157,8 +145,6 @@ public class InvitePlayerScreenController {
                     Platform.runLater(() -> username.setText(""));
                 }
             }
-        } else if (evt.getCode() == ESCAPE) {
-            exitScreen();
         }
 
     }

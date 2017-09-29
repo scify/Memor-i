@@ -63,14 +63,13 @@ public class RegisterOrLoginScreenController {
     private void exitIfEsc(KeyEvent evt) {
         if(evt.getCode() == ESCAPE) {
             exitScreen();
+            evt.consume();
         }
     }
 
     @FXML
     protected void goToRegisterScreen(KeyEvent evt) {
-        if (evt.getCode() == ESCAPE) {
-            exitScreen();
-        } else if(evt.getCode() == SPACE) {
+        if(evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
             new RegisterLoginFormScreen(sceneHandler, true);
         }
@@ -78,9 +77,7 @@ public class RegisterOrLoginScreenController {
 
     @FXML
     protected void goToLoginScreen(KeyEvent evt) {
-        if (evt.getCode() == ESCAPE) {
-            exitScreen();
-        } else if(evt.getCode() == SPACE) {
+        if(evt.getCode() == SPACE) {
             audioEngine.pauseCurrentlyPlayingAudios();
             new RegisterLoginFormScreen(sceneHandler, false);
         }
