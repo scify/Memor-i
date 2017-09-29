@@ -27,7 +27,6 @@ import static javafx.scene.input.KeyCode.ESCAPE;
 
 public class RegisterLoginFormScreenController implements Initializable {
 
-    private Scene primaryScene;
     @FXML
     TextField username;
     @FXML
@@ -43,6 +42,8 @@ public class RegisterLoginFormScreenController implements Initializable {
     private String passwordStr;
     private boolean isRegister;
     private ResourceBundle bundle;
+    private Thread threadUI;
+
     public RegisterLoginFormScreenController() {
         configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
@@ -54,7 +55,6 @@ public class RegisterLoginFormScreenController implements Initializable {
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
-        this.primaryScene = userNameScreenScene;
         this.sceneHandler = sceneHandler;
         this.playerManager = new PlayerManager();
         this.isRegister = isRegister;
@@ -62,13 +62,16 @@ public class RegisterLoginFormScreenController implements Initializable {
         FXRenderingEngine.setGamecoverIcon(userNameScreenScene, "gameCoverImgContainer");
         sceneHandler.pushScene(userNameScreenScene);
 
-        Platform.runLater(() -> {
-            resetUI();
-        });
+        resetUIThread();
         if(isRegister)
             audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "register_username.mp3", false);
         else
             audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "login_username.mp3", false);
+    }
+
+    private void resetUIThread() {
+        threadUI = new Thread(() -> resetUI());
+        threadUI.start();
     }
 
     @FXML
@@ -85,25 +88,34 @@ public class RegisterLoginFormScreenController implements Initializable {
             String cleanString = Normalizer.normalize(username.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
             boolean valid = cleanString.matches("\\w+");
             if (valid) {
-                password.setDisable(false);
-                password.requestFocus();
-                username.setDisable(true);
+                promptForPasswordUI();
                 userNameStr = cleanString;
                 if(isRegister)
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "register_password.mp3", false);
                 else
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "login_password.mp3", false);
-                Platform.runLater(() -> {
-                    if(isRegister)
-                        infoText.setText(bundle.getString("register_form_hint2"));
-                    else
-                        infoText.setText(bundle.getString("login_form_hint2"));
-                });
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
-                username.setText("");
+                threadUI = new Thread(() -> username.setText(""));
+                threadUI.start();
             }
         }
+    }
+
+    private void promptForPasswordUI() {
+        threadUI = new Thread(() -> {
+            Platform.runLater(() -> {
+                password.setDisable(false);
+                password.requestFocus();
+                username.setDisable(true);
+                if(isRegister) {
+                    infoText.setText(bundle.getString("register_form_hint2"));
+                } else {
+                    infoText.setText(bundle.getString("login_form_hint2"));
+                }
+            });
+        });
+        threadUI.start();
     }
 
     @FXML
@@ -113,10 +125,11 @@ public class RegisterLoginFormScreenController implements Initializable {
             passwordStr = cleanString;
             boolean valid = cleanString.matches("\\w+");
             if (valid) {
-                sendRequestToServer();
+                Thread thread = new Thread(() -> sendRequestToServer());
+                thread.start();
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
-                password.setText("");
+                threadUI = new Thread(() -> password.setText(""));
             }
         }
     }
@@ -151,16 +164,16 @@ public class RegisterLoginFormScreenController implements Initializable {
                 // Player with username exists
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username_taken.mp3", true);
                 System.out.println("Player with username " + userNameStr + " exists");
-                Platform.runLater(() -> resetUI());
+                resetUIThread();
                 break;
             case ServerResponse.VALIDATION_ERROR:
                 // Validation error
                 System.out.println("Validation error: " + response.getParameters());
-                Platform.runLater(() -> resetUI());
+                resetUIThread();
                 break;
             case ServerResponse.RESPONSE_EMPTY:
                 // Wrong login credentials
-                Platform.runLater(() -> resetUI());
+                resetUIThread();
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials.mp3", true);
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", true);
                 break;
@@ -169,12 +182,13 @@ public class RegisterLoginFormScreenController implements Initializable {
     }
 
     private void resetUI() {
-        username.setText("");
-        password.setText("");
-        password.setDisable(true);
-        username.setDisable(false);
-        username.requestFocus();
         Platform.runLater(() -> {
+            username.setText("");
+            password.setText("");
+            password.setDisable(true);
+            username.setDisable(false);
+            username.requestFocus();
+
             if(isRegister)
                 infoText.setText(bundle.getString("register_form_hint1"));
             else

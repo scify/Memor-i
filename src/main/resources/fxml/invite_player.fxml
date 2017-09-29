@@ -24,7 +24,7 @@
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer">
         <VBox alignment="center" fx:id="playersDiv" spacing="10.0">
-            <Text styleClass="optionButton, textLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Γράψε ενα όνομα παίκτη:"/>
+            <Text styleClass="optionButton, textLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="%invitationTextPlayer"/>
             <TextField styleClass="optionButton,textField" onKeyPressed="#submitUsername" id="textfield" fx:id="username"/>
             <Text styleClass="optionButton, textLabel, invitationText" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="invitationText"/>
         </VBox>
