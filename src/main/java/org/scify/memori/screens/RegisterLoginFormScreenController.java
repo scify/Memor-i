@@ -34,24 +34,20 @@ public class RegisterLoginFormScreenController implements Initializable {
     @FXML
     Text infoText;
     private String miscellaneousSoundsBasePath;
-    private MemoriConfiguration configuration;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
     private PlayerManager playerManager;
     private String userNameStr;
     private String passwordStr;
     private boolean isRegister;
-    private ResourceBundle bundle;
-    private Thread threadUI;
 
     public RegisterLoginFormScreenController() {
-        configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        bundle = resources;
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
@@ -70,8 +66,7 @@ public class RegisterLoginFormScreenController implements Initializable {
     }
 
     private void resetUIThread() {
-        threadUI = new Thread(() -> resetUI());
-        threadUI.start();
+        Platform.runLater(() -> resetUI());
     }
 
     @FXML
@@ -96,26 +91,17 @@ public class RegisterLoginFormScreenController implements Initializable {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "login_password.mp3", false);
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
-                threadUI = new Thread(() -> username.setText(""));
-                threadUI.start();
+                Platform.runLater(() -> username.setText(""));
             }
         }
     }
 
     private void promptForPasswordUI() {
-        threadUI = new Thread(() -> {
-            Platform.runLater(() -> {
-                password.setDisable(false);
-                password.requestFocus();
-                username.setDisable(true);
-                if(isRegister) {
-                    infoText.setText(bundle.getString("register_form_hint2"));
-                } else {
-                    infoText.setText(bundle.getString("login_form_hint2"));
-                }
-            });
+        Platform.runLater(() -> {
+            password.setDisable(false);
+            password.requestFocus();
+            username.setDisable(true);
         });
-        threadUI.start();
     }
 
     @FXML
@@ -129,7 +115,7 @@ public class RegisterLoginFormScreenController implements Initializable {
                 thread.start();
             } else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_input.mp3", false);
-                threadUI = new Thread(() -> password.setText(""));
+                Platform.runLater(() -> password.setText(""));
             }
         }
     }
@@ -147,22 +133,28 @@ public class RegisterLoginFormScreenController implements Initializable {
 
     private void parseServerResponse(String serverResponse) {
         Gson g = new Gson();
+        System.out.println("1");
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
+        System.out.println("code: "+ code );
         switch (code) {
             case ServerResponse.RESPONSE_SUCCESSFUL:
+                System.out.println("2");
                 // New player created
                 JSONObject responseObj = new JSONObject(serverResponse);
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
+                System.out.println("3");
                 int newPlayerId = paramsObj.getInt("player_id");
-                PlayerManager.setPlayerId(newPlayerId);
-                PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
+//                PlayerManager.setPlayerId(newPlayerId);
+//                PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
                 audioEngine.pauseCurrentlyPlayingAudios();
-                new InvitePlayerScreen(sceneHandler);
+                System.out.println("4");
+                //InvitePlayerScreen invitePlayerScreen = new InvitePlayerScreen(sceneHandler);
+                System.out.println("5");
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Player with username exists
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username_taken.mp3", true);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username_taken.mp3", false);
                 System.out.println("Player with username " + userNameStr + " exists");
                 resetUIThread();
                 break;
@@ -174,26 +166,20 @@ public class RegisterLoginFormScreenController implements Initializable {
             case ServerResponse.RESPONSE_EMPTY:
                 // Wrong login credentials
                 resetUIThread();
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials.mp3", true);
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "username.mp3", true);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "wrong_credentials_prompt_username.mp3", false);
+                break;
+            default:
                 break;
         }
 
     }
 
     private void resetUI() {
-        Platform.runLater(() -> {
-            username.setText("");
-            password.setText("");
-            password.setDisable(true);
-            username.setDisable(false);
-            username.requestFocus();
-
-            if(isRegister)
-                infoText.setText(bundle.getString("register_form_hint1"));
-            else
-                infoText.setText(bundle.getString("login_form_hint1"));
-        });
+        username.setText("");
+        password.setText("");
+        password.setDisable(true);
+        username.setDisable(false);
+        username.requestFocus();
     }
 
     private void exitScreen() {

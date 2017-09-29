@@ -23,15 +23,14 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 
 public class RequestManager {
 
-    private static String SERVER_URL;
     public static int MAX_REQUEST_TRIES = 80;
     public RequestManager() {
-        MemoriConfiguration configuration = new MemoriConfiguration();
-        SERVER_URL = configuration.getProjectProperty("SERVER_URL");
+
     }
 
     public String doPost(String urlEndpoint, List<NameValuePair> params) {
-        urlEndpoint = SERVER_URL + urlEndpoint;
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        urlEndpoint = configuration.getProjectProperty("SERVER_URL") + urlEndpoint;
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(urlEndpoint);
         // add header
@@ -63,7 +62,8 @@ public class RequestManager {
     }
 
     public String doGet(String urlEndpoint) {
-        urlEndpoint = SERVER_URL + urlEndpoint;
+        MemoriConfiguration configuration = new MemoriConfiguration();
+        urlEndpoint = configuration.getProjectProperty("SERVER_URL") + urlEndpoint;
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(urlEndpoint);
 

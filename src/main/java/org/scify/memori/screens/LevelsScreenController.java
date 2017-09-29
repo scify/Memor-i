@@ -24,7 +24,6 @@ import org.scify.memori.network.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.*;
 
@@ -178,7 +177,6 @@ public class LevelsScreenController {
                 thread.start();
                 Thread queryThread = new Thread(() -> queryServerForGameRequestReply(gameLevel));
                 queryThread.start();
-
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Error in creating game request
@@ -198,38 +196,39 @@ public class LevelsScreenController {
     private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
         ServerOperationResponse serverOperationResponse = null;
         int timesCalled = 0;
-        while (serverOperationResponse == null) {
+        while (true) {
             timesCalled ++;
-            ScheduledExecutorService scheduler = Executors
-                    .newScheduledThreadPool(1);
-            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
-                    new GameRequestManager("GET_GAME_REQUEST_REPLY"), 5, TimeUnit.SECONDS);
-            try {
-                serverOperationResponse = future.get();
-                if(serverOperationResponse != null) {
-                    // we got a reply
-
-                    if(serverOperationResponse.getMessage().equals("accepted")) {
-                        // to press enter to start the game
-                        Platform.runLater(() -> messageText.setText("Ο παίκτης δέχθηκε! Πάτησε ENTER"));
-                        promptToStartGame(gameLevel);
-                    } else if(serverOperationResponse.getMessage().equals("rejected")) {
-                        cancelGameRequest();
-                        Platform.runLater(() -> resetUI());
-                        Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
-                        voiceThread.start();
-                        promptToPlayWithCPU();
-                    }
-                }
-                if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+            serverOperationResponse = gameRequestManager.askServerForGameRequestReply();
+            if(serverOperationResponse != null) {
+                // we got a reply
+                if(serverOperationResponse.getMessage().equals("accepted")) {
+                    // to press enter to start the game
+                    Platform.runLater(() -> messageText.setText("Ο παίκτης δέχθηκε! Πάτησε ENTER"));
+                    promptToStartGame(gameLevel);
+                } else if(serverOperationResponse.getMessage().equals("rejected")) {
+                    cancelGameRequest();
+                    Platform.runLater(() -> resetUI());
                     Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                     voiceThread.start();
-                    cancelGameRequest();
+                    promptToPlayWithCPU();
+                    Thread.currentThread().interrupt();
                     break;
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } else {
+                try {
+                    Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+            if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
+                voiceThread.start();
                 cancelGameRequest();
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
     }

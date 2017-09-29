@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class GameRequestManager implements Callable<ServerOperationResponse> {
+public class GameRequestManager {
 
-    public static final int GAME_REQUESTS_CALL_INTERVAL = 3;
+    public static final int GAME_REQUESTS_CALL_INTERVAL = 3000;
+    public static final int SHUFFLE_CARDS_INTERVAL = 3000;
     private RequestManager requestManager;
     private MemoriConfiguration configuration;
     private static int gameRequestId;
-    private String callIdentifier;
 
     public static void setGameRequestId(int gameRequestId) {
         GameRequestManager.gameRequestId = gameRequestId;
@@ -32,27 +32,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         configuration = new MemoriConfiguration();
     }
 
-    public GameRequestManager(String callIdentifier) {
-        requestManager = new RequestManager();
-        configuration = new MemoriConfiguration();
-        this.callIdentifier = callIdentifier;
-    }
-
-    public ServerOperationResponse call() throws Exception {
-        switch (callIdentifier) {
-            case "GET_GAME_REQUEST_REPLY":
-                return askServerForGameRequestReply();
-            case "GET_REQUESTS":
-                return askServerForGameRequests();
-            case "GET_SHUFFLED_CARDS":
-                return askServerForGameRequestShuffledCards();
-            default:
-                break;
-        }
-        return null;
-    }
-
-    private ServerOperationResponse askServerForGameRequests() {
+    public ServerOperationResponse askServerForGameRequests() {
         String url = "player/requests?player_id=" + PlayerManager.getPlayerId();
         String response = requestManager.doGet(url);
         if(response != null && !response.equals("null")) {
@@ -64,7 +44,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         return null;
     }
 
-    private ServerOperationResponse askServerForGameRequestReply() {
+    public ServerOperationResponse askServerForGameRequestReply() {
         String url = "gameRequest/reply?game_request_id=" + getGameRequestId();
         String response = requestManager.doGet(url);
         if(response != null) {
@@ -76,7 +56,7 @@ public class GameRequestManager implements Callable<ServerOperationResponse> {
         return null;
     }
 
-    private ServerOperationResponse askServerForGameRequestShuffledCards() {
+    public ServerOperationResponse askServerForGameRequestShuffledCards() {
         String url = "gameRequest/shuffledCards?game_request_id=" + getGameRequestId();
         String response = requestManager.doGet(url);
         if(response != null) {

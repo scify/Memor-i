@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class PlayerManager  implements Callable<String> {
+public class PlayerManager {
 
-    public static final int MARK_PLAYER_ACTIVE_CALL_INTERVAL = 3;
+    public static final int MARK_PLAYER_ACTIVE_CALL_INTERVAL = 3000;
     private RequestManager requestManager;
 
     private static int playerId;
@@ -20,7 +20,6 @@ public class PlayerManager  implements Callable<String> {
     private static Player opponentPlayer;
     private MemoriConfiguration configuration = new MemoriConfiguration();
     public static boolean localPlayerIsInitiator = false;
-    private String callIdentifier;
     String gameIdentifier;
 
     public PlayerManager() {
@@ -28,14 +27,7 @@ public class PlayerManager  implements Callable<String> {
         gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
     }
 
-    public PlayerManager(String callIdentifier) {
-        requestManager = new RequestManager();
-        this.callIdentifier = callIdentifier;
-        gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
-    }
-
-
-    private String setPlayerOnline() {
+    public String setPlayerOnline() {
         String url = "player/setOnline";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
@@ -105,16 +97,5 @@ public class PlayerManager  implements Callable<String> {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
         return this.requestManager.doPost(url, urlParameters);
-    }
-
-    @Override
-    public String call() throws Exception {
-        switch (callIdentifier) {
-            case "PLAYER_ACTIVE":
-                return setPlayerOnline();
-            default:
-                break;
-        }
-        return null;
     }
 }

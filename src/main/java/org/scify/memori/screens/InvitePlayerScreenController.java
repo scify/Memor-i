@@ -3,7 +3,6 @@ package org.scify.memori.screens;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -18,7 +17,6 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
 
 import static javafx.scene.input.KeyCode.*;
 
@@ -50,13 +47,11 @@ public class InvitePlayerScreenController {
     private PlayerManager playerManager;
     private MemoriGameLauncher gameLauncher;
     private Player candidateOpponent;
-    private ScheduledExecutorService gameRequestsExecutorService = Executors.newScheduledThreadPool(1);
-    private ScheduledExecutorService setPlayerOnlineExecutorService = Executors.newScheduledThreadPool(1);
     private int gameLevelId;
-    private static boolean shouldQueryForRequests = true;
-    private static boolean shouldQueryForMarkingPlayerActive = true;
     private String miscellaneousSoundsBasePath;
     private Thread threadUI;
+    private Thread threadSetPlayerOnline;
+    private Thread threadQueryForGameRequests;
 
     public InvitePlayerScreenController() {
         MemoriConfiguration configuration = new MemoriConfiguration();
@@ -71,27 +66,25 @@ public class InvitePlayerScreenController {
         playerManager = new PlayerManager();
         sceneHandler.pushScene(userNameScreenScene);
         gameLauncher = new MemoriGameLauncher(sceneHandler);
-        shouldQueryForRequests = true;
-        shouldQueryForMarkingPlayerActive = true;
-        queryServerForGameRequestsThread();
-        setPlayerOnlineThread();
-        setPlayerAsNotInGameThread();
+//        queryServerForGameRequestsThread();
+//        setPlayerOnlineThread();
+//        setPlayerAsNotInGameThread();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
     }
 
     private void setPlayerOnlineThread() {
-        Thread thread = new Thread(() -> setPlayerOnline());
-        thread.start();
+        threadSetPlayerOnline = new Thread(() -> setPlayerOnline());
+        threadSetPlayerOnline.start();
     }
 
     private void setPlayerAsNotInGameThread() {
-        Thread thread = new Thread(() -> setPlayerNotInGame());
+        Thread thread = new Thread(() -> playerManager.setPlayerAsNotInGame());
         thread.start();
     }
 
     private void queryServerForGameRequestsThread() {
-        Thread thread = new Thread(() -> queryServerForGameRequests());
-        thread.start();
+        threadQueryForGameRequests = new Thread(() -> queryServerForGameRequests());
+        threadQueryForGameRequests.start();
     }
 
     @FXML
@@ -104,8 +97,8 @@ public class InvitePlayerScreenController {
     private void exitScreen() {
         audioEngine.pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();
-        shouldQueryForMarkingPlayerActive = false;
-        shouldQueryForRequests = false;
+        threadSetPlayerOnline.interrupt();
+        threadQueryForGameRequests.interrupt();
     }
 
     @FXML
@@ -127,7 +120,7 @@ public class InvitePlayerScreenController {
                     if(cleanString.equals(PlayerManager.getLocalPlayer().getName())) {
                         System.out.println("Same username");
                         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "cannot_invite_self.mp3", false);
-                        resetUIThread();
+                        resetUI();
                         setUserNameEmptyThread();
                     } else {
                         thread = new Thread(() -> getPlayerAvailability(finalCleanString));
@@ -144,8 +137,7 @@ public class InvitePlayerScreenController {
     }
 
     private void setUserNameEmptyThread() {
-        threadUI = new Thread(() -> username.setText(""));
-        threadUI.start();
+        Platform.runLater(() -> username.setText(""));
     }
 
     private void searchForRandomPlayer() {
@@ -202,18 +194,21 @@ public class InvitePlayerScreenController {
                     JsonObject parametersObject = (JsonObject) response.getParameters();
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
-                    Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι διαθέσιμος. Πάτησε SPACE για να συνεχίσεις."));
-                    Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false));
-                    thread.start();
+//                    threadUI = new Thread(() -> Platform.runLater(() -> {
+//                        invitationText.setText("Ο παίκτης είναι διαθέσιμος. Πάτησε SPACE για να συνεχίσεις.");
+//                        username.setDisable(true);
+//                    }));
+//                    threadUI.start();
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false);
                     promptToGoToLevelsPage(playerId);
-                    username.setDisable(true);
                 } else if(playerStatus.equals("player_not_available")) {
                     System.out.println("Player not available");
                     playerNotAvailable();
                 } else if(playerStatus.equals("player_in_game")) {
                     // player is online and playing this game, but plays another game
                     System.out.println("Player available but in other game");
-                    Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι σε παιχνίδι. Δοκίμασε αργότερα"));
+//                    threadUI = new Thread(() -> Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι σε παιχνίδι. Δοκίμασε αργότερα")));
+//                    threadUI.start();
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_in_game.mp3", false);
                 }
                 break;
@@ -235,37 +230,39 @@ public class InvitePlayerScreenController {
     }
 
     private void openRequestExistsFromOpponent() {
-        threadUI = new Thread(() -> invitationText.setText("Αυτός ο παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις."));
-        threadUI.start();
+//        threadUI = new Thread(() -> Platform.runLater(() ->invitationText.setText("Αυτός ο παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.")));
+//        threadUI.start();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited_by_opponent.mp3", false);
     }
 
     private void openRequestExistsFromRandomPlayer() {
-        threadUI = new Thread(() -> invitationText.setText("Ένας παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις."));
-        threadUI.start();
+//        threadUI = new Thread(() -> Platform.runLater(() ->invitationText.setText("Ένας παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις.")));
+//        threadUI.start();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited.mp3", false);
     }
 
     private void playerNotFound() {
-        threadUI = new Thread(() -> {
-            invitationText.setText("Αυτός ο παίκτης δεν βρέθηκε. Πάτησε SPACE για να παίξεις με τον υπολογιστή.");
-            username.setText("");
-        });
-        threadUI.start();
-        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_found_prompt_cpu.mp3", true);
+//        threadUI = new Thread(() -> {
+//            Platform.runLater(() -> {
+//                invitationText.setText("Αυτός ο παίκτης δεν βρέθηκε. Πάτησε SPACE για να παίξεις με τον υπολογιστή.");
+//                username.setText("");
+//            });
+//        });
+//        threadUI.start();
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_found_prompt_cpu.mp3", false);
         promptToPlayWithCPU();
     }
 
     private void playerNotAvailable() {
-        threadUI = new Thread(() -> invitationText.setText("Αυτός ο παίκτης δεν είναι διαθέσιμος. Πάτησε SPACE για να παίξεις με τυχαίο παίκτη."));
-        threadUI.start();
+//        threadUI = new Thread(() -> Platform.runLater(() ->invitationText.setText("Αυτός ο παίκτης δεν είναι διαθέσιμος. Πάτησε SPACE για να παίξεις με τυχαίο παίκτη.")));
+//        threadUI.start();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_available.mp3", false);
         promptToPlayWithCPU();
     }
 
     private void noAvailablePlayerFound() {
-        threadUI = new Thread(() -> invitationText.setText("Δεν βρέθηκε διαθέσιμος παίκτης. Πάτησε SPACE για να παίξεις με τον υπολογιστή."));
-        threadUI.start();
+//        threadUI = new Thread(() -> Platform.runLater(() ->invitationText.setText("Δεν βρέθηκε διαθέσιμος παίκτης. Πάτησε SPACE για να παίξεις με τον υπολογιστή.")));
+//        threadUI.start();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_player_available.mp3", false);
         promptToPlayWithCPU();
     }
@@ -276,8 +273,8 @@ public class InvitePlayerScreenController {
                 audioEngine.pauseCurrentlyPlayingAudios();
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
-                shouldQueryForRequests = false;
-                resetUIThread();
+                threadQueryForGameRequests.interrupt();
+                resetUI();
             }
         });
     }
@@ -285,43 +282,47 @@ public class InvitePlayerScreenController {
     private void promptToPlayWithCPU() {
         primaryScene.setOnKeyReleased(event -> {
             if (event.getCode() == SPACE) {
-                shouldQueryForRequests = false;
-                shouldQueryForMarkingPlayerActive = false;
+                threadQueryForGameRequests.interrupt();
+                threadSetPlayerOnline.interrupt();
                 audioEngine.pauseCurrentlyPlayingAudios();
                 new LevelsScreen(sceneHandler, GameType.VS_CPU);
-                resetUIThread();
+                resetUI();
             }
         });
     }
 
     private void queryServerForGameRequests() {
-        ServerOperationResponse serverResponse = null;
-        ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
-        while (serverResponse == null && shouldQueryForRequests) {
-            gameRequestsFuture = gameRequestsExecutorService.schedule(
-                    new GameRequestManager("GET_REQUESTS"), GameRequestManager.GAME_REQUESTS_CALL_INTERVAL, TimeUnit.SECONDS);
-            try {
-                serverResponse = gameRequestsFuture.get();
-                if(serverResponse != null) {
-                    JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
-                    int gameRequestId = parametersObject.get("game_request_id").getAsInt();
-                    GameRequestManager.setGameRequestId(gameRequestId);
-                    String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
-                    int initiatorId = parametersObject.get("initiator_id").getAsInt();
-                    gameLevelId = parametersObject.get("game_level_id").getAsInt();
-                    threadUI = new Thread(() -> {
-                        username.setDisable(true);
-                        invitationText.setText("Έχεις πρόσκληση από τον παίκτη " +initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
-                    });
-                    threadUI.start();
-                    candidateOpponent = new Player(initiatorUserName, initiatorId);
-                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
-
-                    Thread answerThread = new Thread(() -> answerToGameRequest());
-                    answerThread.start();
+        ServerOperationResponse serverResponse;
+        GameRequestManager gameRequestManager = new GameRequestManager();
+        while (true) {
+            serverResponse = gameRequestManager.askServerForGameRequests();
+            if(serverResponse != null) {
+                JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
+                int gameRequestId = parametersObject.get("game_request_id").getAsInt();
+                GameRequestManager.setGameRequestId(gameRequestId);
+                String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
+                int initiatorId = parametersObject.get("initiator_id").getAsInt();
+                gameLevelId = parametersObject.get("game_level_id").getAsInt();
+//                threadUI = new Thread(() -> {
+//                    Platform.runLater(() -> {
+//                        username.setDisable(true);
+//                        invitationText.setText("Έχεις πρόσκληση από τον παίκτη " + initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
+//                    });
+//                });
+//                threadUI.start();
+                candidateOpponent = new Player(initiatorUserName, initiatorId);
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
+                Thread.currentThread().interrupt();
+                Thread answerThread = new Thread(() -> answerToGameRequest());
+                answerThread.start();
+            } else {
+                try {
+                    Thread.sleep(GameRequestManager.GAME_REQUESTS_CALL_INTERVAL);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    break;
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -335,7 +336,7 @@ public class InvitePlayerScreenController {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false);
                 waitForResponseUIThread();
             } else if(event.getCode() == BACK_SPACE) {
-                resetUIThread();
+                resetUI();
                 Thread answerThread = new Thread(() ->  gameRequestManager.sendGameRequestAnswerToServer(false));
                 answerThread.start();
                 // re-check for requests
@@ -344,14 +345,8 @@ public class InvitePlayerScreenController {
         });
     }
 
-    private void resetUIThread() {
-        threadUI = new Thread(() -> resetUI());
-        threadUI.start();
-    }
-
     private void waitForResponseUIThread() {
-        threadUI = new Thread(() -> waitForResponseUI());
-        threadUI.start();
+        waitForResponseUI();
     }
 
     private void resetUI() {
@@ -369,55 +364,51 @@ public class InvitePlayerScreenController {
     }
 
     private void setPlayerOnline() {
-        ScheduledFuture<String> playerActiveFuture;
-        while(shouldQueryForMarkingPlayerActive) {
-            playerActiveFuture = setPlayerOnlineExecutorService.schedule(
-                    new PlayerManager("PLAYER_ACTIVE"), PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL, TimeUnit.SECONDS);
+        PlayerManager playerManager = new PlayerManager();
+        while(true) {
+            playerManager.setPlayerOnline();
             try {
-                String response = playerActiveFuture.get();
+                Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
-
     }
 
-    private void setPlayerNotInGame() {
-        String response = playerManager.setPlayerAsNotInGame();
-    }
 
     private void queryForGameRequestShuffledCards() {
-        ServerOperationResponse serverResponse = null;
+        ServerOperationResponse serverResponse;
         int timesCalled = 0;
-        while (serverResponse == null) {
+        while (true) {
             timesCalled ++;
-
-            ScheduledExecutorService scheduler = Executors
-                    .newScheduledThreadPool(1);
-            ScheduledFuture<ServerOperationResponse> future = scheduler.schedule(
-                    new GameRequestManager("GET_SHUFFLED_CARDS"), 0, TimeUnit.SECONDS);
-            try {
-                serverResponse = future.get();
-                if(serverResponse != null) {
-                    ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
-                    System.out.println("Got cards!");
-                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
-                }
-                if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
-                    audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
-                    cancelGameRequest();
+            serverResponse = gameRequestManager.askServerForGameRequestShuffledCards();
+            if(serverResponse != null) {
+                ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
+                System.out.println("Got cards!");
+                parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
+                Thread.currentThread().interrupt();
+                break;
+            } else {
+                try {
+                    Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                     break;
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+            }
+            if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
+                cancelGameRequest();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
     }
 
     private void cancelGameRequest() {
-        resetUIThread();
+        resetUI();
         Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
         cancelThread.start();
     }
@@ -434,7 +425,7 @@ public class InvitePlayerScreenController {
             CategorizedCard nextCard = memoriCardService.getCardFromLabelAndType(cardJsonObj.get("label").toString(), cardJsonObj.get("category").toString());
             cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
         }
-        resetUIThread();
+        resetUI();
         Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();
