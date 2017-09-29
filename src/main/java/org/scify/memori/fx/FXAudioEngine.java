@@ -26,6 +26,7 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 /**
@@ -39,7 +40,6 @@ public class FXAudioEngine implements AudioEngine{
     private String soundBasePath;
     private String numBasePath;
     private String letterBasePath;
-    private boolean playing;
     private ArrayList<AudioClip> playingAudios = new ArrayList<>();
     protected static ResourceLocator resourceLocator = new ResourceLocator();
 
@@ -100,13 +100,6 @@ public class FXAudioEngine implements AudioEngine{
     }
 
     /**
-     * Plays an appropriate sound associated with a failure Game Event
-     */
-//    public void playFailureSound() {
-//        pauseAndPlaySound(failureSound, false);
-//    }
-
-    /**
      * Plays a sound given a certain balance
      * @param balance the desired balance
      * @param soundFile the file name (path) of the audio clip
@@ -151,7 +144,6 @@ public class FXAudioEngine implements AudioEngine{
             return;
         }
         playingAudios.add(audioClip);
-        playing = true;
         if (isBlocking) {
             blockUIThread(audioClip);
         }

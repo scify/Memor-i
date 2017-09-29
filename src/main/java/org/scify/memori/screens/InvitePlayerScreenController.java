@@ -161,6 +161,7 @@ public class InvitePlayerScreenController {
                 // found a player
                 JsonObject parametersObject = (JsonObject) response.getParameters();
                 int playerId = parametersObject.get("player_id").getAsInt();
+                Platform.runLater(() -> invitationText.setText("Βρέθηκε διαθέσιμος παίκτης! Πάτησε SPACE για να συνεχίσεις."));
                 Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "random_player_found.mp3", false));
                 thread.start();
                 promptToGoToLevelsPage(playerId);

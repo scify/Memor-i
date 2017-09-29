@@ -89,10 +89,6 @@ public class MemoriGameState implements GameState {
                 Player onlinePlayer = PlayerManager.getOpponentPlayer();
                 players.add(onlinePlayer);
                 currentPlayer = PlayerManager.getStartingPlayer();
-                if(PlayerManager.localPlayerIsInitiator)
-                    PlayerManager.setStartingPlayer(player1);
-                else
-                    PlayerManager.setStartingPlayer(onlinePlayer);
             break;
         }
 

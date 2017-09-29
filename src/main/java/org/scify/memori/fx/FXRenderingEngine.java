@@ -696,6 +696,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             listIterator.remove();
                         }
                         break;
+                    case "NOT_YOUR_TURN":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "not_your_turn1.mp3");
+                            listIterator.remove();
+                        }
+                        break;
+                    case "YOUR_TURN":
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "your_turn.mp3", currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
                     default:
                         break;
                 }

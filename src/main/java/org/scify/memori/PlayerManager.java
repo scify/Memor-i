@@ -18,7 +18,6 @@ public class PlayerManager  implements Callable<String> {
     private static int playerId;
     private static Player localPlayer;
     private static Player opponentPlayer;
-    private static Player startingPlayer;
     private MemoriConfiguration configuration = new MemoriConfiguration();
     public static boolean localPlayerIsInitiator = false;
     private String callIdentifier;
@@ -47,10 +46,6 @@ public class PlayerManager  implements Callable<String> {
 
     public static void setLocalPlayer(Player localPlayer) {
         PlayerManager.localPlayer = localPlayer;
-    }
-
-    public static void setStartingPlayer(Player startingPlayer) {
-        PlayerManager.startingPlayer = startingPlayer;
     }
 
     public static Player getStartingPlayer() {

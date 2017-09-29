@@ -64,7 +64,6 @@ public class GameMovementManager {
                 String timestampStr = timestampObj.toString();
                 Long timestamp = Double.valueOf(Double.parseDouble(timestampStr)).longValue();
                 UserAction action = new UserAction(movement.get("actionType").toString(), movement.get("direction").toString(), timestamp);
-
                 return action;
             case ServerResponse.RESPONSE_ERROR:
                 // error

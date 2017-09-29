@@ -5,7 +5,8 @@ out
 src/test/
 push_to_testing.sh
 *.log
-*log.
+*log.1
+*.log.2
 *.log.lck
 additional_pack
 .user_data.properties

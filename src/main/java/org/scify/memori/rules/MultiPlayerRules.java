@@ -42,33 +42,36 @@ public class MultiPlayerRules extends MemoriRules {
         }
         if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent) && !gameInterrupted) {
             handleOpponentNextMove(gsCurrentState);
-
+            if(uaAction != null)
+                handleUserActionDuringOpponentTurn(uaAction, gsCurrentState);
         } else {
             opponentMoveFactory.updateFactoryComponents();
             if(uaAction != null) {
                 handleUserActionMultiPlayerGameEvents(uaAction, gsCurrentState, 0);
             }
         }
-
-
         if(isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             this.handleMultiPlayerFinishGameEvents(uaAction, gsCurrentState);
-        } else {
-            if(uaAction != null)
-                handleUserExitAction(uaAction, gsCurrentState);
         }
         return gsCurrentState;
     }
 
-    private void handleUserExitAction(UserAction uaAction, MemoriGameState gsCurrentState) {
+    private void handleUserActionDuringOpponentTurn(UserAction uaAction, MemoriGameState gsCurrentState) {
         if(uaAction.getActionType().equals("escape")) {
-            //exit current game
-            if(!gsCurrentState.isGameFinished()) {
-                gsCurrentState.gameInterrupted = true;
-            }
-            gsCurrentState.setGameFinished(true);
+            exitGame(gsCurrentState);
+        } else {
+            gsCurrentState.getEventQueue().add(new GameEvent("NOT_YOUR_TURN", null, 0, false));
         }
+    }
+
+
+    private void exitGame(MemoriGameState gsCurrentState) {
+        //exit current game
+        if(!gsCurrentState.isGameFinished()) {
+            gsCurrentState.gameInterrupted = true;
+        }
+        gsCurrentState.setGameFinished(true);
     }
 
     protected void handleMultiPlayerGameStartingGameEvents(MemoriGameState gsCurrentState) throws Exception {
@@ -90,6 +93,7 @@ public class MultiPlayerRules extends MemoriRules {
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_CPU_STARTED"));
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION", null, new Date().getTime(), true));
             gsCurrentState.getEventQueue().add(new GameEvent("CPU_INTRO_MESSAGE", null, new Date().getTime() + 1000, true));
+            gsCurrentState.getEventQueue().add(new GameEvent("YOUR_TURN", null, new Date().getTime() + 2000, false));
         }
     }
 
@@ -133,6 +137,8 @@ public class MultiPlayerRules extends MemoriRules {
         } else if(uaAction.getActionType().equals("opponent_movement")) {
             if(gsCurrentState.getCurrentPlayer().equals(PlayerManager.getOpponentPlayer()))
                 gsCurrentState.getEventQueue().add(new GameEvent("movement", uaAction.getCoords(), new Date().getTime() + delay, true));
+        } else if(uaAction.getActionType().equals("escape")) {
+            exitGame(gsCurrentState);
         }
     }
 
