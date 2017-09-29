@@ -296,8 +296,9 @@ public class InvitePlayerScreenController {
 
     private void queryServerForGameRequests() {
         ServerOperationResponse serverResponse = null;
+        ScheduledFuture<ServerOperationResponse> gameRequestsFuture;
         while (serverResponse == null && shouldQueryForRequests) {
-            ScheduledFuture<ServerOperationResponse> gameRequestsFuture = gameRequestsExecutorService.schedule(
+            gameRequestsFuture = gameRequestsExecutorService.schedule(
                     new GameRequestManager("GET_REQUESTS"), GameRequestManager.GAME_REQUESTS_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
                 serverResponse = gameRequestsFuture.get();
@@ -308,8 +309,10 @@ public class InvitePlayerScreenController {
                     String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
                     int initiatorId = parametersObject.get("initiator_id").getAsInt();
                     gameLevelId = parametersObject.get("game_level_id").getAsInt();
-                    invitationText.setText("Έχεις πρόσκληση από τον παίκτη " +initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
-                    threadUI = new Thread(() -> username.setDisable(true));
+                    threadUI = new Thread(() -> {
+                        username.setDisable(true);
+                        invitationText.setText("Έχεις πρόσκληση από τον παίκτη " +initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
+                    });
                     threadUI.start();
                     candidateOpponent = new Player(initiatorUserName, initiatorId);
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
@@ -366,8 +369,9 @@ public class InvitePlayerScreenController {
     }
 
     private void setPlayerOnline() {
+        ScheduledFuture<String> playerActiveFuture;
         while(shouldQueryForMarkingPlayerActive) {
-            ScheduledFuture<String> playerActiveFuture = setPlayerOnlineExecutorService.schedule(
+            playerActiveFuture = setPlayerOnlineExecutorService.schedule(
                     new PlayerManager("PLAYER_ACTIVE"), PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL, TimeUnit.SECONDS);
             try {
                 String response = playerActiveFuture.get();
