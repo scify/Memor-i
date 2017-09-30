@@ -86,9 +86,15 @@ StackPane {
 }
 
 .textLabel {
-    -fx-fill: white;
-    -fx-stroke: black;
+    -fx-padding: 10px;
+    -fx-pref-height: 50px;
+    -fx-font-family: Ubuntu;
+    -fx-font-size: 250%;
+    -fx-text-fill: white;
+    -fx-stroke: white;
     -fx-stroke-width: 2;
+    -fx-pref-width: 100%;
+    -fx-background-color: transparent;
 }
 
 .largeButton {

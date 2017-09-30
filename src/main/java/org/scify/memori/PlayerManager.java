@@ -8,7 +8,6 @@ import org.scify.memori.network.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class PlayerManager {
 
@@ -18,12 +17,12 @@ public class PlayerManager {
     private static int playerId;
     private static Player localPlayer;
     private static Player opponentPlayer;
-    private MemoriConfiguration configuration = new MemoriConfiguration();
     public static boolean localPlayerIsInitiator = false;
-    String gameIdentifier;
+    private String gameIdentifier;
 
     public PlayerManager() {
         requestManager = new RequestManager();
+        MemoriConfiguration configuration = new MemoriConfiguration();
         gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
     }
 

@@ -24,9 +24,6 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 public class RequestManager {
 
     public static int MAX_REQUEST_TRIES = 80;
-    public RequestManager() {
-
-    }
 
     public String doPost(String urlEndpoint, List<NameValuePair> params) {
         MemoriConfiguration configuration = new MemoriConfiguration();

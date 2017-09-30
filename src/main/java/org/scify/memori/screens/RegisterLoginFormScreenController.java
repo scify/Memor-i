@@ -3,11 +3,10 @@ package org.scify.memori.screens;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Text;
 import org.json.JSONObject;
 import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
@@ -18,21 +17,19 @@ import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.network.ServerResponse;
 
-import java.net.URL;
 import java.text.Normalizer;
-import java.util.ResourceBundle;
 
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
 
-public class RegisterLoginFormScreenController implements Initializable {
+public class RegisterLoginFormScreenController {
 
     @FXML
     TextField username;
     @FXML
     TextField password;
     @FXML
-    Text infoText;
+    Button infoText;
     private String miscellaneousSoundsBasePath;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
@@ -44,10 +41,6 @@ public class RegisterLoginFormScreenController implements Initializable {
     public RegisterLoginFormScreenController() {
         MemoriConfiguration configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene, boolean isRegister) {
@@ -133,24 +126,18 @@ public class RegisterLoginFormScreenController implements Initializable {
 
     private void parseServerResponse(String serverResponse) {
         Gson g = new Gson();
-        System.out.println("1");
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
-        System.out.println("code: "+ code );
         switch (code) {
             case ServerResponse.RESPONSE_SUCCESSFUL:
-                System.out.println("2");
-                // New player created
+                // New player created or player is logged in
                 JSONObject responseObj = new JSONObject(serverResponse);
                 JSONObject paramsObj = responseObj.getJSONObject("parameters");
-                System.out.println("3");
                 int newPlayerId = paramsObj.getInt("player_id");
-//                PlayerManager.setPlayerId(newPlayerId);
-//                PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
+                PlayerManager.setPlayerId(newPlayerId);
+                PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
                 audioEngine.pauseCurrentlyPlayingAudios();
-                System.out.println("4");
-                //InvitePlayerScreen invitePlayerScreen = new InvitePlayerScreen(sceneHandler);
-                System.out.println("5");
+                InvitePlayerScreen invitePlayerScreen = new InvitePlayerScreen(sceneHandler);
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Player with username exists
