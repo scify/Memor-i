@@ -399,19 +399,22 @@ public class InvitePlayerScreenController  implements Initializable {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("exception when querying for shuffled cards");
                 e.printStackTrace();
                 shouldContinue = false;
-                Thread.currentThread().interrupt();
+                opponentCancelledGame();
             }
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
                 shouldContinue = false;
-                audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
-                cancelGameRequest();
-                threadQueryForShuffleCards.interrupt();
+                opponentCancelledGame();
                 break;
             }
         }
+    }
+
+    private void opponentCancelledGame() {
+        audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
+        cancelGameRequest();
+        threadQueryForShuffleCards.interrupt();
     }
 
     private void cancelGameRequest() {
