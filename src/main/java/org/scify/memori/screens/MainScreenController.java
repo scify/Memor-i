@@ -224,10 +224,7 @@ public class MainScreenController implements Initializable {
         audioEngine.pauseCurrentlyPlayingAudios();
         if (evt.getCode() == SPACE) {
             if(RequestManager.networkAvailable()) {
-                if(PlayerManager.getLocalPlayer() == null)
-                    new RegisterOrLoginScreen(sceneHandler);
-                else
-                    new InvitePlayerScreen(sceneHandler);
+                new RegisterOrLoginScreen(sceneHandler);
             }
             else {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_network.mp3", false);
