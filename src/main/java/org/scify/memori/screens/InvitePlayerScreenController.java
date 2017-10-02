@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import com.google.gson.JsonObject;
@@ -37,7 +38,7 @@ public class InvitePlayerScreenController  implements Initializable {
     @FXML
     TextField username;
     @FXML
-    Button invitationText;
+    Label invitationText;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
@@ -49,9 +50,9 @@ public class InvitePlayerScreenController  implements Initializable {
     private String miscellaneousSoundsBasePath;
     private Thread threadSetPlayerOnline;
     private Thread threadQueryForGameRequests;
+    private Thread threadQueryForShuffleCards;
 
     public InvitePlayerScreenController() {
-        System.out.println("controller 1");
         MemoriConfiguration configuration = new MemoriConfiguration();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
@@ -72,6 +73,7 @@ public class InvitePlayerScreenController  implements Initializable {
         setPlayerOnlineThread();
         setPlayerAsNotInGameThread();
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "invite_player_screen_welcome.mp3", false);
+        resetUI();
     }
 
     private void setPlayerOnlineThread() {
@@ -287,9 +289,12 @@ public class InvitePlayerScreenController  implements Initializable {
     private void queryServerForGameRequests() {
         ServerOperationResponse serverResponse;
         GameRequestManager gameRequestManager = new GameRequestManager();
-        while (true) {
+        boolean shouldContinue = true;
+        while (shouldContinue) {
             serverResponse = gameRequestManager.askServerForGameRequests();
             if(serverResponse != null) {
+                shouldContinue = false;
+                threadQueryForGameRequests.interrupt();
                 JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
                 int gameRequestId = parametersObject.get("game_request_id").getAsInt();
                 GameRequestManager.setGameRequestId(gameRequestId);
@@ -301,8 +306,8 @@ public class InvitePlayerScreenController  implements Initializable {
                     invitationText.setText("Έχεις πρόσκληση από τον παίκτη " + initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
                 });
                 candidateOpponent = new Player(initiatorUserName, initiatorId);
+                PlayerManager.setOpponentPlayer(candidateOpponent);
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
-                Thread.currentThread().interrupt();
                 Thread answerThread = new Thread(() -> answerToGameRequest());
                 answerThread.start();
             } else {
@@ -321,8 +326,8 @@ public class InvitePlayerScreenController  implements Initializable {
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 gameRequestManager.sendGameRequestAnswerToServer(true);
-                Thread queryThread = new Thread(() ->  queryForGameRequestShuffledCards());
-                queryThread.start();
+                threadQueryForShuffleCards = new Thread(() ->  queryForGameRequestShuffledCards());
+                threadQueryForShuffleCards.start();
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false);
                 waitForResponseUIThread();
             } else if(event.getCode() == BACK_SPACE) {
@@ -369,30 +374,41 @@ public class InvitePlayerScreenController  implements Initializable {
 
 
     private void queryForGameRequestShuffledCards() {
-        ServerOperationResponse serverResponse;
+        ServerOperationResponse serverResponse = null;
         int timesCalled = 0;
-        while (true) {
+        boolean shouldContinue = true;
+        while (shouldContinue) {
             timesCalled ++;
-            serverResponse = gameRequestManager.askServerForGameRequestShuffledCards();
-            if(serverResponse != null) {
-                ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
-                System.out.println("Got cards!");
-                parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
-                Thread.currentThread().interrupt();
-                break;
-            } else {
-                try {
-                    Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
+            try {
+                serverResponse = gameRequestManager.askServerForGameRequestShuffledCards();
+                if(serverResponse != null) {
+                    shouldContinue = false;
+                    threadQueryForShuffleCards.interrupt();
+                    ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
+                    System.out.println("Got cards!");
+                    parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
                     break;
+                } else {
+                    try {
+                        Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                        shouldContinue = false;
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("exception when querying for shuffled cards");
+                e.printStackTrace();
+                shouldContinue = false;
+                Thread.currentThread().interrupt();
             }
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                shouldContinue = false;
                 audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
                 cancelGameRequest();
-                Thread.currentThread().interrupt();
+                threadQueryForShuffleCards.interrupt();
                 break;
             }
         }

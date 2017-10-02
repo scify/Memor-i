@@ -196,9 +196,15 @@ public class LevelsScreenController {
     private void queryServerForGameRequestReply(MemoriGameLevel gameLevel) {
         ServerOperationResponse serverOperationResponse = null;
         int timesCalled = 0;
-        while (true) {
+        boolean shouldContinue = true;
+        while (shouldContinue) {
             timesCalled ++;
-            serverOperationResponse = gameRequestManager.askServerForGameRequestReply();
+            try {
+                serverOperationResponse = gameRequestManager.askServerForGameRequestReply();
+            } catch (Exception e) {
+                shouldContinue = false;
+                Thread.currentThread().interrupt();
+            }
             if(serverOperationResponse != null) {
                 // we got a reply
                 if(serverOperationResponse.getMessage().equals("accepted")) {
@@ -211,9 +217,10 @@ public class LevelsScreenController {
                     Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                     voiceThread.start();
                     promptToPlayWithCPU();
-                    Thread.currentThread().interrupt();
                     break;
                 }
+                shouldContinue = false;
+                Thread.currentThread().interrupt();
             } else {
                 try {
                     Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
@@ -227,6 +234,7 @@ public class LevelsScreenController {
                 Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                 voiceThread.start();
                 cancelGameRequest();
+                shouldContinue = false;
                 Thread.currentThread().interrupt();
                 break;
             }

@@ -86,6 +86,8 @@ StackPane {
 }
 
 .textLabel {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
     -fx-padding: 10px;
     -fx-pref-height: 50px;
     -fx-font-family: Ubuntu;
@@ -93,7 +95,7 @@ StackPane {
     -fx-text-fill: white;
     -fx-stroke: white;
     -fx-stroke-width: 2;
-    -fx-pref-width: 100%;
+    -fx-pref-width: 1600px;
     -fx-background-color: transparent;
 }
 

@@ -44,8 +44,8 @@ public class GameRequestManager {
         return null;
     }
 
-    public ServerOperationResponse askServerForGameRequestReply() {
-        String url = "gameRequest/reply?game_request_id=" + getGameRequestId();
+    public ServerOperationResponse askServerForGameRequestReply() throws Exception{
+        String url = "gameRequest/reply?game_request_id=" + getGameRequestId() + "&opponent_id=" + String.valueOf(PlayerManager.getOpponentPlayer().getId());
         String response = requestManager.doGet(url);
         if(response != null) {
             ServerOperationResponse serverOperationResponse = parseGameRequestResponse(response);
@@ -56,8 +56,9 @@ public class GameRequestManager {
         return null;
     }
 
-    public ServerOperationResponse askServerForGameRequestShuffledCards() {
-        String url = "gameRequest/shuffledCards?game_request_id=" + getGameRequestId();
+    public ServerOperationResponse askServerForGameRequestShuffledCards() throws Exception{
+        String url = "gameRequest/shuffledCards?game_request_id=" + getGameRequestId() + "&opponent_id=" + String.valueOf(PlayerManager.getOpponentPlayer().getId());
+        System.out.println("opponent id: " + String.valueOf(PlayerManager.getOpponentPlayer().getId()));
         String response = requestManager.doGet(url);
         if(response != null) {
             ServerOperationResponse serverOperationResponse = parseGameRequestResponse(response);
@@ -92,7 +93,7 @@ public class GameRequestManager {
         }
     }
 
-    private ServerOperationResponse parseGameRequestResponse(String serverResponse) {
+    private ServerOperationResponse parseGameRequestResponse(String serverResponse) throws Exception {
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();
@@ -100,6 +101,10 @@ public class GameRequestManager {
             case ServerResponse.RESPONSE_SUCCESSFUL:
                 // game request was either accepted or rejected
                 return response;
+            case ServerResponse.OPPONENT_OFFLINE:
+                // opponent went offline.
+                // throw an Exception to let rules know that the game Ended.
+                throw new Exception("Opponent offline!");
             default:
                 return null;
         }

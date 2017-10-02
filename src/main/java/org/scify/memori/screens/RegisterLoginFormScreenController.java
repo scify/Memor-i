@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class RegisterLoginFormScreenController {
     @FXML
     TextField password;
     @FXML
-    Button infoText;
+    Label infoText;
     private String miscellaneousSoundsBasePath;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private FXAudioEngine audioEngine = new FXAudioEngine();
