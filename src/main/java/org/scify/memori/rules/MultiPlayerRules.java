@@ -308,7 +308,6 @@ public class MultiPlayerRules extends MemoriRules {
 
     private void gameWasTieGameEvents(MemoriGameState gsCurrentState) {
         System.err.println("Game was a tie!");
-        // TODO game events for tie with CPU
         gsCurrentState.getEventQueue().add(new GameEvent("GAME_TIE", null, new Date().getTime() + 7500, true));
     }
 
@@ -318,7 +317,6 @@ public class MultiPlayerRules extends MemoriRules {
         if(PlayerManager.getOpponentPlayer().equals(winnerPlayer))
             localPlayerWon = false;
         if(gameType.equals(GameType.VS_CPU)) {
-            // TODO game events for tie with CPU
             if(localPlayerWon) {
                 System.err.println("You won!");
                 gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_CPU", null, new Date().getTime() + 7500, true));
@@ -327,7 +325,6 @@ public class MultiPlayerRules extends MemoriRules {
                 gsCurrentState.getEventQueue().add(new GameEvent("GAME_LOST_VS_CPU", null, new Date().getTime() + 7500, true));
             }
         } else {
-            // TODO game events for tie with other player
             if(localPlayerWon) {
                 System.err.println("You won!");
                 gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_PLAYER", null, new Date().getTime() + 7500, true));
