@@ -6,8 +6,8 @@
 <?import javafx.scene.image.Image?>
 <?import java.net.URL?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.RegisterLoginFormScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
@@ -28,7 +28,7 @@
             <Label contentDisplay="CENTER" styleClass="textLabel" text="%username"/>
             <TextField styleClass="optionButton,textField" onKeyPressed="#submitUserName" fx:id="username"/>
             <Label contentDisplay="CENTER" styleClass="textLabel" text="%password"/>
-            <TextField styleClass="optionButton,textField" onKeyPressed="#submitPassword" fx:id="password"/>
+            <PasswordField styleClass="optionButton,textField" onKeyPressed="#submitPassword" fx:id="password"/>
             <Label contentDisplay="CENTER" styleClass="textLabel, invitationText" fx:id="infoText"/>
         </VBox>
     </VBox>
