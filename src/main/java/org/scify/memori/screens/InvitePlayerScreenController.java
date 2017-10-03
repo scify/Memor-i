@@ -272,6 +272,7 @@ public class InvitePlayerScreenController  implements Initializable {
                 LevelsScreen levelsScreen = new LevelsScreen(sceneHandler, GameType.VS_PLAYER);
                 levelsScreen.setOpponentId(opponentId);
                 threadQueryForGameRequests.interrupt();
+                threadSetPlayerOnline.interrupt();
                 resetUI();
             }
         });
@@ -364,16 +365,17 @@ public class InvitePlayerScreenController  implements Initializable {
     private void setPlayerOnline() {
         PlayerManager playerManager = new PlayerManager();
         while(true) {
+            System.out.println("setPlayerOnline from invite screen");
             playerManager.setPlayerOnline();
             try {
                 Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
             } catch (InterruptedException e) {
+                System.err.println("setPlayerOnline thread interrupted");
                 Thread.currentThread().interrupt();
                 break;
             }
         }
     }
-
 
     private void queryForGameRequestShuffledCards() {
         ServerOperationResponse serverResponse;
@@ -439,6 +441,7 @@ public class InvitePlayerScreenController  implements Initializable {
             cardsWithPositions.put(nextCard, new Point2D.Double(Double.parseDouble(cardJsonObj.get("xPos").toString()), Double.parseDouble(cardJsonObj.get("yPos").toString())));
         }
         resetUI();
+        threadSetPlayerOnline.interrupt();
         Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();

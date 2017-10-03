@@ -117,6 +117,11 @@ public class CPUMoveFactory implements Observer, MoveFactory {
         return 1000;
     }
 
+    @Override
+    public void terminateFactoryComponents() {
+
+    }
+
     private boolean candidateTileCombinationVisited(Point2D candidateTilePosition) {
         if(visitedTilesPositionsForCurrTurn.isEmpty())
             return false;

@@ -15,10 +15,31 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     Queue<UserAction> opponentActions;
     GameMovementManager gameMovementManager;
     Thread sendUserMovementsToServerThread;
+    private Thread threadSetPlayerOnline;
 
     public OnlineMoveFactory() {
         opponentActions = new LinkedList<>();
         gameMovementManager = new GameMovementManager();
+        setPlayerOnlineThread();
+    }
+
+    private void setPlayerOnlineThread() {
+        threadSetPlayerOnline = new Thread(() -> setPlayerOnline());
+        threadSetPlayerOnline.start();
+    }
+
+    private void setPlayerOnline() {
+        PlayerManager playerManager = new PlayerManager();
+        while(true) {
+            System.out.println("setPlayerOnline from rules");
+            playerManager.setPlayerOnline();
+            try {
+                Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 
     @Override
@@ -55,6 +76,11 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     @Override
     public int getMovementDelay() {
         return 0;
+    }
+
+    @Override
+    public void terminateFactoryComponents() {
+        threadSetPlayerOnline.interrupt();
     }
 
     private int timesCalled = 0;

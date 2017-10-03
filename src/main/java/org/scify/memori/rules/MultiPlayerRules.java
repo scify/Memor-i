@@ -271,6 +271,7 @@ public class MultiPlayerRules extends MemoriRules {
             gsCurrentState.getEventQueue().add(new GameEvent("PLAYER_ABANDONED", null, new Date().getTime() + 1000, true));
             System.err.println("You won!");
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_WON_VS_PLAYER", null, new Date().getTime() + 2000, true));
+            opponentMoveFactory.terminateFactoryComponents();
         }
         return false;
     }
@@ -298,6 +299,7 @@ public class MultiPlayerRules extends MemoriRules {
             GameRequestManager gameRequestManager = new GameRequestManager();
             gameRequestManager.endGame();
             multiPlayerGameEndUserActions(gsCurrentState);
+            opponentMoveFactory.terminateFactoryComponents();
         } else {
             if(gameType.equals(GameType.VS_CPU))
                 super.handleLevelFinishGameEvents(userAction, gsCurrentState);

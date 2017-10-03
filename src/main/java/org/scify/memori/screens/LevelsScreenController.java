@@ -36,11 +36,11 @@ public class LevelsScreenController {
     private int opponentId;
     private GameRequestManager gameRequestManager = new GameRequestManager();
     private MemoriGameLauncher gameLauncher;
-    private Text2Speech text2Speech = new Text2Speech();
     private GameType gameType;
     private String miscellaneousSoundsBasePath;
     private MemoriConfiguration configuration;
     private int currentGameRequestId = 0;
+    private Thread threadSetPlayerOnline;
     @FXML
     Button messageText;
     @FXML
@@ -66,7 +66,27 @@ public class LevelsScreenController {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "levels_screen_welcome.mp3", false);
             }
         });
+        setPlayerOnlineThread();
+    }
 
+    private void setPlayerOnlineThread() {
+        threadSetPlayerOnline = new Thread(() -> setPlayerOnline());
+        threadSetPlayerOnline.start();
+    }
+
+    private void setPlayerOnline() {
+        PlayerManager playerManager = new PlayerManager();
+        while(true) {
+            System.out.println("setPlayerOnline from levels screen");
+            playerManager.setPlayerOnline();
+            try {
+                Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
+            } catch (InterruptedException e) {
+                System.err.println("setPlayerOnline thread interrupted");
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 
     /**
@@ -106,7 +126,12 @@ public class LevelsScreenController {
         if(currentGameRequestId != 0)
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popScene();
+        if(gameType.equals(GameType.VS_PLAYER)) {
+            sceneHandler.simplePopScene();
+            new InvitePlayerScreen(sceneHandler);
+        } else {
+            sceneHandler.popScene();
+        }
     }
 
     private Button btnClicked;
@@ -281,6 +306,7 @@ public class LevelsScreenController {
             if(event.getCode() == ENTER) {
                 PlayerManager.localPlayerIsInitiator = true;
                 audioEngine.pauseCurrentlyPlayingAudios();
+                threadSetPlayerOnline.interrupt();
                 Thread thread = new Thread(() -> gameLauncher.startPvPGame(gameLevel));
                 thread.start();
             }
