@@ -2,6 +2,7 @@ package org.scify.memori;
 
 import com.google.gson.*;
 import org.scify.memori.interfaces.MoveFactory;
+import org.scify.memori.interfaces.Player;
 import org.scify.memori.interfaces.UserAction;
 import org.scify.memori.network.GameMovementManager;
 import org.scify.memori.rules.RuleObserverObject;
@@ -13,6 +14,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
 
     Queue<UserAction> opponentActions;
     GameMovementManager gameMovementManager;
+    Thread sendUserMovementsToServerThread;
 
     public OnlineMoveFactory() {
         opponentActions = new LinkedList<>();
@@ -82,7 +84,8 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         String ruleObserverCode = ruleObserverObject.code;
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
             UserAction userAction = (UserAction) ruleObserverObject.parameters;
-            String serverResponse = sendUserMovementToServer(packUserAction(userAction));
+            sendUserMovementsToServerThread = new Thread(() ->sendUserMovementToServer(packUserAction(userAction)));
+            sendUserMovementsToServerThread.start();
         }
     }
 
