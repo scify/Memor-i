@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -145,12 +144,14 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void searchForRandomPlayer() {
+        waitForResponseUI();
         String serverResponse = playerManager.searchForRandomPlayer();
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         if(!response.getParameters().equals(""))
             response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
+        resetUI();
         switch (code) {
             case ServerResponse.RESPONSE_SUCCESSFUL:
                 // found a player
@@ -181,6 +182,7 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void getPlayerAvailability(String playerUserName) {
+        waitForResponseUI();
         String serverResponse = playerManager.getPlayerAvailability(playerUserName);
         parsePlayerAvailabilityResponse(serverResponse);
     }
@@ -191,6 +193,7 @@ public class InvitePlayerScreenController  implements Initializable {
         if(!response.getParameters().equals(""))
             response.setParameters(g.toJsonTree(response.getParameters()).getAsJsonObject());
         int code = response.getCode();
+        resetUI();
         switch (code) {
             case ServerResponse.RESPONSE_SUCCESSFUL:
                 String playerStatus = response.getMessage();
@@ -294,32 +297,35 @@ public class InvitePlayerScreenController  implements Initializable {
             serverResponse = gameRequestManager.askServerForGameRequests();
             if(serverResponse != null) {
                 shouldContinue = false;
-                threadQueryForGameRequests.interrupt();
-                JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
-                int gameRequestId = parametersObject.get("game_request_id").getAsInt();
-                GameRequestManager.setGameRequestId(gameRequestId);
-                String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
-                int initiatorId = parametersObject.get("initiator_id").getAsInt();
-                gameLevelId = parametersObject.get("game_level_id").getAsInt();
-                Platform.runLater(() -> {
-                    username.setDisable(true);
-                    invitationText.setText("Έχεις πρόσκληση από τον παίκτη " + initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
-                });
-                candidateOpponent = new Player(initiatorUserName, initiatorId);
-                PlayerManager.setOpponentPlayer(candidateOpponent);
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
+                parseGameRequestJSONResponse(serverResponse);
                 Thread answerThread = new Thread(() -> answerToGameRequest());
                 answerThread.start();
             } else {
                 try {
                     Thread.sleep(GameRequestManager.GAME_REQUESTS_CALL_INTERVAL);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.err.println("queryServerForGameRequests thread was interrupted");
                     Thread.currentThread().interrupt();
                     break;
                 }
             }
         }
+    }
+
+    private void parseGameRequestJSONResponse(ServerOperationResponse serverResponse) {
+        JsonObject parametersObject = (JsonObject) serverResponse.getParameters();
+        int gameRequestId = parametersObject.get("game_request_id").getAsInt();
+        int initiatorId = parametersObject.get("initiator_id").getAsInt();
+        String initiatorUserName = parametersObject.get("initiator_user_name").getAsString();
+        gameLevelId = parametersObject.get("game_level_id").getAsInt();
+        candidateOpponent = new Player(initiatorUserName, initiatorId);
+        PlayerManager.setOpponentPlayer(candidateOpponent);
+        GameRequestManager.setGameRequestId(gameRequestId);
+        Platform.runLater(() -> {
+            username.setDisable(true);
+            invitationText.setText("Έχεις πρόσκληση από τον παίκτη " + initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
+        });
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
     }
 
     private void answerToGameRequest() {
@@ -329,7 +335,7 @@ public class InvitePlayerScreenController  implements Initializable {
                 threadQueryForShuffleCards = new Thread(() ->  queryForGameRequestShuffledCards());
                 threadQueryForShuffleCards.start();
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "game_getting_ready.mp3", false);
-                waitForResponseUIThread();
+                waitForResponseUI();
             } else if(event.getCode() == BACK_SPACE) {
                 resetUI();
                 Thread answerThread = new Thread(() ->  gameRequestManager.sendGameRequestAnswerToServer(false));
@@ -338,10 +344,6 @@ public class InvitePlayerScreenController  implements Initializable {
                 queryServerForGameRequestsThread();
             }
         });
-    }
-
-    private void waitForResponseUIThread() {
-        waitForResponseUI();
     }
 
     private void resetUI() {
@@ -374,16 +376,17 @@ public class InvitePlayerScreenController  implements Initializable {
 
 
     private void queryForGameRequestShuffledCards() {
-        ServerOperationResponse serverResponse = null;
+        ServerOperationResponse serverResponse;
         int timesCalled = 0;
         boolean shouldContinue = true;
         while (shouldContinue) {
+            System.out.println("queryForGameRequestShuffledCards loop");
             timesCalled ++;
             try {
                 serverResponse = gameRequestManager.askServerForGameRequestShuffledCards();
                 if(serverResponse != null) {
+                    // if we got response from the server, stop loop
                     shouldContinue = false;
-                    threadQueryForShuffleCards.interrupt();
                     ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
                     System.out.println("Got cards!");
                     parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
@@ -392,7 +395,7 @@ public class InvitePlayerScreenController  implements Initializable {
                     try {
                         Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.err.println("queryForGameRequestShuffledCards was interrupted");
                         Thread.currentThread().interrupt();
                         shouldContinue = false;
                         break;
@@ -401,17 +404,17 @@ public class InvitePlayerScreenController  implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
                 shouldContinue = false;
-                opponentCancelledGame();
+                opponentCanceledGame();
             }
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
                 shouldContinue = false;
-                opponentCancelledGame();
+                opponentCanceledGame();
                 break;
             }
         }
     }
 
-    private void opponentCancelledGame() {
+    private void opponentCanceledGame() {
         audioEngine.playSound(this.miscellaneousSoundsBasePath + "player_cancelled_game.mp3", false);
         cancelGameRequest();
         threadQueryForShuffleCards.interrupt();
