@@ -89,6 +89,7 @@ public class FXSceneHandler {
      */
     public Scene popToScene(Scene scene) {
         List<Scene> eventsList = Collections.synchronizedList(allScenes);
+        Collections.reverse(eventsList);
         ListIterator<Scene> listIterator = eventsList.listIterator();
         while (listIterator.hasNext()) {
            Scene currScene = listIterator.next();
