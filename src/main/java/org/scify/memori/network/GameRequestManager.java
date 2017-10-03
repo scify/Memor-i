@@ -62,9 +62,7 @@ public class GameRequestManager {
         String response = requestManager.doGet(url);
         if(response != null) {
             ServerOperationResponse serverOperationResponse = parseGameRequestResponse(response);
-            if(serverOperationResponse != null) {
-                return serverOperationResponse;
-            }
+            return serverOperationResponse;
         }
         return null;
     }

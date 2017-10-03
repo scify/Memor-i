@@ -47,7 +47,7 @@ public class RequestManager {
             BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));
             StringBuffer result = new StringBuffer();
-            String line = "";
+            String line;
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
