@@ -22,8 +22,7 @@ public class MemoriCardService {
     private List<Card> cards = new ArrayList<>();
 
     public List<Card> getMemoriCards(int numOfCards) {
-        cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
-        return shuffleCards(cards);
+        return shuffleCards(this.cardDBHandlerJSON.getCardsFromDB(numOfCards));
     }
 
     public List<Card> getAllCards() {
