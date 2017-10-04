@@ -32,5 +32,6 @@ public class CategorizedCard extends Card{
         super(label, images, sounds, descriptionSound, descriptionSoundProbability);
         this.category = category;
         this.equivalenceCardSetHashCode = equivalenceCardSetHashCode;
+        this.button.setId(label + "_" + category);
     }
 }

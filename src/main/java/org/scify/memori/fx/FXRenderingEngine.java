@@ -286,7 +286,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                             movementSound((int) coords.getX(), (int) coords.getY());
                             Platform.runLater(() -> {
                                 focusOnTile((int) coords.getX(), (int) coords.getY());
-                                System.out.println("now at: " + coords.getX() + "," + coords.getY());
+                                //System.out.println("now at: " + coords.getX() + "," + coords.getY());
                             });
                             listIterator.remove();
                         }

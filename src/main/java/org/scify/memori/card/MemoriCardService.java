@@ -16,6 +16,7 @@ public class MemoriCardService {
     protected CardDBHandlerJSON cardDBHandlerJSON;
     public MemoriCardService() {
         this.cardDBHandlerJSON = new CardDBHandlerJSON();
+        cards = getAllCards();
     }
 
     private List<Card> cards = new ArrayList<>();
@@ -30,9 +31,7 @@ public class MemoriCardService {
           The number of cards we need depends on the level (number of rows and columns)
           divided by the number of the card tuple we want to form (2-card patterns, 3-card patterns, etc)
          */
-        List<Card> cards = this.cardDBHandlerJSON.getCardsFromDB(this.cardDBHandlerJSON.getNumOfCardsInDB());
-
-        return cards;
+        return this.cardDBHandlerJSON.getCardsFromDB(this.cardDBHandlerJSON.getNumOfCardsInDB());
     }
 
     public int getNumberOfSets() {
@@ -76,7 +75,6 @@ public class MemoriCardService {
     }
 
     public CategorizedCard getCardFromLabelAndType(String cardLabel, String cardCategory) {
-        cards = getAllCards();
         for(Card card: cards) {
             CategorizedCard categorizedCard = (CategorizedCard) card;
             if(categorizedCard.getLabel().equals(cardLabel) && categorizedCard.getCategory().equals(cardCategory))

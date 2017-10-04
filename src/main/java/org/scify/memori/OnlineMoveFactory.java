@@ -31,7 +31,6 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     private void setPlayerOnline() {
         PlayerManager playerManager = new PlayerManager();
         while(true) {
-            System.out.println("setPlayerOnline from rules");
             playerManager.setPlayerOnline();
             try {
                 Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
@@ -85,9 +84,9 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
 
     private int timesCalled = 0;
     private void getLatestMovementFromServer() throws Exception {
-        System.out.println("timesCalled: " + timesCalled);
+//        System.out.println("timesCalled: " + timesCalled);
 
-        TimeUnit.MILLISECONDS.sleep(300);
+        TimeUnit.MILLISECONDS.sleep(200);
         UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
         timesCalled++;
         if(opponentLatestAction != null) {

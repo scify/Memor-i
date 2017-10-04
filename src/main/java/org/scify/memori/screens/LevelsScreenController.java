@@ -77,7 +77,6 @@ public class LevelsScreenController {
     private void setPlayerOnline() {
         PlayerManager playerManager = new PlayerManager();
         while(true) {
-            System.out.println("setPlayerOnline from levels screen");
             playerManager.setPlayerOnline();
             try {
                 Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);

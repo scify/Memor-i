@@ -365,7 +365,6 @@ public class InvitePlayerScreenController  implements Initializable {
     private void setPlayerOnline() {
         PlayerManager playerManager = new PlayerManager();
         while(true) {
-            System.out.println("setPlayerOnline from invite screen");
             playerManager.setPlayerOnline();
             try {
                 Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);

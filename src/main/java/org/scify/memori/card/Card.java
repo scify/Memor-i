@@ -39,7 +39,7 @@ public class Card implements Tile{
     /**
      * the button element that binds the card with the UI layout
      */
-    private Button button;
+    protected Button button;
     /**
      * the type of the card. Cards with the same type are considered identical
      */
