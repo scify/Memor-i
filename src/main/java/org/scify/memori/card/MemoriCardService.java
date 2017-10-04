@@ -18,7 +18,7 @@ public class MemoriCardService {
         this.cardDBHandlerJSON = new CardDBHandlerJSON();
     }
 
-    private static List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
     public List<Card> getMemoriCards(int numOfCards) {
         cards = this.cardDBHandlerJSON.getCardsFromDB(numOfCards);
