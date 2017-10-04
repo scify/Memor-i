@@ -76,9 +76,7 @@ public class MemoriCardService {
     }
 
     public CategorizedCard getCardFromLabelAndType(String cardLabel, String cardCategory) {
-        if(cards.isEmpty()) {
-            cards = getAllCards();
-        }
+        cards = getAllCards();
         for(Card card: cards) {
             CategorizedCard categorizedCard = (CategorizedCard) card;
             if(categorizedCard.getLabel().equals(cardLabel) && categorizedCard.getCategory().equals(cardCategory))
