@@ -99,9 +99,11 @@ public class InvitePlayerScreenController  implements Initializable {
 
     private void exitScreen() {
         audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popScene();
         threadSetPlayerOnline.interrupt();
         threadQueryForGameRequests.interrupt();
+        if(threadQueryForShuffleCards != null)
+            threadQueryForShuffleCards.interrupt();
+        sceneHandler.popScene();
     }
 
     @FXML
@@ -408,6 +410,7 @@ public class InvitePlayerScreenController  implements Initializable {
                 opponentCanceledGame();
             }
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                System.err.println("MAX REQUEST TRIES");
                 shouldContinue = false;
                 opponentCanceledGame();
                 break;

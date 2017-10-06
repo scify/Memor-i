@@ -12,8 +12,8 @@ import java.util.concurrent.Callable;
 
 public class GameRequestManager {
 
-    public static final int GAME_REQUESTS_CALL_INTERVAL = 3000;
-    public static final int SHUFFLE_CARDS_INTERVAL = 3000;
+    public static final int GAME_REQUESTS_CALL_INTERVAL = 2000;
+    public static final int SHUFFLE_CARDS_INTERVAL = 1000;
     private RequestManager requestManager;
     private MemoriConfiguration configuration;
     private static int gameRequestId;

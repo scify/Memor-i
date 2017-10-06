@@ -15,7 +15,6 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.Text2Speech;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
@@ -41,6 +40,7 @@ public class LevelsScreenController {
     private MemoriConfiguration configuration;
     private int currentGameRequestId = 0;
     private Thread threadSetPlayerOnline;
+    private Thread threadGameRequestReply;
     @FXML
     Button messageText;
     @FXML
@@ -66,7 +66,13 @@ public class LevelsScreenController {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "levels_screen_welcome.mp3", false);
             }
         });
-        setPlayerOnlineThread();
+        if(gameType.equals(GameType.VS_PLAYER))
+            setPlayerOnlineThread();
+    }
+
+    private void queryForGameRequestReplyThread(MemoriGameLevel gameLevel) {
+        threadGameRequestReply= new Thread(() -> queryServerForGameRequestReply(gameLevel));
+        threadGameRequestReply.start();
     }
 
     private void setPlayerOnlineThread() {
@@ -126,11 +132,15 @@ public class LevelsScreenController {
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
         if(gameType.equals(GameType.VS_PLAYER)) {
+            threadSetPlayerOnline.interrupt();
+            if(threadGameRequestReply != null)
+                threadGameRequestReply.interrupt();
             sceneHandler.simplePopScene();
             new InvitePlayerScreen(sceneHandler);
         } else {
             sceneHandler.popScene();
         }
+
     }
 
     private Button btnClicked;
@@ -196,11 +206,8 @@ public class LevelsScreenController {
                 int gameRequestId = paramsObj.getInt("game_request_id");
                 GameRequestManager.setGameRequestId(gameRequestId);
                 this.currentGameRequestId = gameRequestId;
-                System.err.println("Success. Game request id: " + gameRequestId);
-                Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_sent.mp3", false));
-                thread.start();
-                Thread queryThread = new Thread(() -> queryServerForGameRequestReply(gameLevel));
-                queryThread.start();
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_sent.mp3", false);
+                queryForGameRequestReplyThread(gameLevel);
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Error in creating game request
