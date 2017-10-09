@@ -12,13 +12,9 @@ import java.util.List;
 
 public class GameMovementManager {
 
-    public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 70;
+    public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 200;
     private RequestManager requestManager;
     private static long timestampOfLastOpponentMovement;
-
-    public static long getTimestampOfLastOpponentMovement() {
-        return timestampOfLastOpponentMovement;
-    }
 
     public static void setTimestampOfLastOpponentMovement(long timestampOfLastOpponentMovement) {
 
@@ -29,24 +25,27 @@ public class GameMovementManager {
         requestManager = new RequestManager();
     }
 
-    public String sendMovementToServer(String movementJson) {
+    public String sendMovementToServer(String movementJson, long userActionTimestamp) {
         System.err.println("sending movement to server: " + movementJson);
         String url = "gameMovement/create";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(GameRequestManager.getGameRequestId())));
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(PlayerManager.getPlayerId())));
-        urlParameters.add(new BasicNameValuePair("timestamp", String.valueOf(System.currentTimeMillis())));
+        urlParameters.add(new BasicNameValuePair("timestamp", String.valueOf(userActionTimestamp)));
         urlParameters.add(new BasicNameValuePair("movement_json", movementJson));
         return this.requestManager.doPost(url, urlParameters);
     }
 
     public UserAction getLatestMovementFromToServer() throws Exception {
-        System.err.println("get latest movement from server: " + String.valueOf(timestampOfLastOpponentMovement));
         String url = "gameMovement/latest";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(GameRequestManager.getGameRequestId())));
         urlParameters.add(new BasicNameValuePair("opponent_id", String.valueOf(PlayerManager.getOpponentPlayer().getId())));
         urlParameters.add(new BasicNameValuePair("last_timestamp", String.valueOf(timestampOfLastOpponentMovement)));
+        System.out.println(url);
+        System.out.println(urlParameters.get(0).getValue());
+        System.out.println(urlParameters.get(1).getValue());
+        System.out.println(urlParameters.get(2).getValue());
         String serverResponse = this.requestManager.doPost(url, urlParameters);
         return parseGameRequestResponse(serverResponse);
     }

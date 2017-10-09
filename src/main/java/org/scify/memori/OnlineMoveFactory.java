@@ -99,8 +99,8 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         }
     }
 
-    private String sendUserMovementToServer(String userActionsParam) {
-        return gameMovementManager.sendMovementToServer(userActionsParam);
+    private String sendUserMovementToServer(String userActionsParam, long userActionTimestamp) {
+        return gameMovementManager.sendMovementToServer(userActionsParam, userActionTimestamp);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         String ruleObserverCode = ruleObserverObject.code;
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
             UserAction userAction = (UserAction) ruleObserverObject.parameters;
-            sendUserMovementsToServerThread = new Thread(() ->sendUserMovementToServer(packUserAction(userAction)));
+            sendUserMovementsToServerThread = new Thread(() ->sendUserMovementToServer(packUserAction(userAction), userAction.getTimestamp()));
             sendUserMovementsToServerThread.start();
         }
     }

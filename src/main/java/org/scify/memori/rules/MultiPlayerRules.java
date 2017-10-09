@@ -263,6 +263,7 @@ public class MultiPlayerRules extends MemoriRules {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             gameInterrupted = true;
             GameRequestManager gameRequestManager = new GameRequestManager();
             Thread thread = new Thread(() -> gameRequestManager.cancelGame());
