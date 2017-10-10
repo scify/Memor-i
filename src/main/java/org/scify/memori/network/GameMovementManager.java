@@ -9,12 +9,14 @@ import org.scify.memori.interfaces.UserAction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class GameMovementManager {
 
     public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 200;
     private RequestManager requestManager;
     private static long timestampOfLastOpponentMovement;
+    protected Semaphore sMoveRequest = new Semaphore(1);
 
     public static void setTimestampOfLastOpponentMovement(long timestampOfLastOpponentMovement) {
 
@@ -36,7 +38,14 @@ public class GameMovementManager {
         return this.requestManager.doPost(url, urlParameters);
     }
 
-    public UserAction getLatestMovementFromToServer() throws Exception {
+    public boolean callOngoing() {
+        return sMoveRequest.availablePermits() == 0;
+    }
+
+    public UserAction getNextMovementFromServer() throws Exception {
+        // Use semaphore to ascertain that the call is served before another
+        sMoveRequest.acquire();
+
         String url = "gameMovement/latest";
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("game_request_id", String.valueOf(GameRequestManager.getGameRequestId())));
@@ -47,10 +56,15 @@ public class GameMovementManager {
         System.out.println(urlParameters.get(1).getValue());
         System.out.println(urlParameters.get(2).getValue());
         String serverResponse = this.requestManager.doPost(url, urlParameters);
+        // Call served. Release semaphore.
+        sMoveRequest.release();
+        // TODO if post fails retry
         return parseGameRequestResponse(serverResponse);
     }
 
     private UserAction parseGameRequestResponse(String serverResponse) throws Exception {
+        if(serverResponse == null)
+            return null;
         Gson g = new Gson();
         ServerOperationResponse response = g.fromJson(serverResponse, ServerOperationResponse.class);
         int code = response.getCode();

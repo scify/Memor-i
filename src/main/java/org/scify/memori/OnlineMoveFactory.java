@@ -2,25 +2,47 @@ package org.scify.memori;
 
 import com.google.gson.*;
 import org.scify.memori.interfaces.MoveFactory;
-import org.scify.memori.interfaces.Player;
 import org.scify.memori.interfaces.UserAction;
 import org.scify.memori.network.GameMovementManager;
 import org.scify.memori.rules.RuleObserverObject;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 public class OnlineMoveFactory implements Observer, MoveFactory {
 
     Queue<UserAction> opponentActions;
+    Queue<UserAction> playerActions;
     GameMovementManager gameMovementManager;
     Thread sendUserMovementsToServerThread;
     private Thread threadSetPlayerOnline;
+    private int timesNextMovementCalled = 0;
+    private static final int SEND_MOVEMENT_INTERVAL = 200;
 
     public OnlineMoveFactory() {
-        opponentActions = new LinkedList<>();
+        opponentActions = new ConcurrentLinkedQueue<>();
+        playerActions = new ConcurrentLinkedQueue<>();
         gameMovementManager = new GameMovementManager();
         setPlayerOnlineThread();
+        sendUserMovementsToServerThread = new Thread(() ->sendNextMovementsToServer());
+        sendUserMovementsToServerThread.start();
+    }
+
+    private void sendNextMovementsToServer() {
+        while(true) {
+            if (!playerActions.isEmpty()) {
+                UserAction userActionToSend = playerActions.poll();
+                sendUserMovementToServer(packUserAction(userActionToSend), userActionToSend.getTimestamp());
+            }
+            try {
+                Thread.sleep(SEND_MOVEMENT_INTERVAL);
+            } catch (InterruptedException e) {
+                System.err.println("sendNextMovementsToServer thread interrupted");
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 
     private void setPlayerOnlineThread() {
@@ -45,7 +67,7 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
     public ArrayList<UserAction> getNextUserMovement(MemoriGameState memoriGameState) throws Exception {
         ArrayList<UserAction> actions = new ArrayList<>();
         if(opponentActions.isEmpty()) {
-            getLatestMovementFromServer();
+            getNextMovementFromServer();
         } else {
             Iterator<UserAction> listIterator = opponentActions.iterator();
             while(listIterator.hasNext()) {
@@ -82,25 +104,31 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         threadSetPlayerOnline.interrupt();
     }
 
-    private int timesCalled = 0;
-    private void getLatestMovementFromServer() throws Exception {
-//        System.out.println("timesCalled: " + timesCalled);
-
+    private void getNextMovementFromServer() throws Exception {
+        // Minimum time before call
         TimeUnit.MILLISECONDS.sleep(200);
-        UserAction opponentLatestAction = gameMovementManager.getLatestMovementFromToServer();
-        timesCalled++;
-        if(opponentLatestAction != null) {
-            timesCalled = 0;
-            opponentActions.add(opponentLatestAction);
+        // Make sure no existing call is ongoing
+        if (gameMovementManager.callOngoing())
+            return;
+
+        UserAction opponentNextAction = gameMovementManager.getNextMovementFromServer();
+        timesNextMovementCalled++;
+        if(opponentNextAction != null) {
+            timesNextMovementCalled = 0;
+            opponentActions.add(opponentNextAction);
         } else {
-            if(timesCalled > gameMovementManager.MAX_REQUEST_TRIES_FOR_MOVEMENT) {
+            if(timesNextMovementCalled > gameMovementManager.MAX_REQUEST_TRIES_FOR_MOVEMENT) {
                 throw new Exception("Queried too many times for latest movement");
             }
         }
     }
 
     private String sendUserMovementToServer(String userActionsParam, long userActionTimestamp) {
-        return gameMovementManager.sendMovementToServer(userActionsParam, userActionTimestamp);
+        String sRes =  gameMovementManager.sendMovementToServer(userActionsParam, userActionTimestamp);
+        while (sRes == null) {
+            sRes =  gameMovementManager.sendMovementToServer(userActionsParam, userActionTimestamp);
+        }
+        return sRes;
     }
 
     @Override
@@ -109,8 +137,8 @@ public class OnlineMoveFactory implements Observer, MoveFactory {
         String ruleObserverCode = ruleObserverObject.code;
         if(ruleObserverCode.equals("PLAYER_MOVE")) {
             UserAction userAction = (UserAction) ruleObserverObject.parameters;
-            sendUserMovementsToServerThread = new Thread(() ->sendUserMovementToServer(packUserAction(userAction), userAction.getTimestamp()));
-            sendUserMovementsToServerThread.start();
+            // TODO check order of user actions to be sent to server (queue) or semaphore
+            playerActions.add(userAction);
         }
     }
 
