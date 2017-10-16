@@ -332,6 +332,8 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void answerToGameRequest() {
+        // stop checking for requests
+        threadQueryForGameRequests.interrupt();
         primaryScene.setOnKeyReleased(event -> {
             if(event.getCode() == ENTER) {
                 gameRequestManager.sendGameRequestAnswerToServer(true);
@@ -401,6 +403,8 @@ public class InvitePlayerScreenController  implements Initializable {
                         System.err.println("queryForGameRequestShuffledCards was interrupted");
                         Thread.currentThread().interrupt();
                         shouldContinue = false;
+                        // re-check for requests
+                        queryServerForGameRequestsThread();
                         break;
                     }
                 }
@@ -408,11 +412,15 @@ public class InvitePlayerScreenController  implements Initializable {
                 e.printStackTrace();
                 shouldContinue = false;
                 opponentCanceledGame();
+                // re-check for requests
+                queryServerForGameRequestsThread();
             }
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
                 System.err.println("MAX REQUEST TRIES");
                 shouldContinue = false;
                 opponentCanceledGame();
+                // re-check for requests
+                queryServerForGameRequestsThread();
                 break;
             }
         }
@@ -445,6 +453,7 @@ public class InvitePlayerScreenController  implements Initializable {
         resetUI();
         threadSetPlayerOnline.interrupt();
         Thread thread = new Thread(() -> gameLauncher.startGameForLevel(gameLevel, GameType.VS_PLAYER, cardsWithPositions));
+        PlayerManager.localPlayerIsInitiator = false;
         PlayerManager.setOpponentPlayer(candidateOpponent);
         thread.start();
     }
