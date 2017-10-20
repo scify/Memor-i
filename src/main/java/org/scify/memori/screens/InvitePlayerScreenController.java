@@ -86,7 +86,9 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void queryServerForGameRequestsThread() {
-        threadQueryForGameRequests = new Thread(() -> queryServerForGameRequests());
+        threadQueryForGameRequests = new Thread(() -> {
+            queryServerForGameRequests();
+        });
         threadQueryForGameRequests.start();
     }
 
@@ -293,6 +295,11 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void queryServerForGameRequests() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ServerOperationResponse serverResponse;
         GameRequestManager gameRequestManager = new GameRequestManager();
         boolean shouldContinue = true;
@@ -345,10 +352,14 @@ public class InvitePlayerScreenController  implements Initializable {
                 resetUI();
                 Thread answerThread = new Thread(() ->  gameRequestManager.sendGameRequestAnswerToServer(false));
                 answerThread.start();
-                // re-check for requests
-                queryServerForGameRequestsThread();
+                // re-check for requests after 5 seconds
+                reCheckForRequestsDelay();
             }
         });
+    }
+
+    private void reCheckForRequestsDelay() {
+        queryServerForGameRequestsThread();
     }
 
     private void resetUI() {
@@ -404,7 +415,7 @@ public class InvitePlayerScreenController  implements Initializable {
                         Thread.currentThread().interrupt();
                         shouldContinue = false;
                         // re-check for requests
-                        queryServerForGameRequestsThread();
+                        reCheckForRequestsDelay();
                         break;
                     }
                 }
@@ -420,7 +431,7 @@ public class InvitePlayerScreenController  implements Initializable {
                 shouldContinue = false;
                 opponentCanceledGame();
                 // re-check for requests
-                queryServerForGameRequestsThread();
+                reCheckForRequestsDelay();
                 break;
             }
         }

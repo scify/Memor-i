@@ -69,6 +69,7 @@ public class MemoriTerrain implements Terrain {
                 tiles.put(new Point2D.Double(iX, iY), getCardAtPosition(givenGameCards, iX, iY));
             }
         }
+        System.out.println("tiles number: " + givenGameCards.size());
         resizeTilesToFitToScreen();
     }
 
@@ -109,7 +110,10 @@ public class MemoriTerrain implements Terrain {
     private void resizeTilesToFitToScreen() {
         for (Map.Entry<Point2D, Tile> currTile: tiles.entrySet()) {
             Card currCard = (Card) currTile.getValue();
-            currCard.setCardWidth(getWidth());
+            if(currCard != null)
+                currCard.setCardWidth(getWidth());
+            else
+                System.err.println("CARD IS NULL!");
         }
     }
 
