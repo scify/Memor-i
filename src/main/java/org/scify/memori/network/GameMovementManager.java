@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 
 public class GameMovementManager {
 
-    public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 200;
+    public static final int MAX_REQUEST_TRIES_FOR_MOVEMENT = 100;
     private RequestManager requestManager;
     private static long timestampOfLastOpponentMovement;
     protected Semaphore sMoveRequest = new Semaphore(1);
