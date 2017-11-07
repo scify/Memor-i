@@ -248,7 +248,6 @@ public class LevelsScreenController {
                     Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                     voiceThread.start();
                     promptToPlayWithCPU();
-                    break;
                 }
                 shouldContinue = false;
                 Thread.currentThread().interrupt();
@@ -258,18 +257,20 @@ public class LevelsScreenController {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
-                    break;
+                    shouldContinue = false;
                 }
             }
+            System.out.println("timesCalled " + timesCalled);
             if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+                System.err.println("Opponent not answering!");
                 Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                 voiceThread.start();
                 cancelGameRequest();
                 shouldContinue = false;
                 Thread.currentThread().interrupt();
-                break;
             }
         }
+        System.err.println("Out of the while loop");
     }
 
     private void cancelGameRequest() {

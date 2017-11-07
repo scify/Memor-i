@@ -406,7 +406,6 @@ public class InvitePlayerScreenController  implements Initializable {
                     ArrayList<LinkedTreeMap> jsonCardsArray = (ArrayList<LinkedTreeMap>) serverResponse.getParameters();
                     System.out.println("Got cards!");
                     parseShuffledCardsFromServerAndStartGame(jsonCardsArray);
-                    break;
                 } else {
                     try {
                         Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
@@ -416,7 +415,6 @@ public class InvitePlayerScreenController  implements Initializable {
                         shouldContinue = false;
                         // re-check for requests
                         reCheckForRequestsDelay();
-                        break;
                     }
                 }
             } catch (Exception e) {
@@ -432,7 +430,6 @@ public class InvitePlayerScreenController  implements Initializable {
                 opponentCanceledGame();
                 // re-check for requests
                 reCheckForRequestsDelay();
-                break;
             }
         }
     }
