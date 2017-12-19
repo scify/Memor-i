@@ -50,6 +50,7 @@ public class InvitePlayerScreenController  implements Initializable {
     private Thread threadSetPlayerOnline;
     private Thread threadQueryForGameRequests;
     private Thread threadQueryForShuffleCards;
+    private ResourceBundle resources;
 
     public InvitePlayerScreenController() {
         MemoriConfiguration configuration = new MemoriConfiguration();
@@ -58,6 +59,7 @@ public class InvitePlayerScreenController  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {
@@ -161,7 +163,7 @@ public class InvitePlayerScreenController  implements Initializable {
                 // found a player
                 JsonObject parametersObject = (JsonObject) response.getParameters();
                 int playerId = parametersObject.get("player_id").getAsInt();
-                Platform.runLater(() -> invitationText.setText("Βρέθηκε διαθέσιμος παίκτης! Πάτησε SPACE για να συνεχίσεις."));
+                Platform.runLater(() -> invitationText.setText(resources.getString("opponent_found")));
                 Thread thread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "random_player_found.mp3", false));
                 thread.start();
                 promptToGoToLevelsPage(playerId);
@@ -201,12 +203,12 @@ public class InvitePlayerScreenController  implements Initializable {
         switch (code) {
             case ServerResponse.RESPONSE_SUCCESSFUL:
                 String playerStatus = response.getMessage();
-                if(playerStatus.equals("player_available")) {
+                if(playerStatus.equals("opponent_available")) {
                     JsonObject parametersObject = (JsonObject) response.getParameters();
                     int playerId = parametersObject.get("player_id").getAsInt();
                     System.out.println("Player available");
                     Platform.runLater(() -> {
-                        invitationText.setText("Ο παίκτης είναι διαθέσιμος. Πάτησε SPACE για να συνεχίσεις.");
+                        invitationText.setText(resources.getString("opponent_available"));
                         username.setDisable(true);
                     });
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_available.mp3", false);
@@ -214,10 +216,10 @@ public class InvitePlayerScreenController  implements Initializable {
                 } else if(playerStatus.equals("player_not_available")) {
                     System.out.println("Player not available");
                     playerNotAvailable();
-                } else if(playerStatus.equals("player_in_game")) {
+                } else if(playerStatus.equals("opponent_in_game")) {
                     // player is online and playing this game, but plays another game
                     System.out.println("Player available but in other game");
-                    Platform.runLater(() -> invitationText.setText("Ο παίκτης είναι σε παιχνίδι. Δοκίμασε αργότερα"));
+                    Platform.runLater(() -> invitationText.setText(resources.getString("opponent_in_game")));
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_in_game.mp3", false);
                 }
                 break;
@@ -239,18 +241,18 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void openRequestExistsFromOpponent() {
-        Platform.runLater(() ->invitationText.setText("Αυτός ο παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις."));
+        Platform.runLater(() ->invitationText.setText(resources.getString("opponent_has_sent_request")));
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited_by_opponent.mp3", false);
     }
 
     private void openRequestExistsFromRandomPlayer() {
-        Platform.runLater(() ->invitationText.setText("Ένας παίκτης σου έχει ήδη στείλει πρόσκληση. Περίμενε για να την ακούσεις."));
+        Platform.runLater(() ->invitationText.setText(resources.getString("player_has_received_request_already")));
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_already_invited.mp3", false);
     }
 
     private void playerNotFound() {
         Platform.runLater(() -> {
-            invitationText.setText("Αυτός ο παίκτης δεν βρέθηκε. Πάτησε SPACE για να παίξεις με τον υπολογιστή.");
+            invitationText.setText(resources.getString("opponent_not_found"));
             username.setText("");
         });
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_found_prompt_cpu.mp3", false);
@@ -258,13 +260,13 @@ public class InvitePlayerScreenController  implements Initializable {
     }
 
     private void playerNotAvailable() {
-        Platform.runLater(() ->invitationText.setText("Αυτός ο παίκτης δεν είναι διαθέσιμος. Πάτησε SPACE για να παίξεις με τυχαίο παίκτη."));
+        Platform.runLater(() ->invitationText.setText(resources.getString("opponent_unavailable_prompt_cpu")));
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "player_not_available.mp3", false);
         promptToPlayWithCPU();
     }
 
     private void noAvailablePlayerFound() {
-        Platform.runLater(() ->invitationText.setText("Δεν βρέθηκε διαθέσιμος παίκτης. Πάτησε SPACE για να παίξεις με τον υπολογιστή."));
+        Platform.runLater(() ->invitationText.setText(resources.getString("no_opponent_found_prompt_cpu")));
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_player_available.mp3", false);
         promptToPlayWithCPU();
     }
@@ -333,7 +335,7 @@ public class InvitePlayerScreenController  implements Initializable {
         GameRequestManager.setGameRequestId(gameRequestId);
         Platform.runLater(() -> {
             username.setDisable(true);
-            invitationText.setText("Έχεις πρόσκληση από τον παίκτη " + initiatorUserName + "! Πάτησε ENTER για να τη δεχθείς.");
+            invitationText.setText(resources.getString("player_has_request_1") + " " + initiatorUserName + resources.getString("player_has_request_2"));
         });
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "new_request.mp3", false);
     }

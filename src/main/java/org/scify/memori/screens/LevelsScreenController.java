@@ -3,6 +3,7 @@ package org.scify.memori.screens;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,12 +22,14 @@ import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.network.ServerResponse;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static javafx.scene.input.KeyCode.*;
 
-public class LevelsScreenController {
+public class LevelsScreenController implements Initializable {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private Scene primaryScene;
@@ -45,6 +48,12 @@ public class LevelsScreenController {
     Button messageText;
     @FXML
     Button infoText;
+    private ResourceBundle resources;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+    }
 
     public LevelsScreenController() {
         configuration = new MemoriConfiguration();
@@ -240,10 +249,11 @@ public class LevelsScreenController {
                 // we got a reply
                 if(serverOperationResponse.getMessage().equals("accepted")) {
                     // to press enter to start the game
-                    Platform.runLater(() -> messageText.setText("Ο παίκτης δέχθηκε! Πάτησε ENTER"));
+                    Platform.runLater(() -> messageText.setText(resources.getString("opponent_accepted")));
                     promptToStartGame(gameLevel);
                 } else if(serverOperationResponse.getMessage().equals("rejected")) {
                     cancelGameRequest();
+                    Platform.runLater(() -> messageText.setText(resources.getString("opponent_rejected")));
                     Platform.runLater(() -> resetUI());
                     Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                     voiceThread.start();
@@ -265,6 +275,7 @@ public class LevelsScreenController {
                 System.err.println("Opponent not answering!");
                 Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                 voiceThread.start();
+                Platform.runLater(() -> messageText.setText(resources.getString("opponent_not_answering")));
                 cancelGameRequest();
                 shouldContinue = false;
                 Thread.currentThread().interrupt();
@@ -275,7 +286,6 @@ public class LevelsScreenController {
 
     private void cancelGameRequest() {
         Platform.runLater(() -> resetUI());
-        Platform.runLater(() -> messageText.setText("Ο παίκτης δεν απαντάει"));
         Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
         cancelThread.start();
     }
