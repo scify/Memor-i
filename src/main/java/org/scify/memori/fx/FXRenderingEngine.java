@@ -540,13 +540,13 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         break;
                     case "DOORS_EXPLANATION_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.gameInstructionSoundsBasePath + "doors_explanation.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "doors_explanation.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "FLIP_EXPLANATION_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.gameInstructionSoundsBasePath + "flip_explanation.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "flip_explanation.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -570,25 +570,25 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         break;
                     case "TUTORIAL_WRONG_PAIR_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.gameInstructionSoundsBasePath + "wrong_pair.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "wrong_pair.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "TUTORIAL_DOORS_CLOSED_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.gameInstructionSoundsBasePath + "doors_closing_explanation.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "doors_closing_explanation.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "TUTORIAL_CORRECT_PAIR_UI":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.gameInstructionSoundsBasePath + "correct_pair_explanation.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.gameInstructionSoundsBasePath + "correct_pair_explanation.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
                     case "DOORS_SHUTTING":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.miscellaneousSoundsBasePath + "doors_shutting.mp3", currentGameEvent.blocking);
+                            fxAudioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "doors_shutting.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

@@ -87,7 +87,7 @@ public class FXAudioEngine implements AudioEngine{
      * Plays an appropriate sound associated with a successful Game Event
      */
     public void playSuccessSound() {
-        playSound("miscellaneous/success.mp3", true);
+        pauseAndPlaySound("miscellaneous/success.mp3", true);
     }
 
     /**
