@@ -188,7 +188,7 @@ public class LevelsScreenController implements Initializable {
 
     private void waitForResponseUI() {
         setAllLevelButtonsAsDisabled();
-        messageText.setText("Περίμενε...");
+        messageText.setText(resources.getString("wait"));
     }
 
     private void resetUI() {

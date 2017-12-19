@@ -375,7 +375,7 @@ public class InvitePlayerScreenController  implements Initializable {
     private void waitForResponseUI() {
         Platform.runLater(() -> {
             username.setDisable(true);
-            invitationText.setText("Περίμενε...");
+            invitationText.setText(resources.getString("wait"));
         });
     }
 
