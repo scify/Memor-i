@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
@@ -46,6 +47,7 @@ import static javafx.scene.input.KeyCode.*;
 
 public class MainScreenController implements Initializable {
 
+    public Button sponsors;
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
     private Stage primaryStage;
@@ -60,7 +62,10 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        // if the game is in english, we want to hide the "sponsors" button
+        if(configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+            sponsors.setVisible(false);
+        }
     }
 
 
