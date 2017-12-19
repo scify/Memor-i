@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -48,6 +49,8 @@ import static javafx.scene.input.KeyCode.*;
 public class MainScreenController implements Initializable {
 
     public Button sponsors;
+    public Button versus_player;
+    public VBox btnContainer;
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
     private Stage primaryStage;
@@ -65,6 +68,13 @@ public class MainScreenController implements Initializable {
         // if the game is in english, we want to hide the "sponsors" button
         if(configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
             sponsors.setVisible(false);
+        }
+        // if the game has vs_player option enabled, show the button
+        // else hide it
+        if(configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+            versus_player.setVisible(true);
+        } else {
+            btnContainer.getChildren().remove(versus_player);
         }
     }
 
@@ -146,11 +156,13 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
-            }
-        });
+        if(configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+            primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                if (newPropertyValue) {
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
+                }
+            });
+        }
 
         primaryScene.lookup("#myScores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
@@ -164,11 +176,13 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
-            }
-        });
+        if(!configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+            primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                if (newPropertyValue) {
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
+                }
+            });
+        }
     }
 
     /**
