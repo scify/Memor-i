@@ -97,13 +97,15 @@ public class SinglePlayerRules extends MemoriRules {
             } else {
                 //else if card not won
                 // play card sound
-                gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, true));
+                gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), 0, false));
             }
         } else {
             // else if not flipped
             // flip card
             flipTile(currTile);
-            flipTileUI(uaAction, gsCurrentState);
+            // on the last card we want the card sound to be blocking so that the result sound
+            // does not interrupt the card sound.
+            flipTileUI(uaAction, gsCurrentState, tileIsLastOfTuple(memoriTerrain, currTile));
 
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
