@@ -166,7 +166,7 @@ public class MultiPlayerRules extends MemoriRules {
             // else if not flipped
             // flip card
             flipTile(currTile);
-            flipTileUI(uaAction, gsCurrentState);
+            flipTileUI(uaAction, gsCurrentState, true);
             notifyObserversForTileFlip(uaAction, currTile);
             if(tileIsLastOfTuple(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)

@@ -64,6 +64,7 @@ public class MemoriRules extends Observable implements Rules {
         //Iterate through game events. If there is a blocking event, return.
         for (GameEvent currentGameEvent : gsCurrentState.getEventQueue()) {
             if (currentGameEvent.blocking) {
+                System.err.println("BLOCKING");
                 return true;
             }
         }
@@ -133,7 +134,7 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void successUI(UserAction uaAction, MemoriGameState gsCurrentState) {
-        gsCurrentState.getEventQueue().add(new GameEvent("SUCCESS_UI", uaAction.getCoords(), new Date().getTime() + 5000, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("SUCCESS_UI", uaAction.getCoords(), new Date().getTime() + 6000, true));
     }
 
     protected void cardDescriptionSoundUI(MemoriGameState gsCurrentState) {
@@ -143,11 +144,15 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState) {
+        flipTileUI(uaAction, gsCurrentState, false);
+    }
+
+    protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState, boolean isCardSoundBlocking) {
         gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
         gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 1800, false));
+        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 3800, isCardSoundBlocking));
     }
 
     protected void updateGameStateAndNextTurn(Tile currTile, MemoriGameState gsCurrentState, MemoriTerrain memoriTerrain) {
