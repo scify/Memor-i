@@ -152,7 +152,7 @@ public class MemoriRules extends Observable implements Rules {
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
         gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
-        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 3800, isCardSoundBlocking));
+        gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 3100, isCardSoundBlocking));
     }
 
     protected void updateGameStateAndNextTurn(Tile currTile, MemoriGameState gsCurrentState, MemoriTerrain memoriTerrain) {
@@ -180,7 +180,7 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void doorsShuttingUI(MemoriGameState gsCurrentState) {
-        gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 5000, true));
+        gsCurrentState.getEventQueue().add(new GameEvent("DOORS_SHUTTING", null, new Date().getTime() + 6000, true));
     }
 
     /**
