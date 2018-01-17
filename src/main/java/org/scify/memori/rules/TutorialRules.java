@@ -101,7 +101,7 @@ public class TutorialRules extends MemoriRules {
                 gsCurrentState.getEventQueue().add(new GameEvent("FLIP_EXPLANATION_UI", null, new Date().getTime() + 4000, true));
 
             }
-            if(tileIsLastOfTuple(memoriTerrain, currTile)) {
+            if(tileIsLastOfTupleAndWinning(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 successUI(uaAction, gsCurrentState);
                 //gsCurrentState.getEventQueue().add(new GameEvent("CARD_DESCRIPTION", uaAction.getCoords(), new Date().getTime() + 4500, true));

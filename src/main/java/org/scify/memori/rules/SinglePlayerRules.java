@@ -105,9 +105,9 @@ public class SinglePlayerRules extends MemoriRules {
             flipTile(currTile);
             // on the last card we want the card sound to be blocking so that the result sound
             // does not interrupt the card sound.
-            flipTileUI(uaAction, gsCurrentState, tileIsLastOfTuple(memoriTerrain, currTile));
+            flipTileUI(uaAction, gsCurrentState, tileIsLastOfTuple(memoriTerrain));
 
-            if(tileIsLastOfTuple(memoriTerrain, currTile)) {
+            if(tileIsLastOfTupleAndWinning(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 successUI(uaAction, gsCurrentState);
                 cardDescriptionSoundUI(gsCurrentState);

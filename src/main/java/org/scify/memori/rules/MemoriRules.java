@@ -148,10 +148,11 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState, boolean isCardSoundBlocking) {
+        System.err.println("flipping tile " + isCardSoundBlocking);
         gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
+        gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_SECOND_UI", uaAction.getCoords(), new Date().getTime() + 3000, false));
-        gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
         gsCurrentState.getEventQueue().add(new GameEvent("CARD_SOUND_UI", uaAction.getCoords(), new Date().getTime() + 3100, isCardSoundBlocking));
     }
 
@@ -314,15 +315,23 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     /**
-     * Checks if the current tile is the last of the n-tuple
+     * Checks if the current tile is the last of the n-tuple and this is a winning tuple
      * @param memoriTerrain the terrain holding all the tiles
      * @param currTile the current tile
      * @return true if the current tile is the last of the n-tuple
      */
-    protected boolean tileIsLastOfTuple(MemoriTerrain memoriTerrain, Tile currTile) {
+    protected boolean tileIsLastOfTupleAndWinning(MemoriTerrain memoriTerrain, Tile currTile) {
         boolean answer = false;
         // if all cards in the open cards tuple are equal and we have reached the end of the tuple (2-cards, 3-cards etc)
-        if(!atLeastOneOtherTileIsDifferent(memoriTerrain, currTile) && (memoriTerrain.getOpenTiles().size() == MainOptions.NUMBER_OF_OPEN_CARDS - 1))
+        if(!atLeastOneOtherTileIsDifferent(memoriTerrain, currTile) && tileIsLastOfTuple(memoriTerrain))
+            answer = true;
+        return answer;
+    }
+
+    protected boolean tileIsLastOfTuple(MemoriTerrain memoriTerrain) {
+        boolean answer = false;
+        // if all cards in the open cards tuple are equal and we have reached the end of the tuple (2-cards, 3-cards etc)
+        if((memoriTerrain.getOpenTiles().size() == MainOptions.NUMBER_OF_OPEN_CARDS - 1))
             answer = true;
         return answer;
     }
