@@ -51,6 +51,7 @@ public class MainScreenController implements Initializable {
     public Button sponsors;
     public Button versus_player;
     public VBox btnContainer;
+    public Button versus_computer;
     private MemoriConfiguration configuration;
     private String miscellaneousSoundsBasePath;
     private Stage primaryStage;
@@ -75,6 +76,12 @@ public class MainScreenController implements Initializable {
             versus_player.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_player);
+        }
+
+        if(configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+            versus_computer.setVisible(true);
+        } else {
+            btnContainer.getChildren().remove(versus_computer);
         }
     }
 
@@ -150,11 +157,13 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
-            }
-        });
+        if(configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+            primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                if (newPropertyValue) {
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
+                }
+            });
+        }
 
         if(configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
             primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
