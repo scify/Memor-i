@@ -18,7 +18,7 @@ To see currently open tasks, discussed ideas and submitted bugs
 
 ### Prerequisities
 
-After cloning the code repository, Java 1.8 and Apache Maven 3.0.5 are required to be able to compile it.
+After cloning the code repository, Java and Apache Maven are required to be able to compile it.
 Ensure that Java and Maven version installed on your machine by running:
 ```
 mvn -v
@@ -36,7 +36,7 @@ By looking at pom.xml you will see some plugins this project uses.
 Supposing that Maven runs correctly on your machine and you have configured this project as a Maven project, 
 these plugins will be automativcally downloaded and installed upon compilation.
 
-After compiling, in order for the standalone .jar file to be built, run these 2 commands:
+After compiling, in order for the standalone .jar file to be built, run these commands:
 
 ```
 mvn clean
@@ -98,7 +98,7 @@ limitations under the License.
 <a href="http://www.scify.gr/site/en/"><img src="http://www.scify.gr/site/images/scify/scify_logo_108.png"></a>
 </td>
 <td>
-<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img src="http://www.latsis-foundation.org/img/iePngs/logoEll.png" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
+<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img height="100px" src="https://dipylon.org/wp-content/uploads/JSL-PBF-Gr_gr.jpg" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
 </td>
 </tr>
 </table>
