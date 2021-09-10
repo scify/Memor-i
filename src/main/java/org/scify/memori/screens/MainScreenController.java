@@ -18,8 +18,7 @@
 package org.scify.memori.screens;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -27,11 +26,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import org.scify.memori.*;
+import org.scify.memori.MemoriGameLauncher;
+import org.scify.memori.PlayerManager;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
@@ -44,7 +44,8 @@ import org.scify.memori.network.RequestManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static javafx.scene.input.KeyCode.*;
+import static javafx.scene.input.KeyCode.ESCAPE;
+import static javafx.scene.input.KeyCode.SPACE;
 
 public class MainScreenController implements Initializable {
 
@@ -52,12 +53,12 @@ public class MainScreenController implements Initializable {
     public Button versus_player;
     public VBox btnContainer;
     public Button versus_computer;
-    private MemoriConfiguration configuration;
-    private String miscellaneousSoundsBasePath;
+    private final MemoriConfiguration configuration;
+    private final String miscellaneousSoundsBasePath;
     private Stage primaryStage;
     private static Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    private FXAudioEngine audioEngine = new FXAudioEngine();
+    private final FXAudioEngine audioEngine = new FXAudioEngine();
 
     public MainScreenController() {
         configuration = new MemoriConfiguration();
@@ -67,18 +68,18 @@ public class MainScreenController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // if the game is in english, we want to hide the "sponsors" button
-        if(configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+        if (configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
             sponsors.setVisible(false);
         }
         // if the game has vs_player option enabled, show the button
         // else hide it
-        if(configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
             versus_player.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_player);
         }
 
-        if(configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
             versus_computer.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_computer);
@@ -117,7 +118,7 @@ public class MainScreenController implements Initializable {
 
     private void setStageFavicon(Stage primaryStage) {
         ResourceLocator resourceLocator = new ResourceLocator();
-        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         //set the "favicon"
         Image faviconImage = new Image(gameCoverImgPath);
         primaryStage.getIcons().add(faviconImage);
@@ -139,7 +140,7 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        primaryScene.lookup("#headphonesAdjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+        primaryScene.lookup("#headphones_adjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
             }
@@ -157,7 +158,7 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        if(configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
             primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
@@ -165,7 +166,7 @@ public class MainScreenController implements Initializable {
             });
         }
 
-        if(configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
             primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
@@ -173,7 +174,7 @@ public class MainScreenController implements Initializable {
             });
         }
 
-        primaryScene.lookup("#myScores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+        primaryScene.lookup("#my_scores").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "my_scores.mp3", false);
             }
@@ -185,7 +186,7 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        if(!configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+        if (!configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
             primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
@@ -200,89 +201,160 @@ public class MainScreenController implements Initializable {
      * @param evt the keyboard event
      */
     @FXML
-    protected void exitGame(KeyEvent evt) {
-        if (evt.getCode() == SPACE || evt.getCode() == ESCAPE) {
+    protected void exitGame(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE || keyEvt.getCode() == ESCAPE) {
+                exitApplication();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
             exitApplication();
         }
     }
 
     /**
      * When the user clicks on "tutorial" button, start a new tutorial game
+     *
      * @param evt the click event
      */
     @FXML
-    protected void initializeTutorialGame(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
-            Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
-            thread.start();
+    protected void initializeTutorialGameEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                initializeTutorialGame();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
+            initializeTutorialGame();
         }
+    }
+
+    protected void initializeTutorialGame() {
+        MemoriGameLauncher memoriGameLauncher = new MemoriGameLauncher(sceneHandler);
+        Thread thread = new Thread(() -> memoriGameLauncher.startTutorialGame());
+        thread.start();
     }
 
     /**
      * When the user clicks on "tutorial" button, start a new tutorial game
+     *
      * @param evt the click event
      */
     @FXML
-    protected void initializeSinglePlayerGame(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            audioEngine.pauseCurrentlyPlayingAudios();
-            new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
+    protected void initializeSinglePlayerGameEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                initializeSinglePlayerGame();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
+            initializeSinglePlayerGame();
         }
     }
 
-    /**
-     * When the user clicks on "tutorial" button, start a new tutorial game
-     * @param evt the click event
-     */
-    @FXML
-    protected void initializePvCGame(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            audioEngine.pauseCurrentlyPlayingAudios();
-            new LevelsScreen(sceneHandler, GameType.VS_CPU);
-        }
-    }
-
-    /**
-     * When the user clicks on "tutorial" button, start a new tutorial game
-     * @param evt the click event
-     */
-    @FXML
-    protected void initializePvPGame(KeyEvent evt) {
+    protected void initializeSinglePlayerGame() {
         audioEngine.pauseCurrentlyPlayingAudios();
-        if (evt.getCode() == SPACE) {
-            if(RequestManager.networkAvailable()) {
-                new RegisterOrLoginScreen(sceneHandler);
+        new LevelsScreen(sceneHandler, GameType.SINGLE_PLAYER);
+    }
+
+    /**
+     * When the user clicks on "tutorial" button, start a new tutorial game
+     *
+     * @param evt the click event
+     */
+    @FXML
+    protected void initializePvCGameEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                initializePvCGame();
             }
-            else {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_network.mp3", false);
+        } else if (evt.getClass() == TouchEvent.class) {
+            initializePvCGame();
+        }
+    }
+
+    protected void initializePvCGame() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        new LevelsScreen(sceneHandler, GameType.VS_CPU);
+    }
+
+    /**
+     * When the user clicks on "tutorial" button, start a new tutorial game
+     *
+     * @param evt the click event
+     */
+    @FXML
+    protected void initializePvPGameEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                initializePvPGame();
             }
+        } else if (evt.getClass() == TouchEvent.class) {
+            initializePvPGame();
+        }
+    }
+
+    protected void initializePvPGame() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        if (RequestManager.networkAvailable()) {
+            new RegisterOrLoginScreen(sceneHandler);
+        } else {
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_network.mp3", false);
+        }
+
+    }
+
+    @FXML
+    protected void myScoresEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                myScores();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
+            myScores();
         }
     }
 
 
-    @FXML
-    protected void myScores(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            audioEngine.pauseCurrentlyPlayingAudios();
-            new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
-        }
+    protected void myScores() {
+        audioEngine.pauseCurrentlyPlayingAudios();
+        new FXHighScoresScreen(sceneHandler, sceneHandler.getMainWindow());
     }
 
     @FXML
-    protected void goToSponsorsPage(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
+    protected void goToSponsorsPageEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                goToSponsorsPage();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
+            goToSponsorsPage();
         }
     }
 
+    protected void goToSponsorsPage() {
+        new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
+    }
 
     @FXML
-    protected void headphonesAdjustment(KeyEvent evt) {
-        if (evt.getCode() == SPACE) {
-            audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
-            audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
+    protected void headphonesAdjustmentEventHandler(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                headphonesAdjustment();
+            }
+        } else if (evt.getClass() == TouchEvent.class) {
+            headphonesAdjustment();
         }
+    }
+
+    protected void headphonesAdjustment() {
+        audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
+        audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
     }
 
     private void addCloseHandlerOnStage() {
@@ -295,7 +367,7 @@ public class MainScreenController implements Initializable {
         // if player has logged in, perform call to set them as non-active
         Player player = PlayerManager.getLocalPlayer();
         PlayerManager playerManager = new PlayerManager();
-        if(player != null) {
+        if (player != null) {
             System.err.println(player.getName());
             playerManager.setPlayerAsNotInGame();
             System.out.println("player set not in game. Closing...");

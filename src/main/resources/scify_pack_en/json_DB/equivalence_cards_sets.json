@@ -1,0 +1,842 @@
+{
+  "equivalence_card_sets": [
+    [
+      {
+        "label": "cow",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "cow.wav"
+        ],
+        "images": [
+          "cow1.jpg",
+          "cow2.png"
+        ],
+        "description_sound": "cow.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cow",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "cow.wav"
+        ],
+        "images": [
+          "cow1.jpg",
+          "cow2.png"
+        ],
+        "description_sound": "cow.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "horse",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "horse.wav"
+        ],
+        "images": [
+          "horse1.jpg",
+          "horse2.png"
+        ],
+        "description_sound": "horse.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "horse",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "horse.wav"
+        ],
+        "images": [
+          "horse1.jpg",
+          "horse2.png"
+        ],
+        "description_sound": "horse.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cat",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "cat.wav"
+        ],
+        "images": [
+          "cat1.jpg",
+          "cat2.png"
+        ],
+        "description_sound": "cat.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cat",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "cat.wav"
+        ],
+        "images": [
+          "cat1.jpg",
+          "cat2.png"
+        ],
+        "description_sound": "cat.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "rooster",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "rooster.wav"
+        ],
+        "images": [
+          "rooster1.jpg",
+          "rooster2.png"
+        ],
+        "description_sound": "rooster.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "rooster",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "rooster.wav"
+        ],
+        "images": [
+          "rooster1.jpg",
+          "rooster2.png"
+        ],
+        "description_sound": "rooster.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "sheep",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "sheep.wav"
+        ],
+        "images": [
+          "sheep1.jpg",
+          "sheep2.png"
+        ],
+        "description_sound": "sheep.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "sheep",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "sheep.wav"
+        ],
+        "images": [
+          "sheep1.jpg",
+          "sheep2.png"
+        ],
+        "description_sound": "sheep.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "pig",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "pig.wav"
+        ],
+        "images": [
+          "pig1.jpg",
+          "pig2.png"
+        ],
+        "description_sound": "pig.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "pig",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "pig.wav"
+        ],
+        "images": [
+          "pig1.jpg",
+          "pig2.png"
+        ],
+        "description_sound": "pig.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "dog",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "bark.wav"
+        ],
+        "images": [
+          "dog_2.jpg",
+          "dog2.png"
+        ],
+        "description_sound": "dog.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "dog",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "bark.wav"
+        ],
+        "images": [
+          "dog_2.jpg",
+          "dog2.png"
+        ],
+        "description_sound": "dog.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "donkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "donkey.wav"
+        ],
+        "images": [
+          "donkey1.jpg",
+          "donkey2.png"
+        ],
+        "description_sound": "donkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "donkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "donkey.wav"
+        ],
+        "images": [
+          "donkey1.jpg",
+          "donkey2.png"
+        ],
+        "description_sound": "donkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "duck",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "duck.wav"
+        ],
+        "images": [
+          "duck1.jpg",
+          "duck2.png"
+        ],
+        "description_sound": "duck.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "duck",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "duck.wav"
+        ],
+        "images": [
+          "duck1.jpg",
+          "duck2.png"
+        ],
+        "description_sound": "duck.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "bee",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "bee.wav"
+        ],
+        "images": [
+          "bee1.jpg",
+          "bee2.png"
+        ],
+        "description_sound": "bee.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "bee",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "bee.wav"
+        ],
+        "images": [
+          "bee1.jpg",
+          "bee2.png"
+        ],
+        "description_sound": "bee.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "dove",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "dove.wav"
+        ],
+        "images": [
+          "dove1.jpg",
+          "dove2.png"
+        ],
+        "description_sound": "dove.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "dove",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "dove.wav"
+        ],
+        "images": [
+          "dove1.jpg",
+          "dove2.png"
+        ],
+        "description_sound": "dove.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "turkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "turkey.wav"
+        ],
+        "images": [
+          "turkey1.jpg",
+          "turkey2.png"
+        ],
+        "description_sound": "turkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "turkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "turkey.wav"
+        ],
+        "images": [
+          "turkey1.jpg",
+          "turkey2.png"
+        ],
+        "description_sound": "turkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "sparrow",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "sparrow.wav"
+        ],
+        "images": [
+          "sparrow1.jpg",
+          "sparrow2.png"
+        ],
+        "description_sound": "sparrow.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "sparrow",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "sparrow.wav"
+        ],
+        "images": [
+          "sparrow1.jpg",
+          "sparrow2.png"
+        ],
+        "description_sound": "sparrow.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "frog",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "frog.wav"
+        ],
+        "images": [
+          "frog1.jpg",
+          "frog2.png"
+        ],
+        "description_sound": "frog.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "frog",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "frog.wav"
+        ],
+        "images": [
+          "frog1.jpg",
+          "frog2.png"
+        ],
+        "description_sound": "frog.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "elephant",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "elephant.wav"
+        ],
+        "images": [
+          "elephant1.jpg",
+          "elephant2.png"
+        ],
+        "description_sound": "elephant.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "elephant",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "elephant.wav"
+        ],
+        "images": [
+          "elephant1.jpg",
+          "elephant2.png"
+        ],
+        "description_sound": "elephant.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cuckoo",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "cuckoo.wav"
+        ],
+        "images": [
+          "cuckoo1.jpg",
+          "cuckoo2.png"
+        ],
+        "description_sound": "cuckoo.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cuckoo",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "cuckoo.wav"
+        ],
+        "images": [
+          "cuckoo1.jpg",
+          "cuckoo2.png"
+        ],
+        "description_sound": "cuckoo.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "guinea-pig",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "guinea-pig.wav"
+        ],
+        "images": [
+          "guinea-pig1.jpg",
+          "guinea-pig2.png"
+        ],
+        "description_sound": "guinea-pig.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "guinea-pig",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "guinea-pig.wav"
+        ],
+        "images": [
+          "guinea-pig1.jpg",
+          "guinea-pig2.png"
+        ],
+        "description_sound": "guinea-pig.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "mosquito",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "mosquito.wav"
+        ],
+        "images": [
+          "mosquito1.jpg",
+          "mosquito2.png"
+        ],
+        "description_sound": "mosquito.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "mosquito",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "mosquito.wav"
+        ],
+        "images": [
+          "mosquito1.jpg",
+          "mosquito2.png"
+        ],
+        "description_sound": "mosquito.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "mouse",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "mouse.wav"
+        ],
+        "images": [
+          "mouse1.jpg",
+          "mouse2.png"
+        ],
+        "description_sound": "mouse.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "mouse",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "mouse.wav"
+        ],
+        "images": [
+          "mouse1.jpg",
+          "mouse2.png"
+        ],
+        "description_sound": "mouse.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "raven",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "raven.wav"
+        ],
+        "images": [
+          "raven1.jpg",
+          "raven2.png"
+        ],
+        "description_sound": "raven.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "raven",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "raven.wav"
+        ],
+        "images": [
+          "raven1.jpg",
+          "raven2.png"
+        ],
+        "description_sound": "raven.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "nightingale",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "nightingale.wav"
+        ],
+        "images": [
+          "nightingale1.jpg",
+          "nightingale2.png"
+        ],
+        "description_sound": "nightingale.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "nightingale",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "nightingale.wav"
+        ],
+        "images": [
+          "nightingale1.jpg",
+          "nightingale2.png"
+        ],
+        "description_sound": "nightingale.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "lion",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "lion.wav"
+        ],
+        "images": [
+          "lion1.jpg",
+          "lion2.png"
+        ],
+        "description_sound": "lion.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "lion",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "lion.wav"
+        ],
+        "images": [
+          "lion1.jpg",
+          "lion2.png"
+        ],
+        "description_sound": "lion.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "seagull",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "seagull.wav"
+        ],
+        "images": [
+          "seagull1.jpg",
+          "seagull2.png"
+        ],
+        "description_sound": "seagull.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "seagull",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "seagull.wav"
+        ],
+        "images": [
+          "seagull1.jpg",
+          "seagull2.png"
+        ],
+        "description_sound": "seagull.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "seal",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "seal.wav"
+        ],
+        "images": [
+          "seal1.jpg",
+          "seal2.png"
+        ],
+        "description_sound": "seal.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "seal",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "seal.wav"
+        ],
+        "images": [
+          "seal1.jpg",
+          "seal2.png"
+        ],
+        "description_sound": "seal.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "cicada",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "cicada.wav"
+        ],
+        "images": [
+          "cicada1.jpg",
+          "cicada2.png"
+        ],
+        "description_sound": "cicada.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "cicada",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "cicada.wav"
+        ],
+        "images": [
+          "cicada1.jpg",
+          "cicada2.png"
+        ],
+        "description_sound": "cicada.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "wolf",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "wolf.wav"
+        ],
+        "images": [
+          "wolf1.jpg",
+          "wolf2.png"
+        ],
+        "description_sound": "wolf.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "wolf",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "wolf.wav"
+        ],
+        "images": [
+          "wolf1.jpg",
+          "wolf2.png"
+        ],
+        "description_sound": "wolf.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ], [
+      {
+        "label": "monkey",
+        "category": "item",
+        "unique": true,
+        "sounds": [
+          "monkey.wav"
+        ],
+        "images": [
+          "monkey1.jpg",
+          "monkey2.png"
+        ],
+        "description_sound": "monkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      },
+      {
+        "label": "monkey",
+        "category": "item_equivalent",
+        "unique": true,
+        "sounds": [
+          "monkey.wav"
+        ],
+        "images": [
+          "monkey1.jpg",
+          "monkey2.png"
+        ],
+        "description_sound": "monkey.mp3",
+        "description_sound_probability":100,
+        "equivalenceCardSetHashCode":""
+      }
+    ]
+  ]
+}

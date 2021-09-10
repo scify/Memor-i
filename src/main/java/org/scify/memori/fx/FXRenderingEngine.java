@@ -1,13 +1,13 @@
 
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ package org.scify.memori.fx;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,9 +29,13 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
-import org.scify.memori.*;
+import org.scify.memori.MainOptions;
+import org.scify.memori.MemoriGameLevel;
+import org.scify.memori.MemoriGameState;
+import org.scify.memori.MemoriTerrain;
 import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.ResourceLocator;
@@ -42,14 +47,12 @@ import java.io.IOException;
 import java.util.*;
 
 import static javafx.scene.input.KeyCode.*;
-import static javafx.scene.input.KeyCode.LEFT;
-import static javafx.scene.input.KeyCode.RIGHT;
 
 /**
  * The Rendering Engine is responsible for handling Game Events (drawing, playing audios etc) as well as implementing the UI events listener
  * (keyboard events in this case)
  */
-public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, EventHandler<KeyEvent> {
+public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, EventHandler<Event> {
 
     private final String audiosBasePath;
     /**
@@ -150,35 +153,35 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         double mWidth = Screen.getPrimary().getBounds().getWidth();
         double mHeight = Screen.getPrimary().getBounds().getHeight();
         gameScene = new Scene(root, mWidth, mHeight);
-        }
-    
+    }
+
     protected void initialiseGameSoundLists() {
 
-        for(int i = 1; i < 5 ; i++) {
+        for (int i = 1; i < 5; i++) {
             //TODO: should poll from sounds that exist in the additional pack only?
             endLevelStartingSounds.add("sound" + i + ".mp3");
         }
-        for(int i = 1; i < 5 ; i++) {
+        for (int i = 1; i < 5; i++) {
             //TODO: should poll from sounds that exist in the additional pack only?
             endLevelEndingSounds.add("sound" + i + ".mp3");
         }
-        for(int i = 1; i < 10 ; i++) {
+        for (int i = 1; i < 10; i++) {
             storyLineSounds.add("storyLine" + i + ".mp3");
         }
-        for(int i = 1; i < 11 ; i++) {
+        for (int i = 1; i < 11; i++) {
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             funFactorSounds.add(i + ".mp3");
         }
 
-        for(int i = 1; i < 3 ; i++) {
+        for (int i = 1; i < 3; i++) {
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             cpuIntroMessages.add("vs_cpu_intro_" + i + ".mp3");
         }
-        for(int i = 1; i < 3 ; i++) {
+        for (int i = 1; i < 3; i++) {
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             playerLostRoundMessages.add("vs_cpu_lost_" + i + ".mp3");
         }
-        for(int i = 1; i < 5 ; i++) {
+        for (int i = 1; i < 5; i++) {
             //TODO: should poll from fun factor sounds that exist in the additional pack only?
             playerWonRoundMessages.add("vs_cpu_won_" + i + ".mp3");
         }
@@ -197,13 +200,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             try {
                 setUpFXComponents();
                 initFXComponents(currentState);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             firstDraw = false;
-        }
-        else {
+        } else {
             //update UI components
             updateFXComponents(currentState);
         }
@@ -227,7 +228,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
             Card card = (Card) pair.getValue();
             //add the card to layout when the Thread deems appropriate
-            Platform.runLater(()-> {
+            Platform.runLater(() -> {
                 try {
                     gridPane.add(card.getButton(), (int) point.getX(), (int) point.getY());
                 } catch (Exception e) {
@@ -239,16 +240,18 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             });
             //Set up the event handler for the current card
             card.getButton().setOnKeyPressed(this);
+            card.getButton().setOnTouchPressed(this);
         }
 
-        Platform.runLater(()-> { //set first card as focused
-            gridPane.getChildren().get(0).getStyleClass().addAll("focusedCard"); });
+        Platform.runLater(() -> { //set first card as focused
+            gridPane.getChildren().get(0).getStyleClass().addAll("focusedCard");
+        });
     }
 
     @Override
     public UserAction getNextUserAction(Player pCurrentPlayer) {
         UserAction toReturn = null;
-        if(!pendingUserActions.isEmpty()) {
+        if (!pendingUserActions.isEmpty()) {
             toReturn = pendingUserActions.get(0);
             pendingUserActions.remove(0);
         }
@@ -728,10 +731,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
 
-
     /**
      * Given the coordinates, marks a Node as visited (green background) by applying a CSS class
-     * @param rowIndex the Node x position
+     *
+     * @param rowIndex    the Node x position
      * @param columnIndex the Node y position
      */
     private void focusOnTile(int rowIndex, int columnIndex) {
@@ -739,7 +742,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         Node node = getNodeByRowColumnIndex(rowIndex, columnIndex, gridPane);
         //remove the focused class from every other Node
         ObservableList<Node> nodes = gridPane.getChildren();
-        for(Node nd: nodes) {
+        for (Node nd : nodes) {
             nd.getStyleClass().remove("focusedCard");
         }
         //apply the CSS class
@@ -751,7 +754,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     /**
      * Computes the sound balance (left-right panning) and rate and plays the movement sound
-     * @param rowIndex the Node x position
+     *
+     * @param rowIndex    the Node x position
      * @param columnIndex the Node y position
      */
     private void movementSound(int rowIndex, int columnIndex) {
@@ -760,11 +764,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         fxAudioEngine.playMovementSound(soundBalance, rate);
     }
 
-    private Node getNodeByRowColumnIndex(final int row,final int column, GridPane gridPane) {
+    private Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();
-        for(Node node : childrens) {
-            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+        for (Node node : childrens) {
+            if (gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
                 result = node;
                 break;
             }
@@ -774,29 +778,50 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     /**
      * Handles the UI events (button clicks) and populates the {@link UserAction} list
+     *
      * @param event the event emitted from Ui
      */
     @Override
-    public void handle(KeyEvent event) {
+    public void handle(Event event) {
+        if (event.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) event;
+            if (keyEvt.getCode() == SPACE) {
+                handleKeyEvent(keyEvt);
+            }
+        } else if (event.getClass() == TouchEvent.class) {
+            handleMouseEvent((TouchEvent) event);
+        }
 
+    }
+
+    protected void handleKeyEvent(KeyEvent event) {
         UserAction userAction = null;
         //Handle different kinds of UI (keyboard) events
         if (event.getCode() == SPACE) {
             userAction = new UserAction("flip", getMovementDirection(event));
-        } else if(isMovementAction(event)) {
+        } else if (isMovementAction(event)) {
             userAction = new UserAction("movement", getMovementDirection(event));
-        } else if(event.getCode() == ENTER) {
+        } else if (event.getCode() == ENTER) {
             //userAction = new UserAction("help", event);
             userAction = new UserAction("enter", getMovementDirection(event));
-        } else if(event.getCode() == F1) {
+        } else if (event.getCode() == F1) {
             userAction = new UserAction("f1", getMovementDirection(event));
-        } else if(event.getCode() == ESCAPE) {
+        } else if (event.getCode() == ESCAPE) {
             userAction = new UserAction("escape", getMovementDirection(event));
             event.consume();
         }
+        addUserAction(userAction);
+    }
 
+    protected void handleMouseEvent(TouchEvent event) {
+        UserAction userAction = new UserAction("flip", "SPACE");
+        event.consume();
+        addUserAction(userAction);
+    }
+
+    protected void addUserAction(UserAction userAction) {
         //if there is a game event currently being processed
-        if(currentGameEvent != null) {
+        if (currentGameEvent != null) {
             //if the currently processed event is blocking, the UI engine does not accept any user actions
             //if the currently processed event is not blocking, accept user actions
             if (!currentGameEvent.blocking)
@@ -807,9 +832,9 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         }
     }
 
-
     /**
      * Determines whether the user action was a movement {@link GameEvent}.
+     *
      * @param evt the action event
      * @return true if the evt was a movement action
      */
@@ -824,9 +849,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     /**
      * Computes the sound balance (left-right panning) and rate and plays the movement sound
-     * @param rowIndex the Node x position
+     *
+     * @param rowIndex    the Node x position
      * @param columnIndex the Node y position
-     * @param isBlocking if the event should block the ui thread
+     * @param isBlocking  if the event should block the ui thread
      */
     private void invalidMovementSound(int rowIndex, int columnIndex, boolean isBlocking) {
         double soundBalance = map(columnIndex, 0.0, (double) gameLevel.getDimensions().getY(), -1.0, 2.0);
@@ -844,7 +870,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         MemoriConfiguration configuration = new MemoriConfiguration();
         ResourceLocator resourceLocator = new ResourceLocator();
 
-        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"),  "game_cover.png");
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         gameCoverImgContainer.setImage(new Image(gameCoverImgPath));
         gameCoverImgContainer.setFitHeight(250);
         gameCoverImgContainer.setFitWidth(250);
