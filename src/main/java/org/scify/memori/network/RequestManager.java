@@ -6,7 +6,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.scify.memori.helper.MemoriConfiguration;
 
@@ -28,7 +30,7 @@ public class RequestManager {
     public String doPost(String urlEndpoint, List<NameValuePair> params) {
         MemoriConfiguration configuration = new MemoriConfiguration();
         urlEndpoint = configuration.getProjectProperty("SERVER_URL") + urlEndpoint;
-        HttpClient client = new DefaultHttpClient();
+        CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(urlEndpoint);
         // add header
         post.setHeader("User-Agent", USER_AGENT);
