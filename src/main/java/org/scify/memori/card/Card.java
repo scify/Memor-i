@@ -142,7 +142,7 @@ public class Card implements Tile{
 
         // apply the appropriate style classes
         this.button.getStyleClass().addAll("cardButton", "closedCard");
-        
+
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;
@@ -167,7 +167,7 @@ public class Card implements Tile{
 
     private RotateTransition createRotator(Node card) {
         RotateTransition rotator = new RotateTransition(Duration.millis(1000), card);
-        rotator.setAxis(Rotate.Y_AXIS);
+        //rotator.setAxis(Rotate.Y_AXIS);
         rotator.setFromAngle(0);
         rotator.setToAngle(360);
         rotator.setInterpolator(Interpolator.EASE_BOTH);
