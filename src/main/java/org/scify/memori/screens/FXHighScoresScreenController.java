@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ public class FXHighScoresScreenController {
 
     @FXML
     private void exitIfEsc(KeyEvent evt) {
-        if(evt.getCode() == ESCAPE) {
+        if (evt.getCode() == ESCAPE) {
             exitScreen();
             evt.consume();
         }
@@ -72,6 +72,7 @@ public class FXHighScoresScreenController {
 
     /**
      * Gets all game levels available and adds a button for each one
+     *
      * @param buttonsContainer FXML container (div) for adding the buttons
      */
     private void addGameLevelButtons(VBox buttonsContainer) {
@@ -95,45 +96,51 @@ public class FXHighScoresScreenController {
 
     /**
      * When the user clicks on a game level button, a new Game should start
+     *
      * @param gameLevelBtn the button clcked
-     * @param gameLevel the game level associated with this button
+     * @param gameLevel    the game level associated with this button
      */
     protected void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
-
         gameLevelBtn.setOnKeyPressed(event -> {
             if (event.getCode() == SPACE) {
-
-                System.err.println("high score: " + highScoreHandler.getHighScoreForLevel(gameLevel.getLevelCode()));
-                String timestampStr = highScoreHandler.getHighScoreForLevel(gameLevel.getLevelCode());
-                // if there is a score in this level (ie if score is nt null)
-                // play relevant audio clips
-                // else play informative audio clip prompting to play the score
-                if (timestampStr != null) {
-                    String[] tokens = timestampStr.split(":");
-                    int minutes = Integer.parseInt(tokens[1]);
-                    int seconds = Integer.parseInt(tokens[2]);
-                    if (minutes != 0) {
-                        audioEngine.playNumSound(minutes);
-                        System.out.println("minutes: " + minutes);
-                        if (minutes > 1)
-                            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minutes.mp3", true);
-                        else
-                            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minute.mp3", true);
-                    }
-                    if (minutes != 0 && seconds != 0)
-                        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "and.mp3", true);
-                    if (seconds != 0) {
-                        audioEngine.playNumSound(seconds);
-                        if (seconds > 1)
-                            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "seconds.mp3", true);
-                        else
-                            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "second.mp3", true);
-                    }
-                } else {
-                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_score.mp3", false);
-                }
+                getHighScoreForGameLevel(gameLevel);
             }
         });
+        gameLevelBtn.setOnTouchPressed(event -> {
+            getHighScoreForGameLevel(gameLevel);
+        });
+    }
+
+    protected void getHighScoreForGameLevel(MemoriGameLevel gameLevel) {
+        System.err.println("high score: " + highScoreHandler.getHighScoreForLevel(gameLevel.getLevelCode()));
+        String timestampStr = highScoreHandler.getHighScoreForLevel(gameLevel.getLevelCode());
+        // if there is a score in this level (ie if score is nt null)
+        // play relevant audio clips
+        // else play informative audio clip prompting to play the score
+        if (timestampStr != null) {
+            String[] tokens = timestampStr.split(":");
+            int minutes = Integer.parseInt(tokens[1]);
+            int seconds = Integer.parseInt(tokens[2]);
+            if (minutes != 0) {
+                audioEngine.playNumSound(minutes);
+                System.out.println("minutes: " + minutes);
+                if (minutes > 1)
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minutes.mp3", true);
+                else
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "minute.mp3", true);
+            }
+            if (minutes != 0 && seconds != 0)
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "and.mp3", true);
+            if (seconds != 0) {
+                audioEngine.playNumSound(seconds);
+                if (seconds > 1)
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "seconds.mp3", true);
+                else
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "second.mp3", true);
+            }
+        } else {
+            audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_score.mp3", false);
+        }
     }
 
     private void exitScreen() {

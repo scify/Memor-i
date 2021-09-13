@@ -75,12 +75,12 @@ public class LevelsScreenController implements Initializable {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "levels_screen_welcome.mp3", false);
             }
         });
-        if(gameType.equals(GameType.VS_PLAYER))
+        if (gameType.equals(GameType.VS_PLAYER))
             setPlayerOnlineThread();
     }
 
     private void queryForGameRequestReplyThread(MemoriGameLevel gameLevel) {
-        threadGameRequestReply= new Thread(() -> queryServerForGameRequestReply(gameLevel));
+        threadGameRequestReply = new Thread(() -> queryServerForGameRequestReply(gameLevel));
         threadGameRequestReply.start();
     }
 
@@ -91,7 +91,7 @@ public class LevelsScreenController implements Initializable {
 
     private void setPlayerOnline() {
         PlayerManager playerManager = new PlayerManager();
-        while(true) {
+        while (true) {
             playerManager.setPlayerOnline();
             try {
                 Thread.sleep(PlayerManager.MARK_PLAYER_ACTIVE_CALL_INTERVAL);
@@ -105,6 +105,7 @@ public class LevelsScreenController implements Initializable {
 
     /**
      * Gets all game levels available and adds a button for each one
+     *
      * @param buttonsContainer FXML container (div) for adding the buttons
      */
     private void addGameLevelButtons(VBox buttonsContainer) {
@@ -128,7 +129,7 @@ public class LevelsScreenController implements Initializable {
 
     @FXML
     private void exitIfEsc(KeyEvent evt) {
-        if(evt.getCode() == ESCAPE) {
+        if (evt.getCode() == ESCAPE) {
             exitScreen();
         }
     }
@@ -137,12 +138,12 @@ public class LevelsScreenController implements Initializable {
      * Pauses all sounds and exits the application
      */
     private void exitScreen() {
-        if(currentGameRequestId != 0)
+        if (currentGameRequestId != 0)
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
-        if(gameType.equals(GameType.VS_PLAYER)) {
+        if (gameType.equals(GameType.VS_PLAYER)) {
             threadSetPlayerOnline.interrupt();
-            if(threadGameRequestReply != null)
+            if (threadGameRequestReply != null)
                 threadGameRequestReply.interrupt();
             sceneHandler.simplePopScene();
             new InvitePlayerScreen(sceneHandler);
@@ -153,37 +154,46 @@ public class LevelsScreenController implements Initializable {
     }
 
     private Button btnClicked;
+
     /**
      * When the user clicks on a game level button, a new Game should start
+     *
      * @param gameLevelBtn the button clcked
-     * @param gameLevel the game level associated with this button
+     * @param gameLevel    the game level associated with this button
      */
     private void levelBtnHandler(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         gameLevelBtn.setOnKeyPressed(event -> {
-            Thread thread;
             if (event.getCode() == SPACE) {
-                switch (gameType) {
-                    case SINGLE_PLAYER:
-                        audioEngine.pauseCurrentlyPlayingAudios();
-                        thread = new Thread(() -> gameLauncher.startSinglePlayerGame(gameLevel));
-                        thread.start();
-                        break;
-                    case VS_CPU:
-                        audioEngine.pauseCurrentlyPlayingAudios();
-                        thread = new Thread(() -> gameLauncher.startPVCPUGame(gameLevel));
-                        thread.start();
-                        break;
-                    case VS_PLAYER:
-                        Platform.runLater(() -> waitForResponseUI());
-                        btnClicked = gameLevelBtn;
-                        thread = new Thread(() -> sendGameRequest(gameLevel));
-                        thread.start();
-                        break;
-                    default:
-                        break;
-                }
+                startGameForGameLevel(gameLevelBtn, gameLevel);
             }
         });
+        gameLevelBtn.setOnTouchPressed(event -> {
+            startGameForGameLevel(gameLevelBtn, gameLevel);
+        });
+    }
+
+    protected void startGameForGameLevel(Button gameLevelBtn, MemoriGameLevel gameLevel) {
+        Thread thread;
+        switch (gameType) {
+            case SINGLE_PLAYER:
+                audioEngine.pauseCurrentlyPlayingAudios();
+                thread = new Thread(() -> gameLauncher.startSinglePlayerGame(gameLevel));
+                thread.start();
+                break;
+            case VS_CPU:
+                audioEngine.pauseCurrentlyPlayingAudios();
+                thread = new Thread(() -> gameLauncher.startPVCPUGame(gameLevel));
+                thread.start();
+                break;
+            case VS_PLAYER:
+                Platform.runLater(() -> waitForResponseUI());
+                btnClicked = gameLevelBtn;
+                thread = new Thread(() -> sendGameRequest(gameLevel));
+                thread.start();
+                break;
+            default:
+                break;
+        }
     }
 
     private void waitForResponseUI() {
@@ -197,7 +207,7 @@ public class LevelsScreenController implements Initializable {
 
     private void sendGameRequest(MemoriGameLevel gameLevel) {
         String serverResponse = gameRequestManager.sendGameRequestToPlayer(PlayerManager.getPlayerId(), opponentId, gameLevel.getLevelCode());
-        if(serverResponse != null) {
+        if (serverResponse != null) {
             parseGameRequestServerResponse(serverResponse, gameLevel);
         }
     }
@@ -238,20 +248,20 @@ public class LevelsScreenController implements Initializable {
         int timesCalled = 0;
         boolean shouldContinue = true;
         while (shouldContinue) {
-            timesCalled ++;
+            timesCalled++;
             try {
                 serverOperationResponse = gameRequestManager.askServerForGameRequestReply();
             } catch (Exception e) {
                 shouldContinue = false;
                 Thread.currentThread().interrupt();
             }
-            if(serverOperationResponse != null) {
+            if (serverOperationResponse != null) {
                 // we got a reply
-                if(serverOperationResponse.getMessage().equals("accepted")) {
+                if (serverOperationResponse.getMessage().equals("accepted")) {
                     // to press enter to start the game
                     Platform.runLater(() -> messageText.setText(resources.getString("opponent_accepted")));
                     promptToStartGame(gameLevel);
-                } else if(serverOperationResponse.getMessage().equals("rejected")) {
+                } else if (serverOperationResponse.getMessage().equals("rejected")) {
                     cancelGameRequest();
                     Platform.runLater(() -> messageText.setText(resources.getString("opponent_rejected")));
                     Platform.runLater(() -> resetUI());
@@ -271,7 +281,7 @@ public class LevelsScreenController implements Initializable {
                 }
             }
             System.out.println("timesCalled " + timesCalled);
-            if(timesCalled > RequestManager.MAX_REQUEST_TRIES) {
+            if (timesCalled > RequestManager.MAX_REQUEST_TRIES) {
                 System.err.println("Opponent not answering!");
                 Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_rejected.mp3", true));
                 voiceThread.start();
@@ -301,17 +311,17 @@ public class LevelsScreenController implements Initializable {
 
     private void setAllLevelButtonsAsDisabled() {
         VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
-        for(Node node: gameLevelsContainer.getChildren()) {
+        for (Node node : gameLevelsContainer.getChildren()) {
             node.setDisable(true);
         }
     }
 
     private void setAllLevelButtonsAsEnabled() {
         VBox gameLevelsContainer = (VBox) primaryScene.lookup("#gameLevelsDiv");
-        for(Node node: gameLevelsContainer.getChildren()) {
+        for (Node node : gameLevelsContainer.getChildren()) {
             node.setDisable(false);
         }
-        if(btnClicked != null)
+        if (btnClicked != null)
             btnClicked.requestFocus();
     }
 
@@ -320,7 +330,7 @@ public class LevelsScreenController implements Initializable {
         Thread voiceThread = new Thread(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "request_accepted.mp3", false));
         voiceThread.start();
         primaryScene.setOnKeyReleased(event -> {
-            if(event.getCode() == ENTER) {
+            if (event.getCode() == ENTER) {
                 PlayerManager.localPlayerIsInitiator = true;
                 audioEngine.pauseCurrentlyPlayingAudios();
                 threadSetPlayerOnline.interrupt();

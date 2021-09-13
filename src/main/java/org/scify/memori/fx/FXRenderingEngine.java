@@ -784,14 +784,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     @Override
     public void handle(Event event) {
         if (event.getClass() == KeyEvent.class) {
-            KeyEvent keyEvt = (KeyEvent) event;
-            if (keyEvt.getCode() == SPACE) {
-                handleKeyEvent(keyEvt);
-            }
+            handleKeyEvent((KeyEvent) event);
         } else if (event.getClass() == TouchEvent.class) {
             handleMouseEvent((TouchEvent) event);
         }
-
     }
 
     protected void handleKeyEvent(KeyEvent event) {
