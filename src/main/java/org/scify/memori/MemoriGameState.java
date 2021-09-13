@@ -1,13 +1,13 @@
 
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,7 +89,7 @@ public class MemoriGameState implements GameState {
                 Player onlinePlayer = PlayerManager.getOpponentPlayer();
                 players.add(onlinePlayer);
                 currentPlayer = PlayerManager.getStartingPlayer();
-            break;
+                break;
         }
 
         iCurrentTurn = 0;
@@ -98,40 +98,35 @@ public class MemoriGameState implements GameState {
 
     /**
      * Updates the column index based on the Key event passed
+     *
      * @param direction the direction of the user action
      */
     public void updateColumnIndex(String direction) {
-        switch(direction) {
-            case "LEFT":
-                columnIndex--;
-                break;
-            case "RIGHT":
-                columnIndex++;
-                break;
-            default: break;
-        }
+        if (direction.equals("LEFT"))
+            columnIndex--;
+        else if (direction.equals("RIGHT"))
+            columnIndex++;
+        else if (direction.startsWith("AT"))
+            columnIndex = Integer.parseInt(direction.substring(direction.lastIndexOf('_') + 1));
     }
 
     /**
      * Updates the row index based on the Key event passed
+     *
      * @param direction the direction of the user action
      */
     public void updateRowIndex(String direction) {
-
-        switch(direction) {
-            case "UP":
-                rowIndex--;
-                break;
-            case "DOWN":
-                rowIndex++;
-                break;
-            default: break;
+        if (direction.equals("UP"))
+            rowIndex--;
+        else if (direction.equals("DOWN"))
+            rowIndex++;
+        else if (direction.startsWith("AT")) {
+            String[] splitted = direction.split("_");
+            rowIndex = Integer.parseInt(splitted[splitted.length - 2]);
         }
     }
 
-
     public int getColumnIndex() {
-
         return columnIndex;
     }
 
@@ -148,11 +143,12 @@ public class MemoriGameState implements GameState {
 
     /**
      * Getter for the game events queue
+     *
      * @return A LinkedList representation of the game events queue
      */
     @Override
     public LinkedList<GameEvent> getEventQueue() {
-        return (LinkedList)gameEventQueue;
+        return (LinkedList) gameEventQueue;
     }
 
 
@@ -175,8 +171,8 @@ public class MemoriGameState implements GameState {
 
     public void incrementTurn() {
         this.iCurrentTurn++;
-        for(Player player: players) {
-            if(!player.equals(currentPlayer)) {
+        for (Player player : players) {
+            if (!player.equals(currentPlayer)) {
                 currentPlayer = player;
                 break;
             }
@@ -189,6 +185,7 @@ public class MemoriGameState implements GameState {
 
     /**
      * Checks if all tiles are in a won state
+     *
      * @return true if all tiles are won
      */
     public boolean areAllTilesWon() {

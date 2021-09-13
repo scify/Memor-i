@@ -29,6 +29,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
@@ -85,12 +87,12 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     /**
      * Each game level has an introductory sound associated with it
      */
-    private ArrayList<String> introductorySounds = new ArrayList<>();
+    private final ArrayList<String> introductorySounds = new ArrayList<>();
 
     /**
      * Every time we play a game we follow the story line
      */
-    private ArrayList<String> storyLineSounds = new ArrayList<>();
+    private final ArrayList<String> storyLineSounds = new ArrayList<>();
 
     /**
      * Fun factor sounds occur every 3 levels
@@ -118,11 +120,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * Every time a level ends, we should construct the end level Sound which consists of:
      * 1) starting sound 2) the time in which the player finished the level 3) an ending sound
      */
-    private ArrayList<String> endLevelStartingSounds = new ArrayList<>();
-    private ArrayList<String> endLevelEndingSounds = new ArrayList<>();
+    private final ArrayList<String> endLevelStartingSounds = new ArrayList<>();
+    private final ArrayList<String> endLevelEndingSounds = new ArrayList<>();
 
-    private MemoriConfiguration configuration;
-    private MemoriGameLevel gameLevel;
+    private final MemoriConfiguration configuration;
+    private final MemoriGameLevel gameLevel;
 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
         configuration = new MemoriConfiguration();
@@ -241,6 +243,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             //Set up the event handler for the current card
             card.getButton().setOnKeyPressed(this);
             card.getButton().setOnTouchPressed(this);
+            card.getButton().setOnMouseClicked(this);
         }
 
         Platform.runLater(() -> { //set first card as focused
@@ -330,6 +333,17 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 //                        }
                         if (new Date().getTime() > currentGameEvent.delay) {
                             fxAudioEngine.pauseAndPlaySound((String) currentGameEvent.parameters, currentGameEvent.blocking);
+                            listIterator.remove();
+                        }
+                        break;
+                    case "FOCUS":
+                        //check if the event should happen after some time
+                        if (new Date().getTime() > currentGameEvent.delay) {
+                            coords = (Point2D) currentGameEvent.parameters;
+                            currCard = (Card) currentState.getTerrain().getTile((int) coords.getX(), (int) coords.getY());
+                            Platform.runLater(() -> {
+                                focusOnTile((int) coords.getX(), (int) coords.getY());
+                            });
                             listIterator.remove();
                         }
                         break;
@@ -739,7 +753,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      */
     private void focusOnTile(int rowIndex, int columnIndex) {
         //get Node (in our case it's a button)
-        Node node = getNodeByRowColumnIndex(rowIndex, columnIndex, gridPane);
+        Node node = getNodeByRowColumnIndex(rowIndex, columnIndex);
         //remove the focused class from every other Node
         ObservableList<Node> nodes = gridPane.getChildren();
         for (Node nd : nodes) {
@@ -764,11 +778,11 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         fxAudioEngine.playMovementSound(soundBalance, rate);
     }
 
-    private Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+    private Node getNodeByRowColumnIndex(final int row, final int column) {
         Node result = null;
-        ObservableList<Node> childrens = gridPane.getChildren();
-        for (Node node : childrens) {
-            if (gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+        ObservableList<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
                 result = node;
                 break;
             }
@@ -786,7 +800,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         if (event.getClass() == KeyEvent.class) {
             handleKeyEvent((KeyEvent) event);
         } else if (event.getClass() == TouchEvent.class) {
-            handleMouseEvent((TouchEvent) event);
+            handleTouchOrMouseEvent(event);
+        } else if (event.getClass() == MouseEvent.class) {
+            if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
+                handleTouchOrMouseEvent(event);
         }
     }
 
@@ -809,8 +826,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         addUserAction(userAction);
     }
 
-    protected void handleMouseEvent(TouchEvent event) {
-        UserAction userAction = new UserAction("flip", "SPACE");
+    protected void handleTouchOrMouseEvent(Event event) {
+        int x = GridPane.getRowIndex((Node) event.getSource());
+        int y = GridPane.getColumnIndex((Node) event.getSource());
+        UserAction userAction = new UserAction("flip", "AT_" + x + "_" + y);
         event.consume();
         addUserAction(userAction);
     }
@@ -851,7 +870,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * @param isBlocking  if the event should block the ui thread
      */
     private void invalidMovementSound(int rowIndex, int columnIndex, boolean isBlocking) {
-        double soundBalance = map(columnIndex, 0.0, (double) gameLevel.getDimensions().getY(), -1.0, 2.0);
+        double soundBalance = map(columnIndex, 0.0, gameLevel.getDimensions().getY(), -1.0, 2.0);
         double rate = map(rowIndex, 0.0, gameLevel.getDimensions().getX(), 1.5, 1.0);
         fxAudioEngine.playInvalidMovementSound(soundBalance, isBlocking);
     }

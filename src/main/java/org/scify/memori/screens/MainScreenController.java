@@ -26,6 +26,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -209,6 +211,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             exitApplication();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                exitApplication();
         }
     }
 
@@ -226,6 +231,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             initializeTutorialGame();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                initializeTutorialGame();
         }
     }
 
@@ -249,6 +257,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             initializeSinglePlayerGame();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                initializeSinglePlayerGame();
         }
     }
 
@@ -271,6 +282,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             initializePvCGame();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                initializePvCGame();
         }
     }
 
@@ -293,6 +307,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             initializePvPGame();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                initializePvPGame();
         }
     }
 
@@ -315,6 +332,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             myScores();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                myScores();
         }
     }
 
@@ -333,6 +353,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             goToSponsorsPage();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                goToSponsorsPage();
         }
     }
 
@@ -349,6 +372,9 @@ public class MainScreenController implements Initializable {
             }
         } else if (evt.getClass() == TouchEvent.class) {
             headphonesAdjustment();
+        } else if (evt.getClass() == MouseEvent.class) {
+            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
+                headphonesAdjustment();
         }
     }
 

@@ -66,16 +66,20 @@ public class SinglePlayerRules extends MemoriRules {
         MemoriTerrain memoriTerrain = (MemoriTerrain) (gsCurrentState.getTerrain());
         // currTile is the tile that was moved on or acted upon
         Tile currTile = memoriTerrain.getTile(gsCurrentState.getRowIndex(), gsCurrentState.getColumnIndex());
-        if(uaAction.getActionType().equals("movement")) {
-            movementUI(uaAction, gsCurrentState);
-
-        } else if (uaAction.getActionType().equals("flip")) {
-            performFlipSinglePlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
-        } else if(uaAction.getActionType().equals("enter")) {
-            createHelpGameEvent(uaAction, gsCurrentState);
-        } else if(uaAction.getActionType().equals("escape")) {
-            //exit current game
-            gsCurrentState.setGameFinished(true);
+        switch (uaAction.getActionType()) {
+            case "movement":
+                movementUI(uaAction, gsCurrentState);
+                break;
+            case "flip":
+                performFlipSinglePlayer(currTile, gsCurrentState, uaAction, memoriTerrain);
+                break;
+            case "enter":
+                createHelpGameEvent(uaAction, gsCurrentState);
+                break;
+            case "escape":
+                //exit current game
+                gsCurrentState.setGameFinished(true);
+                break;
         }
     }
 

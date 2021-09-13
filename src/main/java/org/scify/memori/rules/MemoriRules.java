@@ -149,6 +149,7 @@ public class MemoriRules extends Observable implements Rules {
 
     protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState, boolean isCardSoundBlocking) {
         System.err.println("flipping tile " + isCardSoundBlocking);
+        gsCurrentState.getEventQueue().add(new GameEvent("FOCUS", uaAction.getCoords()));
         gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
         gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
         gsCurrentState.getEventQueue().add(new GameEvent("FLIP_UI", uaAction.getCoords(), new Date().getTime() + 1000, false));

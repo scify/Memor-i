@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 import org.scify.memori.*;
@@ -169,6 +170,10 @@ public class LevelsScreenController implements Initializable {
         });
         gameLevelBtn.setOnTouchPressed(event -> {
             startGameForGameLevel(gameLevelBtn, gameLevel);
+        });
+        gameLevelBtn.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY)
+                startGameForGameLevel(gameLevelBtn, gameLevel);
         });
     }
 
