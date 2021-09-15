@@ -39,9 +39,9 @@ import java.util.logging.Level;
 
 
 public class MainScreen extends Application {
-    private double mWidth = Screen.getPrimary().getBounds().getWidth();
-    private double mHeight = Screen.getPrimary().getBounds().getHeight();
-    private Rectangle graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+    private final double mWidth = Screen.getPrimary().getBounds().getWidth();
+    private final double mHeight = Screen.getPrimary().getBounds().getHeight();
+    private final Rectangle graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     public static Scene scene;
 
     public MainScreen() {
@@ -51,10 +51,6 @@ public class MainScreen extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = new MemoriConfiguration();
-        //TODO (4): Here we add an additional directory called "additional_pack", which will contain the extra data pack, called "test_pack".
-        //To test it, create an "additional_pack" directory with different files
-//        System.out.println("adding path:" + configuration.getUserDir() + "test_pack");
-//        addPath(configuration.getUserDir() + "test_pack");
 
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
         //Load fxml file (layout xml) for first screen
@@ -64,8 +60,8 @@ public class MainScreen extends Application {
         MainScreenController controller = loader.getController();
 
         // set as width and height the screen width and height
-        MainOptions.mWidth = graphicsEnvironment.getWidth() - 10;
-        MainOptions.mHeight = graphicsEnvironment.getHeight() - 10;
+        MainOptions.mWidth = graphicsEnvironment.getWidth();
+        MainOptions.mHeight = graphicsEnvironment.getHeight();
         // construct the scene (the content of the stage)
         Scene primaryScene = new Scene(root, mWidth, mHeight);
         primaryStage.setTitle("Memor-i");

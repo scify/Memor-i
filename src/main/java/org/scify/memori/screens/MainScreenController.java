@@ -94,10 +94,10 @@ public class MainScreenController implements Initializable {
         this.primaryStage = primaryStage;
         addCloseHandlerOnStage();
         primaryScene.getStylesheets().add("css/style.css");
-        primaryStage.show();
+
         primaryStage.requestFocus();
         primaryStage.sizeToScene();
-        primaryStage.setFullScreen(true);
+
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
@@ -106,7 +106,8 @@ public class MainScreenController implements Initializable {
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
-
+        primaryStage.setFullScreen(true);
+        primaryStage.setMaximized(true);
         FXRenderingEngine.setGamecoverIcon(primaryScene, "gameCoverImgContainer");
 
         setStageFavicon(primaryStage);

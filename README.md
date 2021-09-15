@@ -98,11 +98,12 @@ limitations under the License.
 <a href="http://www.scify.gr/site/en/"><img src="http://www.scify.gr/site/images/scify/scify_logo_108.png"></a>
 </td>
 <td>
-<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img height="100px" src="https://dipylon.org/wp-content/uploads/JSL-PBF-Gr_gr.jpg" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
+<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img height="100px" src="https://praksis.gr/cms/files/2019/12/LATSIS_FOUNDATION_LOGO_GR.jpg" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
 </td>
 </tr>
 </table>
 <br><br>
+
 ## Acknowledgments
 
 * [Maven plugin for parsing JSON files](https://mvnrepository.com/artifact/org.json/json)
