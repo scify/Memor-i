@@ -23,7 +23,7 @@
         </ImageView>
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" fx:id="btnContainer">
-        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitGame"/>
+        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment" fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler" onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler" onMouseClicked="#initializeTutorialGameEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player" onKeyPressed="#initializeSinglePlayerGameEventHandler" onTouchPressed="#initializeSinglePlayerGameEventHandler" onMouseClicked="#initializeSinglePlayerGameEventHandler"/>
