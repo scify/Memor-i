@@ -26,9 +26,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -39,12 +36,14 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -69,19 +68,20 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
         // if the game is in english, we want to hide the "sponsors" button
-        if (configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+        if (configuration.getProjectProperty("APP_LANG").equalsIgnoreCase("en")) {
             sponsors.setVisible(false);
         }
         // if the game has vs_player option enabled, show the button
         // else hide it
-        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
             versus_player.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_player);
         }
 
-        if (configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
             versus_computer.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_computer);
@@ -90,14 +90,13 @@ public class MainScreenController implements Initializable {
 
 
     public void setParameters(Stage primaryStage, Scene primaryScene) {
-        this.primaryScene = primaryScene;
+        MainScreenController.primaryScene = primaryScene;
         this.primaryStage = primaryStage;
         addCloseHandlerOnStage();
         primaryScene.getStylesheets().add("css/style.css");
 
         primaryStage.requestFocus();
         primaryStage.sizeToScene();
-
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
@@ -161,7 +160,7 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        if (configuration.getProjectProperty("VS_CPU_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
             primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
@@ -169,7 +168,7 @@ public class MainScreenController implements Initializable {
             });
         }
 
-        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").toLowerCase().equals("true")) {
+        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
             primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
@@ -189,7 +188,7 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        if (!configuration.getProjectProperty("APP_LANG").toLowerCase().equals("en")) {
+        if (!configuration.getProjectProperty("APP_LANG").equalsIgnoreCase("en")) {
             primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);
@@ -205,16 +204,14 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void exitGame(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE || keyEvt.getCode() == ESCAPE) {
                 exitApplication();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             exitApplication();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                exitApplication();
         }
     }
 
@@ -225,16 +222,14 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void initializeTutorialGameEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 initializeTutorialGame();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             initializeTutorialGame();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                initializeTutorialGame();
         }
     }
 
@@ -251,16 +246,14 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void initializeSinglePlayerGameEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 initializeSinglePlayerGame();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             initializeSinglePlayerGame();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                initializeSinglePlayerGame();
         }
     }
 
@@ -276,16 +269,14 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void initializePvCGameEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 initializePvCGame();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             initializePvCGame();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                initializePvCGame();
         }
     }
 
@@ -301,16 +292,14 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     protected void initializePvPGameEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 initializePvPGame();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             initializePvPGame();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                initializePvPGame();
         }
     }
 
@@ -326,16 +315,14 @@ public class MainScreenController implements Initializable {
 
     @FXML
     protected void myScoresEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 myScores();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             myScores();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                myScores();
         }
     }
 
@@ -347,16 +334,14 @@ public class MainScreenController implements Initializable {
 
     @FXML
     protected void goToSponsorsPageEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 goToSponsorsPage();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             goToSponsorsPage();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                goToSponsorsPage();
         }
     }
 
@@ -366,16 +351,14 @@ public class MainScreenController implements Initializable {
 
     @FXML
     protected void headphonesAdjustmentEventHandler(Event evt) {
+        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
                 headphonesAdjustment();
             }
-        } else if (evt.getClass() == TouchEvent.class) {
+        } else {
             headphonesAdjustment();
-        } else if (evt.getClass() == MouseEvent.class) {
-            if (((MouseEvent) evt).getButton() == MouseButton.PRIMARY)
-                headphonesAdjustment();
         }
     }
 

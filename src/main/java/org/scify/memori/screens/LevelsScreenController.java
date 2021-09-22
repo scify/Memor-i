@@ -11,7 +11,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
-import org.scify.memori.*;
+import org.scify.memori.GameLevelService;
+import org.scify.memori.MemoriGameLauncher;
+import org.scify.memori.MemoriGameLevel;
+import org.scify.memori.PlayerManager;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
@@ -174,6 +177,9 @@ public class LevelsScreenController implements Initializable {
         gameLevelBtn.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY)
                 startGameForGameLevel(gameLevelBtn, gameLevel);
+        });
+        gameLevelBtn.setOnAction((event) -> {
+            startGameForGameLevel(gameLevelBtn, gameLevel);
         });
     }
 

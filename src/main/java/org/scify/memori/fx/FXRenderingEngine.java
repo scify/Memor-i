@@ -40,6 +40,7 @@ import org.scify.memori.MemoriGameState;
 import org.scify.memori.MemoriTerrain;
 import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.*;
 
@@ -47,6 +48,7 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.*;
 
@@ -56,7 +58,6 @@ import static javafx.scene.input.KeyCode.*;
  */
 public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, EventHandler<Event> {
 
-    private final String audiosBasePath;
     /**
      * The rendering engine processes the game events, one at a time.
      * The currently processed {@link GameEvent} may block any UI input.
@@ -83,11 +84,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * JavFX component to bind the scene with the .fxml and .css file
      */
     protected Parent root;
-
-    /**
-     * Each game level has an introductory sound associated with it
-     */
-    private final ArrayList<String> introductorySounds = new ArrayList<>();
 
     /**
      * Every time we play a game we follow the story line
@@ -123,14 +119,12 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private final ArrayList<String> endLevelStartingSounds = new ArrayList<>();
     private final ArrayList<String> endLevelEndingSounds = new ArrayList<>();
 
-    private final MemoriConfiguration configuration;
     private final MemoriGameLevel gameLevel;
 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
-        configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = new MemoriConfiguration();
         this.gameLevel = gameLevel;
         this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
-        this.audiosBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
         this.gameInstructionSoundsBasePath = configuration.getProjectProperty("GAME_INSTRUCTION_SOUNDS");
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
@@ -147,11 +141,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         }
         this.initialiseGameSoundLists();
 
-        //initialize the audio engine object
         fxAudioEngine = new FXAudioEngine();
-        /**
-         * computes the current screen height and width
-         */
+
         double mWidth = Screen.getPrimary().getBounds().getWidth();
         double mHeight = Screen.getPrimary().getBounds().getHeight();
         gameScene = new Scene(root, mWidth, mHeight);
@@ -218,17 +209,14 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     protected void initFXComponents(MemoriGameState currentState) {
-        MemoriGameState memoriGS = currentState;
-        MemoriTerrain terrain = (MemoriTerrain) memoriGS.getTerrain();
+        MemoriTerrain terrain = (MemoriTerrain) currentState.getTerrain();
         //Load the tiles list from the Terrain
         Map<Point2D, Tile> initialTiles = terrain.getTiles();
-        Iterator it = initialTiles.entrySet().iterator();
         //Iterate through the tiles list to add them to the Layout object
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            Point2D point = (Point2D) pair.getKey();
+        for (Map.Entry<Point2D, Tile> point2DTileEntry : initialTiles.entrySet()) {
+            Point2D point = (Point2D) ((Map.Entry) point2DTileEntry).getKey();
 
-            Card card = (Card) pair.getValue();
+            Card card = (Card) ((Map.Entry) point2DTileEntry).getValue();
             //add the card to layout when the Thread deems appropriate
             Platform.runLater(() -> {
                 try {
@@ -244,6 +232,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             card.getButton().setOnKeyPressed(this);
             card.getButton().setOnTouchPressed(this);
             card.getButton().setOnMouseClicked(this);
+            card.getButton().setOnAction(this::handleTouchOrMouseEvent);
         }
 
         Platform.runLater(() -> { //set first card as focused
@@ -827,6 +816,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     protected void handleTouchOrMouseEvent(Event event) {
+        MemoriLogger.LOGGER.log(Level.INFO, event.toString());
         int x = GridPane.getRowIndex((Node) event.getSource());
         int y = GridPane.getColumnIndex((Node) event.getSource());
         UserAction userAction = new UserAction("flip", "AT_" + x + "_" + y);

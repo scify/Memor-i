@@ -23,18 +23,18 @@
         </ImageView>
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" fx:id="btnContainer">
-        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment" fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler" onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler" onMouseClicked="#initializeTutorialGameEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player" onKeyPressed="#initializeSinglePlayerGameEventHandler" onTouchPressed="#initializeSinglePlayerGameEventHandler" onMouseClicked="#initializeSinglePlayerGameEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_computer" fx:id="versus_computer" onKeyPressed="#initializePvCGameEventHandler" onTouchPressed="#initializePvCGameEventHandler" onMouseClicked="#initializePvCGameEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player" onKeyPressed="#initializePvPGameEventHandler" onTouchPressed="#initializePvPGameEventHandler" onMouseClicked="#initializePvPGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%first_screen_welcome" fx:id="welcome" onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment" fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler" onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler" onAction="#headphonesAdjustmentEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial" onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler" onMouseClicked="#initializeTutorialGameEventHandler" onAction="#initializeTutorialGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player" onKeyPressed="#initializeSinglePlayerGameEventHandler" onTouchPressed="#initializeSinglePlayerGameEventHandler" onMouseClicked="#initializeSinglePlayerGameEventHandler" onAction="#initializeSinglePlayerGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_computer" fx:id="versus_computer" onKeyPressed="#initializePvCGameEventHandler" onTouchPressed="#initializePvCGameEventHandler" onMouseClicked="#initializePvCGameEventHandler" onAction="#initializePvCGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player" onKeyPressed="#initializePvPGameEventHandler" onTouchPressed="#initializePvPGameEventHandler" onMouseClicked="#initializePvPGameEventHandler" onAction="#initializePvPGameEventHandler"/>
         <VBox alignment="center" fx:id="gameLevelsDiv">
 
         </VBox>
-        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%my_scores" fx:id="my_scores" onKeyPressed="#myScoresEventHandler" onTouchPressed="#myScoresEventHandler" onMouseClicked="#myScoresEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors" onKeyPressed="#goToSponsorsPageEventHandler" onTouchPressed="#goToSponsorsPageEventHandler" onMouseClicked="#goToSponsorsPageEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%my_scores" fx:id="my_scores" onKeyPressed="#myScoresEventHandler" onTouchPressed="#myScoresEventHandler" onMouseClicked="#myScoresEventHandler" onAction="#myScoresEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors" onKeyPressed="#goToSponsorsPageEventHandler" onTouchPressed="#goToSponsorsPageEventHandler" onMouseClicked="#goToSponsorsPageEventHandler" onAction="#goToSponsorsPageEventHandler"/>
     </VBox>
 
     <stylesheets>
