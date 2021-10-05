@@ -29,9 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import org.scify.memori.MainOptions;
@@ -788,11 +785,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     public void handle(Event event) {
         if (event.getClass() == KeyEvent.class) {
             handleKeyEvent((KeyEvent) event);
-        } else if (event.getClass() == TouchEvent.class) {
+        } else {
             handleTouchOrMouseEvent(event);
-        } else if (event.getClass() == MouseEvent.class) {
-            if (((MouseEvent) event).getButton() == MouseButton.PRIMARY)
-                handleTouchOrMouseEvent(event);
         }
     }
 
@@ -820,6 +814,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         int x = GridPane.getRowIndex((Node) event.getSource());
         int y = GridPane.getColumnIndex((Node) event.getSource());
         UserAction userAction = new UserAction("flip", "AT_" + x + "_" + y);
+        MemoriLogger.LOGGER.log(Level.INFO, userAction.toString());
         event.consume();
         addUserAction(userAction);
     }
