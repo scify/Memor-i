@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Label?>
-<StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
-    <VBox alignment="TOP_CENTER" spacing="5" styleClass="logoContainer">
+<StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane"
+           xmlns="http://javafx.com/javafx/8.0.102-ea"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.scify.memori.screens.SponsorsScreenController">
+    <VBox alignment="TOP_CENTER" spacing="10" styleClass="logoContainer">
         <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../img/logo-latsis-gr.png"/>
             </image>
         </ImageView>
-        <Label styleClass="sponsorLabel" text="Η έκδοση Memori PvP του έργου Memori υλοποιείται"/>
-        <Label styleClass="sponsorLabel" text="με χρηματοδότηση από το Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση."/>
+        <Label styleClass="sponsorLabel" text="%sponsors_text_1"/>
+        <Label styleClass="sponsorLabel" text="%sponsors_text_2"/>
 
-        <HBox alignment="CENTER" spacing="5" styleClass="logoContainer">
-            <Label styleClass="sponsorLabel" text="Crowdfunding  χορηγοί της έκδοσης v1 του Memor-i:"/>
+        <HBox alignment="CENTER" spacing="2" styleClass="logoContainer">
+            <Label styleClass="sponsorLabel" text="%sponsors_text_4"/>
+        </HBox>
+        <HBox alignment="CENTER" spacing="2" styleClass="logoContainer">
+            <Label styleClass="sponsorLabel" text="%sponsors_text_3"/>
         </HBox>
     </VBox>
-    <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
-        <ImageView styleClass="boxImage">
-            <image>
-                <Image requestedHeight="250" requestedWidth="250" url="@../img/logo_memor-i_white letters.png"/>
-            </image>
-        </ImageView>
-    </HBox>
-    <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
-        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../img/Powered_by_SciFY.png"/>
-            </image>
-        </ImageView>
-    </HBox>
-    <VBox alignment="CENTER_LEFT" styleClass="sponsorsContainer" style="-fx-padding: 50px">
+    <VBox alignment="CENTER_LEFT" styleClass="sponsorsContainer" style="-fx-padding: 20px">
         <Label styleClass="sponsorLabel" text="Elina Makri"/>
         <Label styleClass="sponsorLabel" text="Akrotiri Women's Group"/>
         <Label styleClass="sponsorLabel" text="Ioannis Pantazis"/>
@@ -70,6 +59,20 @@
         <Label styleClass="sponsorLabel" text="Αθανάσιος Καραλής"/>
         <Label styleClass="sponsorLabel" text="George Bogeas"/>
     </VBox>
+    <HBox alignment="BOTTOM_RIGHT" spacing="2" styleClass="logoContainer">
+        <ImageView styleClass="boxImage">
+            <image>
+                <Image requestedHeight="150" requestedWidth="150" url="@../img/logo_memor-i_white letters.png"/>
+            </image>
+        </ImageView>
+    </HBox>
+    <HBox alignment="BOTTOM_LEFT" spacing="2" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/Powered_by_SciFY.png"/>
+            </image>
+        </ImageView>
+    </HBox>
     <stylesheets>
         <URL value="@/css/style.css"/>
     </stylesheets>

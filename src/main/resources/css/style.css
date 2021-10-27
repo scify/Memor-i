@@ -68,6 +68,10 @@ StackPane {
     -fx-pref-width: 100%;
 }
 
+.padding {
+    -fx-padding: 20px;
+}
+
 .optionButton {
     -fx-pref-width: 400px;
     -fx-pref-height: 50px;
@@ -115,6 +119,11 @@ StackPane {
     -fx-pref-height: 100%;
 }
 
+.languageButtonsContainer {
+    -fx-pref-width: 90%;
+    -fx-pref-height: 100%;
+}
+
 .sponsorsContainer {
     -fx-pref-width: 30%;
     -fx-pref-height: 90%;
@@ -131,7 +140,7 @@ StackPane {
     -fx-font-weight: bold;
 }
 
-.welcomeButton {
+.btn {
     -fx-pref-width: 800px;
     -fx-pref-height: 70px;
     -fx-font-family: Ubuntu;
@@ -144,6 +153,27 @@ StackPane {
     -fx-background-color: transparent;
     -fx-text-fill: yellow;
     -fx-font-weight: bold;
+}
+
+.btn:hover {
+    -fx-cursor: hand;
+}
+
+.btn:pressed {
+    -fx-background-color: #DDDD00;
+    -fx-highlight-fill: -fx-accent;
+    -fx-highlight-text-fill: white;
+    -fx-text-fill: #004C86;
+}
+
+.btn-border {
+    -fx-border-width: 1px;
+    -fx-border-color: yellow;
+}
+
+.btn-language {
+    -fx-pref-width: 30%;
+    -fx-padding: 25px;
 }
 
 .sponsorTextBig {
