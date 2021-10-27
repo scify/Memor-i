@@ -15,7 +15,7 @@ public class ResourceLocator {
     private MemoriConfiguration configuration;
 
     public ResourceLocator() {
-        configuration = new MemoriConfiguration();
+        configuration = MemoriConfiguration.getInstance();
         this.rootDataPath = "/" + configuration.getProjectProperty("DATA_PACKAGE") + "/";
         this.rootDataPathDefault = "/" + configuration.getProjectProperty("DATA_PACKAGE_DEFAULT") + "/";
     }
@@ -54,7 +54,7 @@ public class ResourceLocator {
      */
     private String getFileNameEquivalentFromResourcePack(String file) {
         //System.out.println("Trying to get mapped property: " + file);
-        MemoriConfiguration memoriConfiguration = new MemoriConfiguration();
+        MemoriConfiguration memoriConfiguration = MemoriConfiguration.getInstance();
         //When loading a resource, the "/" means root of the main/resources directory
         InputStream inputStream = getClass().getResourceAsStream(this.rootDataPath + "resources_map.properties");
         //if project_additional.properties file is not found, we load the default one

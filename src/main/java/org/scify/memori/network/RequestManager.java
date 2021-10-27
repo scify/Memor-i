@@ -28,7 +28,7 @@ public class RequestManager {
     public static int MAX_REQUEST_TRIES = 40;
 
     public String doPost(String urlEndpoint, List<NameValuePair> params) {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         urlEndpoint = configuration.getProjectProperty("SERVER_URL") + urlEndpoint;
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(urlEndpoint);
@@ -61,7 +61,7 @@ public class RequestManager {
     }
 
     public String doGet(String urlEndpoint) {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         urlEndpoint = configuration.getProjectProperty("SERVER_URL") + urlEndpoint;
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(urlEndpoint);
@@ -93,7 +93,7 @@ public class RequestManager {
 
     public static boolean networkAvailable() {
         try {
-            MemoriConfiguration configuration = new MemoriConfiguration();
+            MemoriConfiguration configuration = MemoriConfiguration.getInstance();
             final URL url = new URL(configuration.getProjectProperty("SERVER_URL"));
             final URLConnection conn = url.openConnection();
             conn.connect();

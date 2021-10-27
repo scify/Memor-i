@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<StackPane alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.MainMenuScreenController">
+    <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
+            <image>
+                <!--<Image requestedHeight="250" requestedWidth="250" url="@../img/logo_memor-i_white letters.png" />-->
+            </image>
+        </ImageView>
+    </HBox>
+    <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
+        <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../img/Powered_by_SciFY.png"/>
+            </image>
+        </ImageView>
+    </HBox>
+    <VBox alignment="center" styleClass="optionButtonContainer" fx:id="btnContainer">
+        <Button contentDisplay="CENTER" styleClass="btn" text="%first_screen_welcome" fx:id="welcome"
+                onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%change_language_btn"
+                fx:id="change_language_btn" onKeyPressed="#goToLanguagesScreen" onTouchPressed="#goToLanguagesScreen"
+                onMouseClicked="#goToLanguagesScreen" onAction="#goToLanguagesScreen"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment"
+                fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler"
+                onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler"
+                onAction="#headphonesAdjustmentEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial"
+                onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler"
+                onMouseClicked="#initializeTutorialGameEventHandler" onAction="#initializeTutorialGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player"
+                onKeyPressed="#initializeSinglePlayerGameEventHandler"
+                onTouchPressed="#initializeSinglePlayerGameEventHandler"
+                onMouseClicked="#initializeSinglePlayerGameEventHandler"
+                onAction="#initializeSinglePlayerGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_computer" fx:id="versus_computer"
+                onKeyPressed="#initializePvCGameEventHandler" onTouchPressed="#initializePvCGameEventHandler"
+                onMouseClicked="#initializePvCGameEventHandler" onAction="#initializePvCGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player"
+                onKeyPressed="#initializePvPGameEventHandler" onTouchPressed="#initializePvPGameEventHandler"
+                onMouseClicked="#initializePvPGameEventHandler" onAction="#initializePvPGameEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%my_scores" fx:id="my_scores"
+                onKeyPressed="#myScoresEventHandler" onTouchPressed="#myScoresEventHandler"
+                onMouseClicked="#myScoresEventHandler" onAction="#myScoresEventHandler"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors"
+                onKeyPressed="#goToSponsorsPageEventHandler" onTouchPressed="#goToSponsorsPageEventHandler"
+                onMouseClicked="#goToSponsorsPageEventHandler" onAction="#goToSponsorsPageEventHandler"/>
+        <VBox alignment="center" spacing="25" styleClass="padding">
+            <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame"
+                    onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+        </VBox>
+
+    </VBox>
+
+    <stylesheets>
+        <URL value="@/css/style.css"/>
+    </stylesheets>
+</StackPane>

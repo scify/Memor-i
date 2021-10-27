@@ -22,7 +22,7 @@ public class PlayerManager {
 
     public PlayerManager() {
         requestManager = new RequestManager();
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
     }
 

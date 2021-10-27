@@ -29,7 +29,7 @@ public class GameRequestManager {
 
     public GameRequestManager() {
         requestManager = new RequestManager();
-        configuration = new MemoriConfiguration();
+        configuration = MemoriConfiguration.getInstance();
     }
 
     public ServerOperationResponse askServerForGameRequests() {

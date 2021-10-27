@@ -22,10 +22,10 @@
         </ImageView>
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" spacing="10.0">
-        <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%select_game_level" fx:id="infoText"/>
+        <Button contentDisplay="CENTER" styleClass="btn" text="%select_game_level" fx:id="infoText"/>
         <VBox alignment="center" fx:id="gameLevelsDiv">
         </VBox>
-        <Button contentDisplay="CENTER" styleClass="welcomeButton" fx:id="messageText"/>
+        <Button contentDisplay="CENTER" styleClass="btn" fx:id="messageText"/>
     </VBox>
     <stylesheets>
         <URL value="@/css/style.css" />

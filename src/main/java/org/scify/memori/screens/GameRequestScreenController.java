@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class GameRequestScreenController {
     private Scene primaryScene;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    protected FXAudioEngine audioEngine = new FXAudioEngine();
+    protected AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private ArrayList<Player> availablePlayers = new ArrayList<>();
 
     public void setParameters(FXSceneHandler sceneHandler, Scene userNameScreenScene) {

@@ -23,7 +23,7 @@
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer">
         <VBox alignment="center" fx:id="gameRequestActionsDiv">
-            <Button contentDisplay="CENTER" styleClass="welcomeButton" text="%new_game_request" fx:id="welcome" />
+            <Button contentDisplay="CENTER" styleClass="btn" text="%new_game_request" fx:id="welcome" />
         </VBox>
     </VBox>
     <stylesheets>
