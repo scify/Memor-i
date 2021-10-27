@@ -17,28 +17,21 @@
 
 package org.scify.memori.screens;
 
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import org.scify.memori.MemoriGameLauncher;
-import org.scify.memori.PlayerManager;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
-import org.scify.memori.helper.ResourceLocator;
-import org.scify.memori.interfaces.Player;
+import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.RequestManager;
 
 import java.net.URL;
@@ -48,7 +41,7 @@ import java.util.logging.Level;
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
 
-public class MainScreenController implements Initializable {
+public class MainMenuScreenController implements Initializable {
 
     public Button sponsors;
     public Button versus_player;
@@ -56,23 +49,19 @@ public class MainScreenController implements Initializable {
     public Button versus_computer;
     private final MemoriConfiguration configuration;
     private final String miscellaneousSoundsBasePath;
-    private Stage primaryStage;
-    private static Scene primaryScene;
+    private Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    private final FXAudioEngine audioEngine = new FXAudioEngine();
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
 
-    public MainScreenController() {
-        configuration = new MemoriConfiguration();
+    public MainMenuScreenController() {
+        configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
-        // if the game is in english, we want to hide the "sponsors" button
-        if (configuration.getProjectProperty("APP_LANG").equalsIgnoreCase("en")) {
-            sponsors.setVisible(false);
-        }
+
         // if the game has vs_player option enabled, show the button
         // else hide it
         if (configuration.getProjectProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
@@ -88,48 +77,13 @@ public class MainScreenController implements Initializable {
         }
     }
 
-
-    public void setParameters(Stage primaryStage, Scene primaryScene) {
-        MainScreenController.primaryScene = primaryScene;
-        this.primaryStage = primaryStage;
-        addCloseHandlerOnStage();
-        primaryScene.getStylesheets().add("css/style.css");
-
-        primaryStage.requestFocus();
-        primaryStage.sizeToScene();
-
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
-        primaryStage.setFullScreen(true);
-        primaryStage.setMaximized(true);
-        FXRenderingEngine.setGamecoverIcon(primaryScene, "gameCoverImgContainer");
-
-        setStageFavicon(primaryStage);
-        sceneHandler.setMainWindow(primaryStage);
-        sceneHandler.pushScene(primaryScene);
-
+    public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {
+        this.primaryScene = levelsScreenScene;
+        this.sceneHandler = sceneHandler;
+        sceneHandler.pushScene(levelsScreenScene);
+        FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
         attachButtonFocusHandlers();
-        primaryStage.show();
-
     }
-
-    private void setStageFavicon(Stage primaryStage) {
-        ResourceLocator resourceLocator = new ResourceLocator();
-        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
-        //set the "favicon"
-        Image faviconImage = new Image(gameCoverImgPath);
-        primaryStage.getIcons().add(faviconImage);
-    }
-
-    public static void screenPoppedUI() {
-        primaryScene.lookup("#welcome").requestFocus();
-    }
-
 
     /**
      * Attaches focus handlers to fixed buttons (tutorial, exit, etc)
@@ -208,10 +162,10 @@ public class MainScreenController implements Initializable {
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE || keyEvt.getCode() == ESCAPE) {
-                exitApplication();
+                MainScreen.exitApplication();
             }
         } else {
-            exitApplication();
+            MainScreen.exitApplication();
         }
     }
 
@@ -315,7 +269,6 @@ public class MainScreenController implements Initializable {
 
     @FXML
     protected void myScoresEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
@@ -350,8 +303,19 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
+    protected void goToLanguagesScreen(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                new LanguageSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+            }
+        } else {
+            new LanguageSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        }
+    }
+
+    @FXML
     protected void headphonesAdjustmentEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
@@ -365,26 +329,5 @@ public class MainScreenController implements Initializable {
     protected void headphonesAdjustment() {
         audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
         audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
-    }
-
-    private void addCloseHandlerOnStage() {
-        primaryStage.setOnCloseRequest(t -> exitApplication());
-    }
-
-    private void exitApplication() {
-        System.out.println("Stage is closing");
-        audioEngine.pauseCurrentlyPlayingAudios();
-        // if player has logged in, perform call to set them as non-active
-        Player player = PlayerManager.getLocalPlayer();
-        PlayerManager playerManager = new PlayerManager();
-        if (player != null) {
-            System.err.println(player.getName());
-            playerManager.setPlayerAsNotInGame();
-            System.out.println("player set not in game. Closing...");
-        } else {
-            System.out.println("no local player. Closing...");
-        }
-        Platform.exit();
-        System.exit(0);
     }
 }

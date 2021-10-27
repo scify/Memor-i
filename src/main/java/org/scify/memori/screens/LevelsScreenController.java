@@ -20,6 +20,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
@@ -38,7 +39,7 @@ public class LevelsScreenController implements Initializable {
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private Scene primaryScene;
     private FXSceneHandler sceneHandler = new FXSceneHandler();
-    private FXAudioEngine audioEngine = new FXAudioEngine();
+    private AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private int opponentId;
     private GameRequestManager gameRequestManager = new GameRequestManager();
     private MemoriGameLauncher gameLauncher;
@@ -60,7 +61,7 @@ public class LevelsScreenController implements Initializable {
     }
 
     public LevelsScreenController() {
-        configuration = new MemoriConfiguration();
+        configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 

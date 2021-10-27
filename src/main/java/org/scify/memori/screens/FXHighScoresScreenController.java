@@ -29,6 +29,7 @@ import org.scify.memori.HighScoresHandlerImpl;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 
 import java.util.List;
 
@@ -41,16 +42,16 @@ public class FXHighScoresScreenController {
      * An Audio Engine object, able to play sounds
      */
     private HighScoresHandlerImpl highScoreHandler;
-    private FXAudioEngine audioEngine;
+    private AudioEngine audioEngine;
     protected FXSceneHandler sceneHandler;
 
     private String miscellaneousSoundsBasePath;
 
     public void setParameters(FXSceneHandler sHandler, Scene scoresScene) {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
-        audioEngine = new FXAudioEngine();
+        audioEngine = FXAudioEngine.getInstance();;
 
         highScoreHandler = new HighScoresHandlerImpl();
         sceneHandler = sHandler;

@@ -7,6 +7,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -16,12 +17,12 @@ public class RegisterOrLoginScreenController {
     private Scene primaryScene;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    protected FXAudioEngine audioEngine = new FXAudioEngine();
+    protected AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private String miscellaneousSoundsBasePath;
     private MemoriConfiguration configuration;
 
     public RegisterOrLoginScreenController() {
-        configuration = new MemoriConfiguration();
+        configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 

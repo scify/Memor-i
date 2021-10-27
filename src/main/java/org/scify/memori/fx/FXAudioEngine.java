@@ -32,22 +32,29 @@ import java.util.logging.Level;
 /**
  * Responsible for handling Audio events
  */
-public class FXAudioEngine implements AudioEngine{
+public class FXAudioEngine extends AudioEngine{
 
     private MediaPlayer movementSoundPlayer;
     private Media movementSoundMedia;
     private AudioClip audioClip;
-    private String soundBasePath;
-    private String numBasePath;
-    private String letterBasePath;
-    private ArrayList<AudioClip> playingAudios = new ArrayList<>();
+    private final String soundBasePath;
+    private final String numBasePath;
+    private final String letterBasePath;
+    private final ArrayList<AudioClip> playingAudios = new ArrayList<>();
     protected static ResourceLocator resourceLocator = new ResourceLocator();
+    private static AudioEngine instance = null;
 
-    public FXAudioEngine() {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+    private FXAudioEngine() {
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.soundBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
         this.numBasePath = configuration.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
         this.letterBasePath = configuration.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
+    }
+
+    public static AudioEngine getInstance() {
+        if(instance == null)
+            instance = new FXAudioEngine();
+        return instance;
     }
 
     /**
@@ -118,12 +125,6 @@ public class FXAudioEngine implements AudioEngine{
                 }
 
             }
-    }
-
-
-    @Override
-    public void playSound(String soundFile) {
-        playSound(soundFile, false);
     }
 
     /**

@@ -20,11 +20,11 @@ package org.scify.memori.screens;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
-import org.scify.memori.interfaces.HighScoresScreen;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -33,20 +33,14 @@ import java.util.ResourceBundle;
 import static org.scify.memori.MainOptions.mHeight;
 import static org.scify.memori.MainOptions.mWidth;
 
-/**
- * JavaFX Screen constructor page
- */
-public class FXHighScoresScreen implements HighScoresScreen {
 
-    protected FXSceneHandler sceneHandler;
-
-    public FXHighScoresScreen(FXSceneHandler shSceneHandler, Stage mainWindow) {
-        this.sceneHandler = shSceneHandler;
+public class MainMenuScreen {
+    public MainMenuScreen(FXSceneHandler sceneHandler, Stage mainWindow) {
         sceneHandler.setMainWindow(mainWindow);
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scores.fxml"),
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;
         try {
@@ -58,12 +52,7 @@ public class FXHighScoresScreen implements HighScoresScreen {
         assert root != null;
         Scene scoresScene = new Scene(root, mWidth, mHeight);
 
-        FXHighScoresScreenController controller = loader.getController();
+        MainMenuScreenController controller = loader.getController();
         controller.setParameters(sceneHandler, scoresScene);
-    }
-
-    @Override
-    public void initialize() {
-
     }
 }

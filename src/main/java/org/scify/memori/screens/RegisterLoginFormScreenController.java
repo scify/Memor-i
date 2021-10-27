@@ -14,6 +14,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.network.ServerResponse;
@@ -33,14 +34,14 @@ public class RegisterLoginFormScreenController {
     Label infoText;
     private String miscellaneousSoundsBasePath;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    private FXAudioEngine audioEngine = new FXAudioEngine();
+    private AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private PlayerManager playerManager;
     private String userNameStr;
     private String passwordStr;
     private boolean isRegister;
 
     public RegisterLoginFormScreenController() {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 

@@ -18,6 +18,7 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
@@ -40,7 +41,7 @@ public class InvitePlayerScreenController  implements Initializable {
     Label invitationText;
 
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    private FXAudioEngine audioEngine = new FXAudioEngine();
+    private AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private GameRequestManager gameRequestManager;
     private PlayerManager playerManager;
     private MemoriGameLauncher gameLauncher;
@@ -53,7 +54,7 @@ public class InvitePlayerScreenController  implements Initializable {
     private ResourceBundle resources;
 
     public InvitePlayerScreenController() {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
     }
 

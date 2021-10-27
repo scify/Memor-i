@@ -63,7 +63,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     /**
      * A {@link AudioEngine} object, able to play sounds
      */
-    private FXAudioEngine fxAudioEngine;
+    private AudioEngine fxAudioEngine;
 
     /**
      * The {@link GridPane} holds all cards
@@ -119,7 +119,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     private final MemoriGameLevel gameLevel;
 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.gameLevel = gameLevel;
         this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
         this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
@@ -138,7 +138,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         }
         this.initialiseGameSoundLists();
 
-        fxAudioEngine = new FXAudioEngine();
+        fxAudioEngine = FXAudioEngine.getInstance();;
 
         double mWidth = Screen.getPrimary().getBounds().getWidth();
         double mHeight = Screen.getPrimary().getBounds().getHeight();
@@ -867,7 +867,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     public static void setGamecoverIcon(Scene scene, String imgContainer) {
         ImageView gameCoverImgContainer = (ImageView) scene.lookup("#" + imgContainer);
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         ResourceLocator resourceLocator = new ResourceLocator();
 
         String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");

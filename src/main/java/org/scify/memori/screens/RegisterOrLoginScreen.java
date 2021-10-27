@@ -20,7 +20,7 @@ public class RegisterOrLoginScreen {
 
     public RegisterOrLoginScreen(FXSceneHandler shSceneHandler) {
         sceneHandler = shSceneHandler;
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register_or_login.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));

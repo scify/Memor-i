@@ -18,8 +18,28 @@
 package org.scify.memori.interfaces;
 
 
-public interface AudioEngine {
-    void playSound(String sSoundType);
+public abstract class AudioEngine {
+    abstract public void playSound(String sSoundType, boolean isBlocking);
 
-    void playBalancedSound(double balance, String soundFile, boolean isBlocking);
+    public void playSound(String soundFile) {
+        playSound(soundFile, false);
+    }
+
+    abstract public void playBalancedSound(double balance, String soundFile, boolean isBlocking);
+
+    abstract public void pauseCurrentlyPlayingAudios();
+
+    abstract public void pauseAndPlaySound(String s, boolean b);
+
+    abstract public void playNumSound(int minutes);
+
+    public abstract void playCardSound(String randomSound, boolean blocking);
+
+    public abstract void playSuccessSound();
+
+    public abstract void playLetterSound(int number);
+
+    public abstract void playMovementSound(double soundBalance, double rate);
+
+    public abstract void playInvalidMovementSound(double soundBalance, boolean isBlocking);
 }

@@ -130,7 +130,7 @@ public class Card implements Tile{
 
     public Card(String label, String[] images, String[] sounds, String cardDescriptionSound, int cardDescriptionSoundProbability) {
 
-        MemoriConfiguration configuration = new MemoriConfiguration();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
 
         this.images = images;
         this.button = new Button();
