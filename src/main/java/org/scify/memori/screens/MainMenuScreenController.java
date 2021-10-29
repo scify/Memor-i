@@ -31,10 +31,13 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.RequestManager;
+import org.scify.memori.tts.TTSFacade;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -51,7 +54,8 @@ public class MainMenuScreenController implements Initializable {
     private final String miscellaneousSoundsBasePath;
     private Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
-    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();
+    ;
 
     public MainMenuScreenController() {
         configuration = MemoriConfiguration.getInstance();
@@ -60,8 +64,6 @@ public class MainMenuScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
-
         // if the game has vs_player option enabled, show the button
         // else hide it
         if (configuration.getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
@@ -90,11 +92,14 @@ public class MainMenuScreenController implements Initializable {
      */
     private void attachButtonFocusHandlers() {
 
-        primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
-            }
-        });
+//        primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+//            if (newPropertyValue) {
+//                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
+//            }
+//        });
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
+        ResourceBundle bundle = ResourceBundle.getBundle("languages.strings", locale, new UTF8Control());
+        TTSFacade.speak(bundle.getString("first_screen_welcome"));
 
         primaryScene.lookup("#headphones_adjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
             if (newPropertyValue) {

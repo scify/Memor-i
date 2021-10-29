@@ -63,6 +63,7 @@ public class MemoriConfiguration {
     }
 
     public void setProperty(String key, String value) {
-        this.props.setProperty(key, value);
+        if (value != null)
+            this.props.setProperty(key, value);
     }
 }

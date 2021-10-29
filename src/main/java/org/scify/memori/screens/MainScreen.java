@@ -41,6 +41,7 @@ import org.scify.memori.interfaces.Player;
 import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 
 public class MainScreen extends Application {
@@ -62,7 +63,7 @@ public class MainScreen extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-
+        MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
         Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         //Load fxml file (layout xml) for first screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
