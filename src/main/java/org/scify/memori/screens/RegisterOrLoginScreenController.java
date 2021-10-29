@@ -23,7 +23,7 @@ public class RegisterOrLoginScreenController {
 
     public RegisterOrLoginScreenController() {
         configuration = MemoriConfiguration.getInstance();
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {

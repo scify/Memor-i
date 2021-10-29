@@ -55,7 +55,7 @@ public class InvitePlayerScreenController  implements Initializable {
 
     public InvitePlayerScreenController() {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
     @Override

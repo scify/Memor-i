@@ -20,7 +20,6 @@ package org.scify.memori.screens;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
@@ -38,7 +37,7 @@ public class MainMenuScreen {
     public MainMenuScreen(FXSceneHandler sceneHandler, Stage mainWindow) {
         sceneHandler.setMainWindow(mainWindow);
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));

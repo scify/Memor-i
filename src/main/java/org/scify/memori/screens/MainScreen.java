@@ -1,13 +1,13 @@
 
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,8 @@ public class MainScreen extends Application {
     private Stage primaryStage;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private final MemoriConfiguration configuration;
-    private static final AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private static final AudioEngine audioEngine = FXAudioEngine.getInstance();
+    ;
 
     public MainScreen() {
         MemoriLogger.initLogger();
@@ -62,12 +63,12 @@ public class MainScreen extends Application {
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
 
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         //Load fxml file (layout xml) for first screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = loader.load();
-
+        configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
         // set as width and height the screen width and height
         MainOptions.mWidth = graphicsEnvironment.getWidth();
         MainOptions.mHeight = graphicsEnvironment.getHeight();
@@ -103,7 +104,7 @@ public class MainScreen extends Application {
 
     private void setStageFavicon(Stage primaryStage) {
         ResourceLocator resourceLocator = new ResourceLocator();
-        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getDataPackProperty("IMAGES_BASE_PATH") + configuration.getDataPackProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         //set the "favicon"
         javafx.scene.image.Image faviconImage = new Image(gameCoverImgPath);
         primaryStage.getIcons().add(faviconImage);

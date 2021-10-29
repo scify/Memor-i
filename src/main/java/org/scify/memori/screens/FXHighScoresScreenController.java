@@ -49,7 +49,7 @@ public class FXHighScoresScreenController {
 
     public void setParameters(FXSceneHandler sHandler, Scene scoresScene) {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = FXAudioEngine.getInstance();;
 

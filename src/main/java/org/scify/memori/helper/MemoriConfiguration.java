@@ -47,13 +47,9 @@ public class MemoriConfiguration {
      * @param propertyKey the property key
      * @return the property value
      */
-    public String getProjectProperty(String propertyKey) {
-        return this.getDataPackProperty(propertyKey, "/project_additional.properties");
-    }
-
-    public String getDataPackProperty(String propertyKey, String propertyFileName) {
+    public String getDataPackProperty(String propertyKey) {
         //When loading a resource, the "/" means root of the main/resources directory
-        InputStream inputStream = getClass().getResourceAsStream(propertyFileName);
+        InputStream inputStream = getClass().getResourceAsStream("/project_additional.properties");
         //if project_additional.properties file is not found, we load the default one
         if (inputStream == null) {
             inputStream = getClass().getResourceAsStream("/project.properties");

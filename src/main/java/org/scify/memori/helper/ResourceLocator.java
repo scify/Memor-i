@@ -1,6 +1,6 @@
 package org.scify.memori.helper;
 import org.scify.memori.fx.FXAudioEngine;
-import org.scify.memori.helper.MemoriConfiguration;
+
 import java.io.*;
 import java.net.URL;
 
@@ -16,8 +16,8 @@ public class ResourceLocator {
 
     public ResourceLocator() {
         configuration = MemoriConfiguration.getInstance();
-        this.rootDataPath = "/" + configuration.getProjectProperty("DATA_PACKAGE") + "/";
-        this.rootDataPathDefault = "/" + configuration.getProjectProperty("DATA_PACKAGE_DEFAULT") + "/";
+        this.rootDataPath = "/" + configuration.getDataPackProperty("DATA_PACKAGE") + "/";
+        this.rootDataPathDefault = "/" + configuration.getDataPackProperty("DATA_PACKAGE_DEFAULT") + "/";
     }
 
 

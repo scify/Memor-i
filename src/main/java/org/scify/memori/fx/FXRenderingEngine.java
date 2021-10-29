@@ -121,14 +121,14 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     public FXRenderingEngine(MemoriGameLevel gameLevel) {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.gameLevel = gameLevel;
-        this.packageName = configuration.getProjectProperty("DATA_PACKAGE");
-        this.storyLineSoundsBasePath = configuration.getProjectProperty("STORYLINE_SOUNDS");
-        this.gameInstructionSoundsBasePath = configuration.getProjectProperty("GAME_INSTRUCTION_SOUNDS");
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
-        this.funFactorSoundsBasePath = configuration.getProjectProperty("FUN_FACTOR_SOUNDS");
-        this.endLevelStartingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_STARTING_SOUNDS");
-        this.endLevelEndingSoundsBasePath = configuration.getProjectProperty("END_LEVEL_ENDING_SOUNDS");
-        this.multiPlayerSoundsBasePath = configuration.getProjectProperty("MULTIPLAYER_SOUNDS_BASE_PATH");
+        this.packageName = configuration.getDataPackProperty("DATA_PACKAGE");
+        this.storyLineSoundsBasePath = configuration.getDataPackProperty("STORYLINE_SOUNDS");
+        this.gameInstructionSoundsBasePath = configuration.getDataPackProperty("GAME_INSTRUCTION_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
+        this.funFactorSoundsBasePath = configuration.getDataPackProperty("FUN_FACTOR_SOUNDS");
+        this.endLevelStartingSoundsBasePath = configuration.getDataPackProperty("END_LEVEL_STARTING_SOUNDS");
+        this.endLevelEndingSoundsBasePath = configuration.getDataPackProperty("END_LEVEL_ENDING_SOUNDS");
+        this.multiPlayerSoundsBasePath = configuration.getDataPackProperty("MULTIPLAYER_SOUNDS_BASE_PATH");
 
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));
@@ -870,7 +870,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         ResourceLocator resourceLocator = new ResourceLocator();
 
-        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getProjectProperty("IMAGES_BASE_PATH") + configuration.getProjectProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
+        String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getDataPackProperty("IMAGES_BASE_PATH") + configuration.getDataPackProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         gameCoverImgContainer.setImage(new Image(gameCoverImgPath));
         gameCoverImgContainer.setFitHeight(250);
         gameCoverImgContainer.setFitWidth(250);

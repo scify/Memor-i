@@ -55,9 +55,9 @@ public class GameLevelService {
      */
     public List<MemoriGameLevel> createGameLevels() {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        String levelIntroSoundPath = configuration.getProjectProperty("LEVEL_INTRO_SOUNDS");
-        String levelNameSoundPath = configuration.getProjectProperty("LEVEL_NAME_SOUNDS");
-        String levelDescriptionSoundPath = configuration.getProjectProperty("LEVEL_DESCRIPTION_SOUNDS");
+        String levelIntroSoundPath = configuration.getDataPackProperty("LEVEL_INTRO_SOUNDS");
+        String levelNameSoundPath = configuration.getDataPackProperty("LEVEL_NAME_SOUNDS");
+        String levelDescriptionSoundPath = configuration.getDataPackProperty("LEVEL_DESCRIPTION_SOUNDS");
         int levelIndex = 0;
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
         for(Point2D levelDimensions : gameDimensionsPlayable) {

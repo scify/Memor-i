@@ -26,7 +26,6 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 
 /**
@@ -46,9 +45,9 @@ public class FXAudioEngine extends AudioEngine{
 
     private FXAudioEngine() {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        this.soundBasePath = configuration.getProjectProperty("AUDIOS_BASE_PATH");
-        this.numBasePath = configuration.getProjectProperty("NUMBER_SOUNDS_BASE_PATH");
-        this.letterBasePath = configuration.getProjectProperty("LETTER_SOUNDS_BASE_PATH");
+        this.soundBasePath = configuration.getDataPackProperty("AUDIOS_BASE_PATH");
+        this.numBasePath = configuration.getDataPackProperty("NUMBER_SOUNDS_BASE_PATH");
+        this.letterBasePath = configuration.getDataPackProperty("LETTER_SOUNDS_BASE_PATH");
     }
 
     public static AudioEngine getInstance() {

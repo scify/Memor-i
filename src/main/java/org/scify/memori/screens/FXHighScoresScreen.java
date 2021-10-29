@@ -44,7 +44,7 @@ public class FXHighScoresScreen implements HighScoresScreen {
         this.sceneHandler = shSceneHandler;
         sceneHandler.setMainWindow(mainWindow);
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scores.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));

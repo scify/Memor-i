@@ -62,7 +62,7 @@ public class LevelsScreenController implements Initializable {
 
     public LevelsScreenController() {
         configuration = MemoriConfiguration.getInstance();
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene, GameType gameType) {

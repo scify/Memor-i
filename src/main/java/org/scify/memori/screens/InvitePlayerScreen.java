@@ -22,7 +22,7 @@ public class InvitePlayerScreen {
     public InvitePlayerScreen(FXSceneHandler shSceneHandler) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/invite_player.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;

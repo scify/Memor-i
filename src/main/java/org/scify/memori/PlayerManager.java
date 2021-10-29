@@ -23,7 +23,7 @@ public class PlayerManager {
     public PlayerManager() {
         requestManager = new RequestManager();
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
+        gameIdentifier = configuration.getDataPackProperty("GAME_IDENTIFIER");
     }
 
     public String setPlayerOnline() {

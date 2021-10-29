@@ -23,7 +23,7 @@ public class LevelsScreen {
     public LevelsScreen(FXSceneHandler shSceneHandler, GameType gameType) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/levels_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;

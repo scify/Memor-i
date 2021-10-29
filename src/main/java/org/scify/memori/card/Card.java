@@ -22,7 +22,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.scify.memori.MainOptions;
 import org.scify.memori.helper.ResourceLocator;
@@ -146,10 +145,10 @@ public class Card implements Tile{
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;
-        this.imagesBasePath =  configuration.getProjectProperty("IMAGES_BASE_PATH");
-        this.cardImageBasePath = configuration.getProjectProperty("CARD_IMAGE_BASE_PATH");
-        this.cardSoundsBasePath = configuration.getProjectProperty("CARD_SOUND_BASE_PATH");
-        this.cardDescriptionSoundBasePath = configuration.getProjectProperty("CARD_NAME_SOUND_BASE_PATH");
+        this.imagesBasePath =  configuration.getDataPackProperty("IMAGES_BASE_PATH");
+        this.cardImageBasePath = configuration.getDataPackProperty("CARD_IMAGE_BASE_PATH");
+        this.cardSoundsBasePath = configuration.getDataPackProperty("CARD_SOUND_BASE_PATH");
+        this.cardDescriptionSoundBasePath = configuration.getDataPackProperty("CARD_NAME_SOUND_BASE_PATH");
 
         flipBackUI();
     }

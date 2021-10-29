@@ -21,7 +21,7 @@ public class RegisterLoginFormScreen {
     public RegisterLoginFormScreen(FXSceneHandler shSceneHandler, boolean isRegister) {
         sceneHandler = shSceneHandler;
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        Locale locale = new Locale(configuration.getProjectProperty("APP_LANG"));
+        Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register_login_form.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = null;

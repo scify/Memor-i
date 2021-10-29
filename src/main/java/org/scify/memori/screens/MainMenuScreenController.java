@@ -55,7 +55,7 @@ public class MainMenuScreenController implements Initializable {
 
     public MainMenuScreenController() {
         configuration = MemoriConfiguration.getInstance();
-        this.miscellaneousSoundsBasePath = configuration.getProjectProperty("MISCELLANEOUS_SOUNDS");
+        this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
     @Override
@@ -64,13 +64,13 @@ public class MainMenuScreenController implements Initializable {
 
         // if the game has vs_player option enabled, show the button
         // else hide it
-        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
             versus_player.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_player);
         }
 
-        if (configuration.getProjectProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.getDataPackProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
             versus_computer.setVisible(true);
         } else {
             btnContainer.getChildren().remove(versus_computer);
@@ -114,7 +114,7 @@ public class MainMenuScreenController implements Initializable {
             }
         });
 
-        if (configuration.getProjectProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.getDataPackProperty("VS_CPU_ENABLED").equalsIgnoreCase("true")) {
             primaryScene.lookup("#versus_computer").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_cpu.mp3", false);
@@ -122,7 +122,7 @@ public class MainMenuScreenController implements Initializable {
             });
         }
 
-        if (configuration.getProjectProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
             primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);
@@ -142,7 +142,7 @@ public class MainMenuScreenController implements Initializable {
             }
         });
 
-        if (!configuration.getProjectProperty("APP_LANG").equalsIgnoreCase("en")) {
+        if (!configuration.getDataPackProperty("APP_LANG").equalsIgnoreCase("en")) {
             primaryScene.lookup("#sponsors").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "sponsors.mp3", false);

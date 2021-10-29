@@ -8,7 +8,6 @@ import org.scify.memori.helper.MemoriConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class GameRequestManager {
 
@@ -69,7 +68,7 @@ public class GameRequestManager {
 
     public String sendGameRequestToPlayer(int playerInitiatorId, int playerOpponentId, int gameLevelId) {
         String url = "gameRequest/initiate";
-        String gameIdentifier = configuration.getProjectProperty("GAME_IDENTIFIER");
+        String gameIdentifier = configuration.getDataPackProperty("GAME_IDENTIFIER");
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_initiator_id", String.valueOf(playerInitiatorId)));
         urlParameters.add(new BasicNameValuePair("player_opponent_id", String.valueOf(playerOpponentId)));

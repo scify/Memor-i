@@ -48,6 +48,12 @@ mvn assembly:single
 mvn dependency:copy-dependencies
 ```
 
+In order to run the produced `.jar` file, run:
+
+```bash
+java -jar -Djdk.gtk.version=2 memori-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
 These tasks can also be accomplished more easily just by running 
 ```
 ./build_project.sh
