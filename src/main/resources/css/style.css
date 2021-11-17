@@ -25,6 +25,14 @@
     -fx-border-insets: 20px;
     -fx-background-insets: 20px;
 }
+.inputSelectMethodContainer {
+    -fx-padding: 100 0 0 0;
+}
+
+.inputSelectMethodButtonsContainer {
+    -fx-padding: 100 0 0 0;
+}
+
 .cardButton {
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
@@ -138,6 +146,7 @@ StackPane {
     -fx-background-insets: 2px;
     -fx-text-fill: yellow;
     -fx-font-weight: bold;
+    -fx-end-margin: 25px;
 }
 
 .btn {

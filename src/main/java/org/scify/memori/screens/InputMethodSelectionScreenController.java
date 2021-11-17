@@ -8,35 +8,38 @@ import javafx.scene.input.KeyEvent;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.tts.TTSFacade;
 
 import static javafx.scene.input.KeyCode.SPACE;
 
-public class LanguageSelectionScreenController extends MemoriScreenController {
+public class InputMethodSelectionScreenController extends MemoriScreenController {
 
     public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {
         this.sceneHandler = sceneHandler;
         sceneHandler.pushScene(levelsScreenScene);
         FXRenderingEngine.setGamecoverIcon(levelsScreenScene, "gameCoverImgContainer");
-        TTSFacade.speak("This is a test call to the text to speech service in english.");
     }
 
     @FXML
-    protected void onSetLang(Event evt) {
+    protected void onSetInputMethod(Event evt) {
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
-                setLang(evt);
+                setInputMethod(evt);
             }
         } else {
-            setLang(evt);
+            setInputMethod(evt);
         }
     }
 
-    private void setLang(Event evt) {
+    @FXML
+    protected void back(Event evt) {
+        sceneHandler.popScene();
+    }
+
+    private void setInputMethod(Event evt) {
         Node node = (Node) evt.getSource();
-        String langCode = (String) node.getUserData();
-        MemoriConfiguration.getInstance().setProperty("APP_LANG", langCode);
-        new InputMethodSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        String inputMethod = (String) node.getUserData();
+        MemoriConfiguration.getInstance().setProperty("INPUT_METHOD", inputMethod);
+        new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
     }
 }
