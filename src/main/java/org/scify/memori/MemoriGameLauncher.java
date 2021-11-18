@@ -93,8 +93,6 @@ public class MemoriGameLauncher {
                     startGameForLevel(gameLevel, gameType);
                     break;
                 case GAME_FINISHED:
-                    quitToMainScreen();
-                    break;
                 case GAME_INTERRUPTED:
                     quitToMainScreen();
                     break;
