@@ -52,7 +52,8 @@ public class MainMenuScreenController implements Initializable {
     private Scene primaryScene;
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private final AudioEngine audioEngine = FXAudioEngine.getInstance();
-    ;
+    @FXML
+    Button tutorialBtn;
 
     public MainMenuScreenController() {
         configuration = MemoriConfiguration.getInstance();
@@ -74,6 +75,8 @@ public class MainMenuScreenController implements Initializable {
         } else {
             btnContainer.getChildren().remove(versus_computer);
         }
+        if (configuration.getDataPackProperty("INPUT_METHOD").equals("mouse_touch"))
+            tutorialBtn.setVisible(false);
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {

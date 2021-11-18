@@ -40,6 +40,7 @@ public class InputMethodSelectionScreenController extends MemoriScreenController
         Node node = (Node) evt.getSource();
         String inputMethod = (String) node.getUserData();
         MemoriConfiguration.getInstance().setProperty("INPUT_METHOD", inputMethod);
+        MemoriConfiguration.getInstance().setProperty("TTS_ENABLED", String.valueOf(inputMethod.equals("mouse_touch")));
         new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
     }
 }

@@ -24,22 +24,29 @@
     <HBox alignment="center" styleClass="languageButtonsContainer" spacing="25.0">
         <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="English" userData="en" onKeyPressed="#onSetLang" onTouchPressed="#onSetLang" onMouseClicked="#onSetLang">
             <graphic>
-                <ImageView fitWidth="300.0" preserveRatio="true">
+                <ImageView fitWidth="250.0" preserveRatio="true">
                     <Image url="@../img/lang/en.png"/>
                 </ImageView>
             </graphic>
         </Button>
         <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="Ελληνικά" userData="el" onKeyPressed="#onSetLang" onTouchPressed="#onSetLang" onMouseClicked="#onSetLang">
             <graphic>
-                <ImageView fitWidth="300.0" preserveRatio="true">
+                <ImageView fitWidth="250.0" preserveRatio="true">
                     <Image url="@../img/lang/el.png"/>
                 </ImageView>
             </graphic>
         </Button>
         <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="Espanol" userData="es" onKeyPressed="#onSetLang" onTouchPressed="#onSetLang" onMouseClicked="#onSetLang">
             <graphic>
-                <ImageView fitWidth="300.0" preserveRatio="true">
+                <ImageView fitWidth="250.0" preserveRatio="true">
                     <Image url="@../img/lang/es.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="Italiano" userData="it" onKeyPressed="#onSetLang" onTouchPressed="#onSetLang" onMouseClicked="#onSetLang">
+            <graphic>
+                <ImageView fitWidth="250.0" preserveRatio="true">
+                    <Image url="@../img/lang/it.png"/>
                 </ImageView>
             </graphic>
         </Button>

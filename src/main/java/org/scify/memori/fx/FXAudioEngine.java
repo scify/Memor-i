@@ -48,11 +48,9 @@ public class FXAudioEngine extends AudioEngine {
     protected static ResourceLocator resourceLocator = new ResourceLocator();
     private static AudioEngine instance = null;
     private final MemoriConfiguration configuration;
-    private boolean ttsEnabled;
 
     private FXAudioEngine() {
         this.configuration = MemoriConfiguration.getInstance();
-        this.ttsEnabled = configuration.getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true");
         this.soundBasePath = configuration.getDataPackProperty("AUDIOS_BASE_PATH");
         this.numBasePath = configuration.getDataPackProperty("NUMBER_SOUNDS_BASE_PATH");
         this.letterBasePath = configuration.getDataPackProperty("LETTER_SOUNDS_BASE_PATH");
@@ -144,6 +142,7 @@ public class FXAudioEngine extends AudioEngine {
      * @param isBlocking    whether the player should block the calling {@link Thread} while the sound is playing
      */
     public void playSound(String soundFilePath, boolean isBlocking) {
+        boolean ttsEnabled = configuration.getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true");
         if (ttsEnabled) {
             int end = soundFilePath.indexOf(".");
             playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));

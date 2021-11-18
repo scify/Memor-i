@@ -37,6 +37,7 @@ public class LanguageSelectionScreenController extends MemoriScreenController {
         Node node = (Node) evt.getSource();
         String langCode = (String) node.getUserData();
         MemoriConfiguration.getInstance().setProperty("APP_LANG", langCode);
+        MemoriConfiguration.getInstance().setProperty("DATA_PACKAGE_DEFAULT", "generic_pack_" + langCode);
         new InputMethodSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
     }
 }

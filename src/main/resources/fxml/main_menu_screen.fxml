@@ -31,7 +31,7 @@
                 fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler"
                 onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler"
                 onAction="#headphonesAdjustmentEventHandler"/>
-        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorial"
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorialBtn"
                 onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler"
                 onMouseClicked="#initializeTutorialGameEventHandler" onAction="#initializeTutorialGameEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player"
