@@ -22,6 +22,7 @@ public abstract class MemoriScreenController {
     /**
      * Pauses all sounds and exits the application
      */
+    @FXML
     protected void exitScreen() {
         FXAudioEngine.getInstance().pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();

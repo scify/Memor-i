@@ -142,6 +142,7 @@ public class LevelsScreenController implements Initializable {
     /**
      * Pauses all sounds and exits the application
      */
+    @FXML
     private void exitScreen() {
         if (currentGameRequestId != 0)
             cancelGameRequest();

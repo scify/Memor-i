@@ -31,8 +31,8 @@
                 </graphic>
             </Button>
             <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="%back" userData="mouse_touch"
-                    onKeyPressed="#back" onTouchPressed="#back"
-                    onMouseClicked="#back">
+                    onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
+                    onMouseClicked="#exitScreen">
                 <graphic>
                     <ImageView fitWidth="200.0" preserveRatio="true">
                         <Image url="@../img/back.png"/>

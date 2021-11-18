@@ -36,7 +36,7 @@ import java.util.List;
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
 
-public class FXHighScoresScreenController {
+public class FXHighScoresScreenController extends MemoriScreenController{
 
     /**
      * An Audio Engine object, able to play sounds
@@ -147,10 +147,5 @@ public class FXHighScoresScreenController {
         } else {
             audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "no_score.mp3", false);
         }
-    }
-
-    private void exitScreen() {
-        audioEngine.pauseCurrentlyPlayingAudios();
-        sceneHandler.popScene();
     }
 }

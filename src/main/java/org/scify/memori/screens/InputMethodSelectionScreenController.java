@@ -31,11 +31,6 @@ public class InputMethodSelectionScreenController extends MemoriScreenController
         }
     }
 
-    @FXML
-    protected void back(Event evt) {
-        sceneHandler.popScene();
-    }
-
     private void setInputMethod(Event evt) {
         Node node = (Node) evt.getSource();
         String inputMethod = (String) node.getUserData();

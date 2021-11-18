@@ -6,6 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
 <StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.FXHighScoresScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
@@ -18,7 +19,12 @@
             </image>
         </ImageView>
     </HBox>
-    <VBox alignment="center" fx:id="gameLevelsDiv">
+    <VBox alignment="center" styleClass="optionButtonContainer" spacing="10.0">
+        <VBox alignment="center" fx:id="gameLevelsDiv">
+        </VBox>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%back"
+                fx:id="back" onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
+                onMouseClicked="#exitScreen" onAction="#exitScreen"/>
     </VBox>
 
     <stylesheets>

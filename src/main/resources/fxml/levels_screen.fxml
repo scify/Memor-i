@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.memori.screens.LevelsScreenController">
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<StackPane onKeyPressed="#exitIfEsc" alignment="center" styleClass="rootPane"
+           xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.scify.memori.screens.LevelsScreenController">
     <HBox alignment="BOTTOM_RIGHT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="boxImage" fx:id="gameCoverImgContainer">
             <image>
-                <!--<Image requestedHeight="250" requestedWidth="250" url="@../img/logo_memor-i_white letters.png" />-->
+                <Image requestedHeight="250" requestedWidth="250" url="@../img/logo_memor-i_white letters.png" />
             </image>
         </ImageView>
     </HBox>
     <HBox alignment="BOTTOM_LEFT" spacing="5" styleClass="logoContainer">
         <ImageView styleClass="logoImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../img/Powered_by_SciFY.png" />
+                <Image url="@../img/Powered_by_SciFY.png"/>
             </image>
         </ImageView>
     </HBox>
@@ -25,9 +26,11 @@
         <Button contentDisplay="CENTER" styleClass="btn" text="%select_game_level" fx:id="infoText"/>
         <VBox alignment="center" fx:id="gameLevelsDiv">
         </VBox>
-        <Button contentDisplay="CENTER" styleClass="btn" fx:id="messageText"/>
+        <Button contentDisplay="CENTER" styleClass="optionButton" text="%back"
+                fx:id="back" onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
+                onMouseClicked="#exitScreen" onAction="#exitScreen"/>
     </VBox>
     <stylesheets>
-        <URL value="@/css/style.css" />
+        <URL value="@/css/style.css"/>
     </stylesheets>
 </StackPane>
