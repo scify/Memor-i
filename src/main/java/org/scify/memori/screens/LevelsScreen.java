@@ -19,6 +19,7 @@ public class LevelsScreen {
 
     protected FXSceneHandler sceneHandler;
     LevelsScreenController controller;
+    public static Scene scene;
 
     public LevelsScreen(FXSceneHandler shSceneHandler, GameType gameType) {
         sceneHandler = shSceneHandler;
@@ -33,10 +34,10 @@ public class LevelsScreen {
             e.printStackTrace();
         }
 
-        Scene gameLevelsScene = new Scene(root, mWidth, mHeight);
+        scene = new Scene(root, mWidth, mHeight);
         controller = loader.getController();
 
-        controller.setParameters(sceneHandler, gameLevelsScene, gameType);
+        controller.setParameters(sceneHandler, scene, gameType);
     }
 
     public void setOpponentId(int opponentId) {

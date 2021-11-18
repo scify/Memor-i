@@ -4,13 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import org.scify.memori.fx.FXAudioEngine;
+import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 
 public abstract class MemoriScreenController {
     protected FXSceneHandler sceneHandler;
-    public abstract void setParameters(FXSceneHandler sceneHandler, Scene scoresScene);
+    public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
+        this.sceneHandler = sceneHandler;
+        sceneHandler.pushScene(scene);
+        FXRenderingEngine.setGamecoverIcon(scene, "gameCoverImgContainer");
+    }
 
     @FXML
     private void exitIfEsc(KeyEvent evt) {

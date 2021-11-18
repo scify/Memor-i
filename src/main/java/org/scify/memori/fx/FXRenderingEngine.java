@@ -30,6 +30,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import org.scify.memori.MainOptions;
 import org.scify.memori.MemoriGameLevel;
@@ -39,6 +40,7 @@ import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
+import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.*;
 
 import java.awt.geom.Point2D;
@@ -81,6 +83,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
      * JavFX component to bind the scene with the .fxml and .css file
      */
     protected Parent root;
+    protected VBox vBox;
+    protected Button backBtn;
 
     /**
      * Every time we play a game we follow the story line
@@ -131,14 +135,17 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         this.multiPlayerSoundsBasePath = configuration.getDataPackProperty("MULTIPLAYER_SOUNDS_BASE_PATH");
 
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/game.fxml"));
+            Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game.fxml"),
+                    ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
         this.initialiseGameSoundLists();
 
-        fxAudioEngine = FXAudioEngine.getInstance();;
+        fxAudioEngine = FXAudioEngine.getInstance();
 
         double mWidth = Screen.getPrimary().getBounds().getWidth();
         double mHeight = Screen.getPrimary().getBounds().getHeight();
@@ -201,8 +208,23 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     public void setUpFXComponents() throws IOException {
-        gridPane = ((GridPane) root);
+        vBox = (VBox) root.lookup("#vBox");
+        gridPane = ((GridPane) vBox.lookup("#gameGrid"));
+        backBtn = (Button) vBox.lookup("#backBtn");
+        if (MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch")) {
+            backBtn.setOnTouchPressed(this::exitGame);
+            backBtn.setOnMouseClicked(this::exitGame);
+            backBtn.setOnAction(this::exitGame);
+        } else {
+            Platform.runLater(() -> vBox.getChildren().remove(backBtn));
+        }
         gameScene.getStylesheets().add("css/style.css");
+    }
+
+    protected void exitGame(Event event) {
+        UserAction userAction = new UserAction("escape", "SPACE");
+        event.consume();
+        addUserAction(userAction);
     }
 
     protected void initFXComponents(MemoriGameState currentState) {

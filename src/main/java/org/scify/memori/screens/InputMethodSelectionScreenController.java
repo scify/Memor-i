@@ -13,12 +13,6 @@ import static javafx.scene.input.KeyCode.SPACE;
 
 public class InputMethodSelectionScreenController extends MemoriScreenController {
 
-    public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {
-        this.sceneHandler = sceneHandler;
-        sceneHandler.pushScene(levelsScreenScene);
-        FXRenderingEngine.setGamecoverIcon(levelsScreenScene, "gameCoverImgContainer");
-    }
-
     @FXML
     protected void onSetInputMethod(Event evt) {
         if (evt.getClass() == KeyEvent.class) {

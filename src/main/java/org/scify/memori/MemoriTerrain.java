@@ -110,8 +110,10 @@ public class MemoriTerrain implements Terrain {
     private void resizeTilesToFitToScreen() {
         for (Map.Entry<Point2D, Tile> currTile: tiles.entrySet()) {
             Card currCard = (Card) currTile.getValue();
-            if(currCard != null)
+            if(currCard != null) {
                 currCard.setCardWidth(getWidth());
+                currCard.setCardHeight(getHeight());
+            }
             else
                 System.err.println("CARD IS NULL!");
         }

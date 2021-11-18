@@ -79,10 +79,10 @@ public class MainMenuScreenController implements Initializable {
             tutorialBtn.setVisible(false);
     }
 
-    public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene) {
-        this.primaryScene = levelsScreenScene;
+    public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
+        this.primaryScene = scene;
         this.sceneHandler = sceneHandler;
-        sceneHandler.pushScene(levelsScreenScene);
+        sceneHandler.pushScene(scene);
         FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
         attachButtonFocusHandlers();
     }

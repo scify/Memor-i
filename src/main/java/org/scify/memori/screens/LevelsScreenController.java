@@ -36,16 +36,14 @@ import static javafx.scene.input.KeyCode.*;
 
 public class LevelsScreenController implements Initializable {
 
-    private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private Scene primaryScene;
     private FXSceneHandler sceneHandler = new FXSceneHandler();
-    private AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private int opponentId;
-    private GameRequestManager gameRequestManager = new GameRequestManager();
+    private final GameRequestManager gameRequestManager = new GameRequestManager();
     private MemoriGameLauncher gameLauncher;
     private GameType gameType;
-    private String miscellaneousSoundsBasePath;
-    private MemoriConfiguration configuration;
+    private final String miscellaneousSoundsBasePath;
     private int currentGameRequestId = 0;
     private Thread threadSetPlayerOnline;
     private Thread threadGameRequestReply;
@@ -61,7 +59,7 @@ public class LevelsScreenController implements Initializable {
     }
 
     public LevelsScreenController() {
-        configuration = MemoriConfiguration.getInstance();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
@@ -69,8 +67,8 @@ public class LevelsScreenController implements Initializable {
         this.primaryScene = levelsScreenScene;
         this.sceneHandler = sceneHandler;
         this.gameType = gameType;
-        gameLauncher = new MemoriGameLauncher(sceneHandler);
-        sceneHandler.pushScene(levelsScreenScene);
+
+        this.sceneHandler.pushScene(levelsScreenScene);
         FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
         VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
@@ -115,7 +113,7 @@ public class LevelsScreenController implements Initializable {
      */
     private void addGameLevelButtons(VBox buttonsContainer) {
         GameLevelService gameLevelService = new GameLevelService();
-        gameLevels = new ArrayList<>();
+        List<MemoriGameLevel> gameLevels = new ArrayList<>();
         gameLevels = gameLevelService.createGameLevels();
         for (MemoriGameLevel currLevel : gameLevels) {
             Button gameLevelBtn = new Button();
@@ -187,6 +185,7 @@ public class LevelsScreenController implements Initializable {
 
     protected void startGameForGameLevel(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         Thread thread;
+        gameLauncher = new MemoriGameLauncher(this.sceneHandler);
         switch (gameType) {
             case SINGLE_PLAYER:
                 audioEngine.pauseCurrentlyPlayingAudios();
@@ -242,12 +241,9 @@ public class LevelsScreenController implements Initializable {
                 queryForGameRequestReplyThread(gameLevel);
                 break;
             case ServerResponse.RESPONSE_ERROR:
-                // Error in creating game request
-                responseParameters = (String) response.getParameters();
-                System.err.println("ERROR: " + responseParameters);
-                break;
             case ServerResponse.VALIDATION_ERROR:
                 // Error in server validation rules
+                // Error in creating game request
                 responseParameters = (String) response.getParameters();
                 System.err.println("ERROR: " + responseParameters);
                 break;

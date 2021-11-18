@@ -9,6 +9,7 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.GameRequestManager;
+import org.scify.memori.screens.LevelsScreen;
 import org.scify.memori.screens.MainScreen;
 
 import java.awt.geom.Point2D;
@@ -24,8 +25,8 @@ import java.util.logging.Level;
 public class MemoriGameLauncher {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
-    private FXSceneHandler sceneHandler;
-    private AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private final FXSceneHandler sceneHandler;
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private GameType gameType;
 
     public MemoriGameLauncher(FXSceneHandler sceneHandler) {
@@ -94,7 +95,7 @@ public class MemoriGameLauncher {
                     break;
                 case GAME_FINISHED:
                 case GAME_INTERRUPTED:
-                    quitToMainScreen();
+                    quitToAllLevelsScreen();
                     break;
                 case NEXT_LEVEL:
                     playNextLevel(gameLevel);
@@ -115,18 +116,13 @@ public class MemoriGameLauncher {
      * Gets the next level and starts a new game on this level.
      */
     private void loadNextLevel() {
-        if(gameType.equals(GameType.VS_PLAYER)) {
-            // TODO push invite player screen with opponent id and re-invite player
-            // invite player screen should inform player that the opponent is being re-invited
-        } else {
-            MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
-            MainOptions.GAME_LEVEL_CURRENT++;
-            startGameForLevel(gameLevelNext, gameType);
-        }
+        MemoriGameLevel gameLevelNext = gameLevels.get(MainOptions.GAME_LEVEL_CURRENT);
+        MainOptions.GAME_LEVEL_CURRENT++;
+        startGameForLevel(gameLevelNext, gameType);
     }
 
-    private void quitToMainScreen() {
-        sceneHandler.popToScene(MainScreen.scene);
+    private void quitToAllLevelsScreen() {
+        sceneHandler.popToScene(LevelsScreen.scene);
     }
 
     private void playNextLevel(MemoriGameLevel gameLevel) {
@@ -136,8 +132,6 @@ public class MemoriGameLauncher {
                 startGameForLevel(gameLevel, GameType.SINGLE_PLAYER);
                 break;
             case VS_CPU:
-                loadNextLevel();
-                break;
             case SINGLE_PLAYER:
                 loadNextLevel();
                 break;

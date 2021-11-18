@@ -53,7 +53,6 @@ public class MainScreen extends Application {
     protected FXSceneHandler sceneHandler = new FXSceneHandler();
     private final MemoriConfiguration configuration;
     private static final AudioEngine audioEngine = FXAudioEngine.getInstance();
-    ;
 
     public MainScreen() {
         MemoriLogger.initLogger();

@@ -34,6 +34,9 @@ import static org.scify.memori.MainOptions.mWidth;
 
 
 public class MainMenuScreen {
+
+    protected FXSceneHandler sceneHandler;
+
     public MainMenuScreen(FXSceneHandler sceneHandler, Stage mainWindow) {
         sceneHandler.setMainWindow(mainWindow);
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
@@ -54,4 +57,6 @@ public class MainMenuScreen {
         MainMenuScreenController controller = loader.getController();
         controller.setParameters(sceneHandler, scoresScene);
     }
+
+
 }

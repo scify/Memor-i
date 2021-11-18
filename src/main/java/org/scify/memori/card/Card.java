@@ -154,9 +154,15 @@ public class Card implements Tile{
     }
 
     public void setCardWidth(double terrainWidth) {
-        double width = MainOptions.mWidth/terrainWidth - ((MainOptions.mWidth/terrainWidth) * 0.1);
-        this.button.setPrefHeight(width * 0.6666);
+        double width = MainOptions.mWidth/terrainWidth;
         this.button.setPrefWidth(width);
+        this.button.setMinWidth(width);
+    }
+
+    public void setCardHeight(double terrainHeight) {
+        double height = (MainOptions.mHeight/terrainHeight) - 80;
+        this.button.setPrefHeight(height);
+        this.button.setMinHeight(height);
     }
 
     public void turnCard() {
