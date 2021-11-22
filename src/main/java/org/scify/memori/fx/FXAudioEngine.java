@@ -145,7 +145,11 @@ public class FXAudioEngine extends AudioEngine {
         boolean ttsEnabled = configuration.getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true");
         if (ttsEnabled) {
             int end = soundFilePath.indexOf(".");
-            playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));
+            try {
+                playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));
+            } catch (MissingResourceException e) {
+                playSoundFromFileSystem(soundFilePath, isBlocking);
+            }
         } else
             playSoundFromFileSystem(soundFilePath, isBlocking);
     }
@@ -153,16 +157,11 @@ public class FXAudioEngine extends AudioEngine {
     protected void playSoundFromTTS(String soundKey) {
         Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         ResourceBundle bundle = ResourceBundle.getBundle("languages.strings", locale, new UTF8Control());
-        try {
-            TTSFacade.speak(bundle.getString(soundKey));
-        } catch (MissingResourceException e) {
-            System.err.println(e);
-        }
+        TTSFacade.speak(bundle.getString(soundKey));
     }
 
     protected void playSoundFromFileSystem(String soundFilePath, boolean isBlocking) {
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
-
         try {
             audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
             audioClip.play();
