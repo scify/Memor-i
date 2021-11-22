@@ -148,6 +148,7 @@ public class FXAudioEngine extends AudioEngine {
             try {
                 playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));
             } catch (MissingResourceException e) {
+                System.err.println("Could not load TTS key. Trying File system for: " + soundFilePath);
                 playSoundFromFileSystem(soundFilePath, isBlocking);
             }
         } else
