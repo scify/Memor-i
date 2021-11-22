@@ -19,4 +19,9 @@ public class BasicTextToSpeechService implements TextToSpeechService {
         System.out.println("Speaking: " + s + " in lang: " + langCode);
     }
 
+    @Override
+    public void postGameStatus(String status) {
+        System.out.println("Status: " + status);
+    }
+
 }
