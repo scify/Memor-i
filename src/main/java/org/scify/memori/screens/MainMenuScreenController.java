@@ -34,6 +34,8 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.RequestManager;
 
+import java.awt.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -294,15 +296,22 @@ public class MainMenuScreenController implements Initializable {
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
-                goToSponsorsPage();
+                openSponsorsPage();
             }
         } else {
-            goToSponsorsPage();
+            openSponsorsPage();
         }
     }
 
-    protected void goToSponsorsPage() {
-        new SponsorsScreen(sceneHandler, sceneHandler.getMainWindow());
+    protected void openSponsorsPage() {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(new URI("https://memoristudio.scify.org/about#memori-gameK"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
