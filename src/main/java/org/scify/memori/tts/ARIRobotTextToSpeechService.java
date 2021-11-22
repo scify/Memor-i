@@ -38,8 +38,15 @@ public class ARIRobotTextToSpeechService implements TextToSpeechService {
     public void speak(String s, String langCode) {
         MemoriLogger.LOGGER.log(Level.INFO, "Speaking: " + s + " in: " + languages.get(langCode));
         String payload = "{\"rawtext\": {\"text\":\"" + s + "\", \"lang_id\":\"" + languages.get(langCode) + "\"}}";
-        String res = this.requestManager.doPost(URL, payload);
+        String res = this.requestManager.doPost(URL + "tts", payload);
         MemoriLogger.LOGGER.log(Level.INFO, "ROBOT API RESULT: " + res);
+    }
+
+    @Override
+    public void postGameStatus(String status) {
+        String payload = "{\"game_status\": \"" + status + "\"}";
+        String res = this.requestManager.doPost(URL + "memori_state", payload);
+        MemoriLogger.LOGGER.log(Level.INFO, "ROBOT API STATUS RESULT: " + res);
     }
 
 }

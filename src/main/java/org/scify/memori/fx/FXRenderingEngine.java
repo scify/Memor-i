@@ -42,6 +42,7 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.*;
+import org.scify.memori.tts.TTSFacade;
 
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -225,6 +226,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         UserAction userAction = new UserAction("escape", "SPACE");
         event.consume();
         addUserAction(userAction);
+        TTSFacade.postGameStatus("finished");
     }
 
     protected void initFXComponents(MemoriGameState currentState) {

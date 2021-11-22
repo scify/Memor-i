@@ -26,6 +26,7 @@ import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.RequestManager;
 import org.scify.memori.network.ServerOperationResponse;
 import org.scify.memori.network.ServerResponse;
+import org.scify.memori.tts.TTSFacade;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -186,6 +187,7 @@ public class LevelsScreenController implements Initializable {
     protected void startGameForGameLevel(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         Thread thread;
         gameLauncher = new MemoriGameLauncher(this.sceneHandler);
+        TTSFacade.postGameStatus("started");
         switch (gameType) {
             case SINGLE_PLAYER:
                 audioEngine.pauseCurrentlyPlayingAudios();

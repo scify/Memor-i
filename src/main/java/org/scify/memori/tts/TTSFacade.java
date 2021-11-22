@@ -12,4 +12,8 @@ public class TTSFacade {
         Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         textToSpeechService.speak(s, String.valueOf(locale));
     }
+
+    public static void postGameStatus(String status) {
+        textToSpeechService.postGameStatus(status);
+    }
 }
