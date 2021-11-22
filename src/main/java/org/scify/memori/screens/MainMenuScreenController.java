@@ -105,7 +105,7 @@ public class MainMenuScreenController implements Initializable {
         });
 
         if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("false"))
-            primaryScene.lookup("#tutorial").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            primaryScene.lookup("#tutorialBtn").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
                 }
