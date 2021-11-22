@@ -1,6 +1,10 @@
 package org.scify.memori.rules;
 
-import org.scify.memori.*;
+import org.scify.memori.HighScoresHandlerImpl;
+import org.scify.memori.MainOptions;
+import org.scify.memori.MemoriGameState;
+import org.scify.memori.MemoriTerrain;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.TimeWatch;
 import org.scify.memori.interfaces.*;
 
@@ -32,12 +36,12 @@ public class SinglePlayerRules extends MemoriRules {
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
 
         MemoriGameState gsCurrentState = (MemoriGameState) gsCurrent;
-        if(eventQueueContainsBlockingEvent(gsCurrentState)) {
+        if (eventQueueContainsBlockingEvent(gsCurrentState)) {
             return gsCurrentState;
         }
         handleGameStartingGameEvents(gsCurrentState);
 
-        if(uaAction != null) {
+        if (uaAction != null) {
             handleUserActionSinglePlayerGameEvents(uaAction, gsCurrentState);
             //After the first user action, start the stopwatch
             if (!watchStarted) {
@@ -45,7 +49,7 @@ public class SinglePlayerRules extends MemoriRules {
                 watchStarted = true;
             }
         }
-        if(isLastRound(gsCurrent)) {
+        if (isLastRound(gsCurrent)) {
             //if ready to finish event already in events queue
             this.handleSinglePlayerFinishGameEvents(uaAction, gsCurrentState);
         }
@@ -53,7 +57,7 @@ public class SinglePlayerRules extends MemoriRules {
     }
 
     private void handleUserActionSinglePlayerGameEvents(UserAction uaAction, MemoriGameState gsCurrentState) {
-        if(movementValid(uaAction.getDirection(), gsCurrentState)) {
+        if (movementValid(uaAction.getDirection(), gsCurrentState)) {
             handleValidActionSinglePlayerEvent(uaAction, gsCurrentState);
         } else {
             gsCurrentState.getEventQueue().add(invalidMovementGameEvent(gsCurrentState));
@@ -85,17 +89,18 @@ public class SinglePlayerRules extends MemoriRules {
 
     /**
      * Applies the rules and creates the game events relevant to flipping a card
-     * @param currTile the tile that the flip performed on
+     *
+     * @param currTile       the tile that the flip performed on
      * @param gsCurrentState the current game state
-     * @param uaAction the user action object
-     * @param memoriTerrain the terrain holding all the tiles
+     * @param uaAction       the user action object
+     * @param memoriTerrain  the terrain holding all the tiles
      */
     protected void performFlipSinglePlayer(Tile currTile, MemoriGameState gsCurrentState, UserAction uaAction, MemoriTerrain memoriTerrain) {
         // Rule 6: flip
         // If target card flipped
-        if(isTileFlipped(currTile)) {
+        if (isTileFlipped(currTile)) {
             //if card won
-            if(isTileWon(currTile)) {
+            if (isTileWon(currTile)) {
                 //play empty sound
                 gsCurrentState.getEventQueue().add(new GameEvent("EMPTY"));
             } else {
@@ -111,14 +116,14 @@ public class SinglePlayerRules extends MemoriRules {
             // does not interrupt the card sound.
             flipTileUI(uaAction, gsCurrentState, tileIsLastOfTuple(memoriTerrain));
 
-            if(tileIsLastOfTupleAndWinning(memoriTerrain, currTile)) {
+            if (tileIsLastOfTupleAndWinning(memoriTerrain, currTile)) {
                 // If last of n-tuple flipped (i.e. if we have enough cards flipped to form a tuple)
                 successUI(uaAction, gsCurrentState);
                 cardDescriptionSoundUI(gsCurrentState);
                 updateGameStateAndNextTurn(currTile, gsCurrentState, memoriTerrain);
             } else {
                 // else not last card in tuple
-                if(atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
+                if (atLeastOneOtherTileIsDifferent(memoriTerrain, currTile)) {
                     // Flip card back
                     flipBackTileAndAddToOpenCards(currTile, gsCurrentState, memoriTerrain);
                     doorsShuttingUI(gsCurrentState);
@@ -135,10 +140,10 @@ public class SinglePlayerRules extends MemoriRules {
         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "STORYLINE_AUDIO")) {
             gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO"));
             gsCurrentState.getEventQueue().add(new GameEvent("STORYLINE_AUDIO_UI", null, 0, true));
-            if(!(MainOptions.GAME_LEVEL_CURRENT == 4)) {
+            if (!(MainOptions.GAME_LEVEL_CURRENT == 4)) {
                 if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "FUN_FACTOR")) {
                     gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR"));
-                    if(MainOptions.STORY_LINE_LEVEL % 2 == 1) {
+                    if (MainOptions.STORY_LINE_LEVEL % 2 == 1) {
                         gsCurrentState.getEventQueue().add(new GameEvent("FUN_FACTOR_UI", null, 0, true));
                     }
                 }
@@ -149,7 +154,7 @@ public class SinglePlayerRules extends MemoriRules {
             }
         }
 
-        if(MainOptions.GAME_LEVEL_CURRENT == 4) {
+        if (MainOptions.GAME_LEVEL_CURRENT == 4) {
             if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "HELP_INSTRUCTIONS")) {
                 gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS"));
                 gsCurrentState.getEventQueue().add(new GameEvent("HELP_INSTRUCTIONS_UI", null, 0, false));
@@ -158,14 +163,16 @@ public class SinglePlayerRules extends MemoriRules {
     }
 
     private void handleSinglePlayerFinishGameEvents(UserAction userAction, MemoriGameState gsCurrentState) {
-        if(!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH_GAME")) {
+        if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH_GAME")) {
             //add appropriate event
             gsCurrentState.getEventQueue().add(new GameEvent("READY_TO_FINISH_GAME"));
             //add UI events
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5500, true));
-            addTimeGameEvent(watch, gsCurrentState);
 
-            gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
+            if (!MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true")) {
+                addTimeGameEvent(watch, gsCurrentState);
+                gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
+            }
 
             levelEndUserActions(gsCurrentState);
             //update high score
@@ -177,7 +184,8 @@ public class SinglePlayerRules extends MemoriRules {
 
     /**
      * Prepares the UI events that will play the sound clips for the high score
-     * @param watch The watch object that contains the timer
+     *
+     * @param watch          The watch object that contains the timer
      * @param gsCurrentState the current game state
      */
     private void addTimeGameEvent(TimeWatch watch, MemoriGameState gsCurrentState) {
@@ -188,18 +196,18 @@ public class SinglePlayerRules extends MemoriRules {
         int seconds = Integer.parseInt(tokens[2]);
         System.err.println("minutes: " + minutes);
         System.err.println("seconds: " + seconds);
-        if(minutes != 0) {
+        if (minutes != 0) {
             gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", minutes, new Date().getTime() + 5200, true));
-            if(minutes > 1)
+            if (minutes > 1)
                 gsCurrentState.getEventQueue().add(new GameEvent("MINUTES", minutes, new Date().getTime() + 5300, true));
             else
                 gsCurrentState.getEventQueue().add(new GameEvent("MINUTE", minutes, new Date().getTime() + 5500, true));
         }
-        if(minutes != 0 && seconds != 0)
+        if (minutes != 0 && seconds != 0)
             gsCurrentState.getEventQueue().add(new GameEvent("AND", minutes, new Date().getTime() + 5700, true));
-        if(seconds != 0) {
+        if (seconds != 0) {
             gsCurrentState.getEventQueue().add(new GameEvent("NUMERIC", seconds, new Date().getTime() + 6000, true));
-            if(seconds > 1)
+            if (seconds > 1)
                 gsCurrentState.getEventQueue().add(new GameEvent("SECONDS", minutes, new Date().getTime() + 5300, true));
             else
                 gsCurrentState.getEventQueue().add(new GameEvent("SECOND", minutes, new Date().getTime() + 5500, true));
