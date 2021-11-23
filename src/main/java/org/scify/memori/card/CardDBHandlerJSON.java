@@ -1,14 +1,18 @@
 package org.scify.memori.card;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.JSONFileHandler;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.CardDBHandler;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,18 +57,18 @@ public class CardDBHandlerJSON implements CardDBHandler {
         JSONFileHandler jsonFileHandler = new JSONFileHandler();
         List<Card> cardSet = new ArrayList<>();
         Iterator it = setObjects.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             JSONObject currObj = (JSONObject) it.next();
             int cardDescriptionSoundProbability = 0;
-            if(currObj.has("description_sound_probability"))
+            if (currObj.has("description_sound_probability"))
                 cardDescriptionSoundProbability = currObj.getInt("description_sound_probability");
             Card newCard = new CategorizedCard(
                     (String) currObj.get("label"),
                     jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("images")),
                     jsonFileHandler.jsonArrayToStringArray((JSONArray) currObj.get("sounds")),
-                    (String)currObj.get("category"),
-                    (String)currObj.get("equivalenceCardSetHashCode"),
-                    (String)currObj.get("description_sound"),
+                    (String) currObj.get("category"),
+                    (String) currObj.get("equivalenceCardSetHashCode"),
+                    (String) currObj.get("description_sound"),
                     cardDescriptionSoundProbability
             );
             cardSet.add(newCard);
@@ -74,7 +78,8 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     /**
      * Given a json file, read the root object (identified by the second parameter)
-     * @param dbFile the db file path
+     *
+     * @param dbFile   the db file path
      * @param objectId the id identifying the desired object
      * @return
      */
@@ -98,10 +103,23 @@ public class CardDBHandlerJSON implements CardDBHandler {
         return objectSets;
     }
 
+    public JSONArray getObjectRemote(String dbFile, String objectId) {
+        JSONArray objectSets = null;
+        try {
+            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL("http://memoristudio.scify.org/resolveData/data_packs/additional_pack_442/data/json_DB/equivalence_cards_sets.json"), StandardCharsets.UTF_8));
+            objectSets = jsonFileHandler.getJSONArrayFromObject(rootObject, objectId);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return assignHashCodesToCardsSets(objectSets);
+    }
+
     public int countCardsInCardSet(JSONArray equivalenceCardSets) {
         Iterator it = equivalenceCardSets.iterator();
         int cardsNum = 0;
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             JSONArray currentEquivalenceCardSet = (JSONArray) it.next();
             cardsNum += currentEquivalenceCardSet.length();
         }
@@ -110,7 +128,8 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     /**
      * Extract a specific number of  {@link JSONObject}, Given a set of Json Objects
-     * @param cardSets the set of Json objects
+     *
+     * @param cardSets   the set of Json objects
      * @param numOfCards the number of objects to be extracted
      * @return a subset of the initial set
      */
@@ -133,14 +152,14 @@ public class CardDBHandlerJSON implements CardDBHandler {
             // categories will hold every category that has been already read so we only add one card from each category
             ArrayList categories = new ArrayList();
 
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 JSONObject currCard = (JSONObject) it.next();
                 // if the current category has not been read before and the current card has not been already added
-                if(!categories.contains(currCard.get("category"))) {
+                if (!categories.contains(currCard.get("category"))) {
                     // if the current card is set to be unique
-                    if(currCard.get("unique").equals(true) || currCard.get("unique").equals(1)) {
+                    if (currCard.get("unique").equals(true) || currCard.get("unique").equals(1)) {
                         // if we haven't picked from this equivalence set
-                        if(equivalenceCardSetHashCodes.contains(currCard.get("equivalenceCardSetHashCode"))) {
+                        if (equivalenceCardSetHashCodes.contains(currCard.get("equivalenceCardSetHashCode"))) {
                             // reset the temporary cards list
                             cardsListTemp = new ArrayList<>();
                             //we need to break the loop so that we change equivalence card set
@@ -155,7 +174,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
                 }
 
             }
-            if(cardsListTemp.size() > 0) {
+            if (cardsListTemp.size() > 0) {
                 extractedCards.addAll(cardsListTemp);
                 cardCount += cardsListTemp.size();
                 equivalenceCardSetHashCodes.add(cardsListTemp.get(0).get("equivalenceCardSetHashCode"));
@@ -167,16 +186,17 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     /**
      * given a JSONArray of card objects, assign a unique hash code (for the equivalence set) to each card.
+     *
      * @param cardSets the set of cards
      * @return the set of cards with the hash codes
      */
     public JSONArray assignHashCodesToCardsSets(JSONArray cardSets) {
         Iterator it = cardSets.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             String equivalenceCardSetHashCode = randomString();
             JSONArray currSet = (JSONArray) it.next();
             Iterator itCards = currSet.iterator();
-            while(itCards.hasNext()) {
+            while (itCards.hasNext()) {
                 JSONObject currCard = (JSONObject) itCards.next();
                 currCard.put("equivalenceCardSetHashCode", equivalenceCardSetHashCode);
             }
@@ -187,16 +207,18 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     /**
      * Produce a random integer in [Min - Max) set
+     *
      * @param Min the minimum number
      * @param Max the maximum number
      * @return a random integer in [Min - Max)
      */
     private int random_int(int Min, int Max) {
-        return (int) (Math.random()*(Max-Min))+Min;
+        return (int) (Math.random() * (Max - Min)) + Min;
     }
 
     /**
      * Produces a random String.
+     *
      * @return a random String object
      */
     private String randomString() {
