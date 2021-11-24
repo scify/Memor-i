@@ -23,9 +23,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import org.scify.memori.GameLevelService;
+import org.scify.memori.HighScoresHandlerImpl;
 import org.scify.memori.MemoriGameLevel;
 import org.scify.memori.fx.FXAudioEngine;
-import org.scify.memori.HighScoresHandlerImpl;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
@@ -36,7 +36,7 @@ import java.util.List;
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
 
-public class FXHighScoresScreenController extends MemoriScreenController{
+public class FXHighScoresScreenController extends MemoriScreenController {
 
     /**
      * An Audio Engine object, able to play sounds
@@ -51,7 +51,8 @@ public class FXHighScoresScreenController extends MemoriScreenController{
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
-        audioEngine = FXAudioEngine.getInstance();;
+        audioEngine = FXAudioEngine.getInstance();
+        ;
 
         highScoreHandler = new HighScoresHandlerImpl();
         sceneHandler = sHandler;

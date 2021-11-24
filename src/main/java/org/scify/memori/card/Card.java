@@ -1,13 +1,13 @@
 
 /**
  * Copyright 2016 SciFY.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,8 +24,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 import org.scify.memori.MainOptions;
-import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.Tile;
 
 
@@ -33,7 +33,7 @@ import org.scify.memori.interfaces.Tile;
  * Implements the {@link Tile} representation in the game.
  * The user can move on tiles and flip them
  */
-public class Card implements Tile{
+public class Card implements Tile {
 
     /**
      * the button element that binds the card with the UI layout
@@ -79,14 +79,12 @@ public class Card implements Tile{
     protected String cardDescriptionSoundBasePath;
 
 
-
     protected String imagesBasePath;
 
     protected static ResourceLocator resourceLocator = new ResourceLocator();
 
 
     /**
-     *
      * @return the Node (Button) that is laid on the layout
      */
     public Button getButton() {
@@ -95,6 +93,7 @@ public class Card implements Tile{
 
     /**
      * Checks if the card is won
+     *
      * @return true if the card is won
      */
     @Override
@@ -116,6 +115,7 @@ public class Card implements Tile{
 
     /**
      * Checks if the card is flipped
+     *
      * @return true if the card is flipped
      */
     @Override
@@ -145,7 +145,7 @@ public class Card implements Tile{
         this.label = label;
         this.isWon = false;
         this.isFlipped = false;
-        this.imagesBasePath =  configuration.getDataPackProperty("IMAGES_BASE_PATH");
+        this.imagesBasePath = configuration.getDataPackProperty("IMAGES_BASE_PATH");
         this.cardImageBasePath = configuration.getDataPackProperty("CARD_IMAGE_BASE_PATH");
         this.cardSoundsBasePath = configuration.getDataPackProperty("CARD_SOUND_BASE_PATH");
         this.cardDescriptionSoundBasePath = configuration.getDataPackProperty("CARD_NAME_SOUND_BASE_PATH");
@@ -154,13 +154,13 @@ public class Card implements Tile{
     }
 
     public void setCardWidth(double terrainWidth) {
-        double width = MainOptions.mWidth/terrainWidth;
+        double width = MainOptions.mWidth / terrainWidth;
         this.button.setPrefWidth(width);
         this.button.setMinWidth(width);
     }
 
     public void setCardHeight(double terrainHeight) {
-        double height = (MainOptions.mHeight/terrainHeight) - 80;
+        double height = (MainOptions.mHeight / terrainHeight) - 80;
         this.button.setPrefHeight(height);
         this.button.setMinHeight(height);
     }
@@ -194,30 +194,37 @@ public class Card implements Tile{
 
     /**
      * function to set the UI of the flipped card (change icons)
+     *
      * @param imgIndex the index of the image
      */
     public void flipUI(int imgIndex) {
         // only if this image exists
-        if(imgIndex < images.length) {
-            String imgFile = resourceLocator.getCorrectPathForFile(this.imagesBasePath + this.cardImageBasePath, images[imgIndex]);
+        if (imgIndex < images.length) {
+            String imgFile = images[imgIndex].startsWith("http") ? images[imgIndex] : resourceLocator.getCorrectPathForFile(this.imagesBasePath + this.cardImageBasePath, images[imgIndex]);
             button.setStyle("-fx-background-image: url(" + imgFile + ")");
         }
     }
+
     /**
      * function to set the UI of the flipped back card (change icons)
      */
-    public void flipBackUI () {
+    public void flipBackUI() {
         String imgFile = resourceLocator.getCorrectPathForFile(this.imagesBasePath, "box.png");
-        button.setStyle("-fx-background-image: url(" + imgFile +")");
+        button.setStyle("-fx-background-image: url(" + imgFile + ")");
     }
 
     /**
      * Get a random sound from the card sounds
+     *
      * @return the sound file name associated with the card
      */
     public String getRandomSound() {
-        if(sounds.length != 0)
-            return cardSoundsBasePath + sounds[random_int(0, sounds.length)];
+
+        if (sounds.length != 0) {
+            String path = sounds[random_int(0, sounds.length)];
+            return path.startsWith("http") ? path : cardSoundsBasePath + path;
+        }
+
         return null;
     }
 
@@ -226,6 +233,6 @@ public class Card implements Tile{
     }
 
     private int random_int(int Min, int Max) {
-        return (int) (Math.random()*(Max-Min))+Min;
+        return (int) (Math.random() * (Max - Min)) + Min;
     }
 }

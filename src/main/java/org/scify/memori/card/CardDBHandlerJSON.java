@@ -23,9 +23,18 @@ import java.util.logging.Level;
 public class CardDBHandlerJSON implements CardDBHandler {
 
     public JSONFileHandler jsonFileHandler;
+    public JSONArray jsonArray;
+    private List<Card> cards = new ArrayList<>();
     private String dbFile;
+    protected static CardDBHandlerJSON instance = null;
 
-    public CardDBHandlerJSON() {
+    public static CardDBHandlerJSON getInstance() {
+        if(instance == null)
+            instance = new CardDBHandlerJSON();
+        return instance;
+    }
+
+    private CardDBHandlerJSON() {
         jsonFileHandler = new JSONFileHandler();
         ResourceLocator resourceLocator = new ResourceLocator();
         dbFile = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
@@ -36,29 +45,34 @@ public class CardDBHandlerJSON implements CardDBHandler {
         MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFile);
     }
 
+    public void initCards() {
+        this.jsonArray = getObjectRemote(dbFile, "equivalence_card_sets");
+        this.cards = this.getCardsFromDB(this.getNumOfCardsInDB());
+    }
+
     @Override
     public int getNumberOfEquivalenceCardSets() {
-        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
-        //MemoriLogger.LOGGER.log(Level.INFO, "NumberOfEquivalenceCardSets: " + initialObjectsSet.length());
-        return initialObjectsSet.length();
+        return jsonArray.length();
     }
 
     public int getNumOfCardsInDB() {
-        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
-        return countCardsInCardSet(initialObjectsSet);
+        Iterator<Object> it = jsonArray.iterator();
+        int cardsNum = 0;
+        while (it.hasNext()) {
+            JSONArray currentEquivalenceCardSet = (JSONArray) it.next();
+            cardsNum += currentEquivalenceCardSet.length();
+        }
+        return cardsNum;
     }
 
     @Override
     public List<Card> getCardsFromDB(int numOfCards) {
 
-        JSONArray initialObjectsSet = getObjectFromJSONFile(dbFile, "equivalence_card_sets");
-
-        ArrayList<Object> setObjects = extractObjectsFromJSONArray(initialObjectsSet, numOfCards);
+        ArrayList<Object> setObjects = extractObjectsFromJSONArray(jsonArray, numOfCards);
         JSONFileHandler jsonFileHandler = new JSONFileHandler();
         List<Card> cardSet = new ArrayList<>();
-        Iterator it = setObjects.iterator();
-        while (it.hasNext()) {
-            JSONObject currObj = (JSONObject) it.next();
+        for (Object setObject : setObjects) {
+            JSONObject currObj = (JSONObject) setObject;
             int cardDescriptionSoundProbability = 0;
             if (currObj.has("description_sound_probability"))
                 cardDescriptionSoundProbability = currObj.getInt("description_sound_probability");
@@ -106,7 +120,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
     public JSONArray getObjectRemote(String dbFile, String objectId) {
         JSONArray objectSets = null;
         try {
-            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL("http://memoristudio.scify.org/resolveData/data_packs/additional_pack_442/data/json_DB/equivalence_cards_sets.json"), StandardCharsets.UTF_8));
+            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL("http://memoristudio.scify.org/resolveData/data_packs/additional_pack_7/data/json_DB/equivalence_cards_sets_absolute.json"), StandardCharsets.UTF_8));
             objectSets = jsonFileHandler.getJSONArrayFromObject(rootObject, objectId);
 
         } catch (IOException e) {
@@ -114,16 +128,6 @@ public class CardDBHandlerJSON implements CardDBHandler {
         }
 
         return assignHashCodesToCardsSets(objectSets);
-    }
-
-    public int countCardsInCardSet(JSONArray equivalenceCardSets) {
-        Iterator it = equivalenceCardSets.iterator();
-        int cardsNum = 0;
-        while (it.hasNext()) {
-            JSONArray currentEquivalenceCardSet = (JSONArray) it.next();
-            cardsNum += currentEquivalenceCardSet.length();
-        }
-        return cardsNum;
     }
 
     /**
@@ -224,5 +228,9 @@ public class CardDBHandlerJSON implements CardDBHandler {
     private String randomString() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32);
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 }

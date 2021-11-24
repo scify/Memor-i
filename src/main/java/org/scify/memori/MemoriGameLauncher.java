@@ -28,16 +28,15 @@ public class MemoriGameLauncher {
     private final FXSceneHandler sceneHandler;
     private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
     private GameType gameType;
+    private GameLevelService gameLevelService;
 
     public MemoriGameLauncher(FXSceneHandler sceneHandler) {
-        GameLevelService gameLevelService = new GameLevelService();
+        gameLevelService = new GameLevelService();
         gameLevels = new ArrayList<>();
-        gameLevels = gameLevelService.createGameLevels();
         this.sceneHandler = sceneHandler;
     }
 
     public void startTutorialGame() {
-        GameLevelService gameLevelService = new GameLevelService();
         gameLevels = new ArrayList<>();
         gameLevels = gameLevelService.createGameLevels();
         MemoriGameLevel gameLevel = gameLevels.get(0);

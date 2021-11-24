@@ -33,8 +33,6 @@ public abstract class AudioEngine {
 
     abstract public void playNumSound(int minutes);
 
-    public abstract void playCardSound(String randomSound, boolean blocking);
-
     public abstract void playSuccessSound();
 
     public abstract void playLetterSound(int number);

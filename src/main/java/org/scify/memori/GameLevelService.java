@@ -16,51 +16,22 @@ public class GameLevelService {
     private ArrayList<String> gameLevelNames = new ArrayList<>();
     private ArrayList<String> gameLevelIntroSounds = new ArrayList<>();
     private ArrayList<String> gameLevelDescriptionSounds = new ArrayList<>();
-    public GameLevelService() {
-        MemoriCardService cardService = new MemoriCardService();
-        ArrayList<Point2D> gameDimensions = new ArrayList<>();
-
-        gameDimensions.add(new Point2D.Double(2,3));
-        gameDimensions.add(new Point2D.Double(2,4));
-        gameDimensions.add(new Point2D.Double(3,4));
-        gameDimensions.add(new Point2D.Double(4,4));
-        gameDimensions.add(new Point2D.Double(5,4));
-        gameDimensions.add(new Point2D.Double(4,6));
-        gameDimensions.add(new Point2D.Double(5,6));
-        gameDimensions.add(new Point2D.Double(8,8));
-
-        int numberOfSets = cardService.getNumberOfSets();
-        for(Point2D dimensions: gameDimensions) {
-            if((int)dimensions.getX() * (int)dimensions.getY() <= numberOfSets) {
-                gameDimensionsPlayable.add(dimensions);
-            } else {
-                break;
-            }
-        }
-
-        //the max number of levels is the size of the game levels list
-        MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
-        for(int i = 1; i <= gameDimensionsPlayable.size() ; i++) {
-            gameLevelNames.add("level" + i + ".mp3");
-            gameLevelIntroSounds.add("level" + i + ".mp3");
-            gameLevelDescriptionSounds.add("level" + i + ".mp3");
-        }
-    }
-
 
     /**
      * The available game levels are computed based on the level intro sounds directory
      * (Given that each game level has EXACTLY one intro sound)
+     *
      * @return
      */
     public List<MemoriGameLevel> createGameLevels() {
+        init();
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         String levelIntroSoundPath = configuration.getDataPackProperty("LEVEL_INTRO_SOUNDS");
         String levelNameSoundPath = configuration.getDataPackProperty("LEVEL_NAME_SOUNDS");
         String levelDescriptionSoundPath = configuration.getDataPackProperty("LEVEL_DESCRIPTION_SOUNDS");
         int levelIndex = 0;
         ArrayList<MemoriGameLevel> gameLevels = new ArrayList<>();
-        for(Point2D levelDimensions : gameDimensionsPlayable) {
+        for (Point2D levelDimensions : gameDimensionsPlayable) {
             MemoriGameLevel memoriGameLevel = new MemoriGameLevel(
                     levelIndex + 1,
                     levelDimensions,
@@ -76,4 +47,35 @@ public class GameLevelService {
     }
 
 
+    private void init() {
+        MemoriCardService cardService = new MemoriCardService();
+        cardService.initCards();
+        ArrayList<Point2D> gameDimensions = new ArrayList<>();
+
+        gameDimensions.add(new Point2D.Double(2, 3));
+        gameDimensions.add(new Point2D.Double(2, 4));
+        gameDimensions.add(new Point2D.Double(3, 4));
+        gameDimensions.add(new Point2D.Double(4, 4));
+        gameDimensions.add(new Point2D.Double(5, 4));
+        gameDimensions.add(new Point2D.Double(4, 6));
+        gameDimensions.add(new Point2D.Double(5, 6));
+        gameDimensions.add(new Point2D.Double(8, 8));
+
+        int numberOfSets = cardService.getNumberOfSets();
+        for (Point2D dimensions : gameDimensions) {
+            if ((int) dimensions.getX() * (int) dimensions.getY() <= numberOfSets) {
+                gameDimensionsPlayable.add(dimensions);
+            } else {
+                break;
+            }
+        }
+
+        //the max number of levels is the size of the game levels list
+        MainOptions.MAX_NUM_OF_LEVELS = gameDimensionsPlayable.size();
+        for (int i = 1; i <= gameDimensionsPlayable.size(); i++) {
+            gameLevelNames.add("level" + i + ".mp3");
+            gameLevelIntroSounds.add("level" + i + ".mp3");
+            gameLevelDescriptionSounds.add("level" + i + ".mp3");
+        }
+    }
 }

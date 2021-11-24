@@ -27,10 +27,7 @@ import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.tts.TTSFacade;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -86,17 +83,6 @@ public class FXAudioEngine extends AudioEngine {
     }
 
     /**
-     * Plays a sound associated with a Card object
-     *
-     * @param soundFile  the file name (path) of the audio clip
-     * @param isBlocking whether the player should block the calling Thread while the sound is playing
-     */
-    public void playCardSound(String soundFile, boolean isBlocking) {
-        playSound(soundFile, isBlocking);
-    }
-
-
-    /**
      * Plays an appropriate sound associated with a successful Game Event
      */
     public void playSuccessSound() {
@@ -149,10 +135,10 @@ public class FXAudioEngine extends AudioEngine {
                 playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));
             } catch (MissingResourceException e) {
                 System.err.println("Could not load TTS key. Trying File system for: " + soundFilePath);
-                playSoundFromFileSystem(soundFilePath, isBlocking);
+                analyzeAndPlaySound(soundFilePath, isBlocking);
             }
         } else
-            playSoundFromFileSystem(soundFilePath, isBlocking);
+            analyzeAndPlaySound(soundFilePath, isBlocking);
     }
 
     protected void playSoundFromTTS(String soundKey) {
@@ -161,20 +147,34 @@ public class FXAudioEngine extends AudioEngine {
         TTSFacade.speak(bundle.getString(soundKey));
     }
 
+    protected void analyzeAndPlaySound(String path, boolean isBlocking) {
+        if (path.startsWith("http"))
+            playSoundFromURL(path, isBlocking);
+        else
+            playSoundFromFileSystem(path, isBlocking);
+    }
+
     protected void playSoundFromFileSystem(String soundFilePath, boolean isBlocking) {
         String fileResourcePath = resourceLocator.getCorrectPathForFile(this.soundBasePath, soundFilePath);
         try {
-            audioClip = new AudioClip(FXAudioEngine.class.getResource(fileResourcePath).toExternalForm());
+            String pathToOpen = Objects.requireNonNull(FXAudioEngine.class.getResource(fileResourcePath)).toExternalForm();
+            audioClip = new AudioClip(pathToOpen);
             audioClip.play();
         } catch (Exception e) {
             MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
-            System.err.println("error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
+            System.err.println("error loading sound for: " + soundFilePath + e);
             return;
         }
         playingAudios.add(audioClip);
         if (isBlocking) {
             blockUIThread(audioClip);
         }
+    }
+
+    protected void playSoundFromURL(String url, boolean isBlocking) {
+        Media sound = new Media(url);
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
     }
 
     private void blockUIThread(AudioClip audioClip) {
