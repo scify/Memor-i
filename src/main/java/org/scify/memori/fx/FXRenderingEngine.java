@@ -891,6 +891,8 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
 
     public static void setGamecoverIcon(Scene scene, String imgContainer) {
         ImageView gameCoverImgContainer = (ImageView) scene.lookup("#" + imgContainer);
+        if (gameCoverImgContainer == null || !gameCoverImgContainer.isVisible())
+            return;
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         ResourceLocator resourceLocator = new ResourceLocator();
 
