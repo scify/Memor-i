@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<StackPane onKeyPressed="#exitIfEsc" styleClass="rootPane"
+           xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.scify.memori.screens.GameFlavorSelectionScreenController">
+    <VBox alignment="TOP_CENTER" styleClass="optionButtonContainer" fx:id="vBox">
+        <Button contentDisplay="TOP" styleClass="optionButton" text="%back"
+                onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
+                onMouseClicked="#exitScreen"
+                id="backBtn"/>
+        <ImageView fx:id="loaderImage" styleClass="loadingImage" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/loading.gif"/>
+        </ImageView>
+        <ScrollPane fx:id="scrollPane" styleClass="scrollPane,rootPane">
+            <GridPane maxWidth="Infinity" styleClass="rootPane" maxHeight="Infinity" alignment="center" hgap="1" vgap="1"
+                      fx:id="gamesContainer"/>
+        </ScrollPane>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@/css/style.css"/>
+    </stylesheets>
+</StackPane>

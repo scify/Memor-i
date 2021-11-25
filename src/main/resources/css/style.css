@@ -68,6 +68,10 @@
     -fx-background-color: linear-gradient(to right, #4457bf, #313f8e); /* Standard syntax */
 }
 
+.scrollPane {
+    -fx-padding: 20px;
+}
+
 GridPane {
     -fx-pref-height: 95% !important;
 }
@@ -91,6 +95,10 @@ StackPane {
     -fx-background-radius: 10 10 10 10;
     -fx-font-weight: bold;
     -fx-padding: 10px;
+}
+
+.gameFlavorButton {
+    -fx-font-size: 12;
 }
 
 .textField {
@@ -201,4 +209,8 @@ StackPane {
     -fx-padding: 5px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
+}
+
+.loadingImage {
+    -fx-background-color: transparent;
 }

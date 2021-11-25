@@ -18,9 +18,8 @@ public class JSONFileHandler {
      * @return the shuffled set
      */
     public JSONArray getJSONArrayFromObject(JSONObject object, String arrayName) {
-        JSONArray jsonArray = object.getJSONArray(arrayName); // Get all JSONArray rows
         // shuffle the rows (we want the cards to be in a random order)
-        return jsonArray;
+        return object.getJSONArray(arrayName);
     }
 
 
