@@ -40,7 +40,7 @@ public class GameFlavorService {
         JSONArray objectSets;
         List<GameFlavor> gameFlavors = new ArrayList<>();
         try {
-            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL("http://memoristudio.scify.org/api/games?lang=" + MemoriConfiguration.getInstance().getDataPackProperty("APP_LANG")), StandardCharsets.UTF_8));
+            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL(MemoriConfiguration.getInstance().getDataPackProperty("SERVER_URL") + "games?lang=" + MemoriConfiguration.getInstance().getDataPackProperty("APP_LANG")), StandardCharsets.UTF_8));
             objectSets = rootObject.getJSONArray("data");
             for (Object objectSet : objectSets) {
                 JSONObject currGameFlavor = (JSONObject) objectSet;
@@ -57,5 +57,9 @@ public class GameFlavorService {
         }
 
         return gameFlavors;
+    }
+
+    public GameFlavor getGameFlavor(int gameFlavorId) {
+        return gameFlavors.stream().filter(gameFlavor -> gameFlavorId == gameFlavor.id).findFirst().orElse(null);
     }
 }

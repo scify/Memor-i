@@ -15,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
+import org.scify.memori.card.CardDBHandlerJSON;
+import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.game_flavor.GameFlavor;
 import org.scify.memori.game_flavor.GameFlavorService;
@@ -116,6 +118,8 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
     }
 
     private void loadLevelsScreenForGameFlavor(int gameFlavorId) {
-        System.out.println(gameFlavorId);
+        GameFlavor gameFlavor = gameFlavorService.getGameFlavor(gameFlavorId);
+        CardDBHandlerJSON.setDbFilePath(gameFlavor.equivalenceSetFilePath);
+        new LevelsScreen(sceneHandler, GameType.VS_CPU);
     }
 }

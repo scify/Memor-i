@@ -14,10 +14,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 
 public class CardDBHandlerJSON implements CardDBHandler {
@@ -25,11 +22,11 @@ public class CardDBHandlerJSON implements CardDBHandler {
     public JSONFileHandler jsonFileHandler;
     public JSONArray jsonArray;
     private List<Card> cards = new ArrayList<>();
-    private String dbFile;
+    private static String dbFilePath;
     protected static CardDBHandlerJSON instance = null;
 
     public static CardDBHandlerJSON getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new CardDBHandlerJSON();
         return instance;
     }
@@ -37,16 +34,24 @@ public class CardDBHandlerJSON implements CardDBHandler {
     private CardDBHandlerJSON() {
         jsonFileHandler = new JSONFileHandler();
         ResourceLocator resourceLocator = new ResourceLocator();
-        dbFile = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
+        if (dbFilePath == null)
+            dbFilePath = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
         //because we want to perform getResourceAsStream on the dbFile, we need to eliminate the slash "/" that the string starts with:
-        if (dbFile.charAt(0) == '/') {
-            dbFile = dbFile.substring(1, dbFile.length());
+        if (dbFilePath.charAt(0) == '/') {
+            dbFilePath = dbFilePath.substring(1);
         }
-        MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFile);
+        MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFilePath);
+    }
+
+    public static void setDbFilePath(String filePath) {
+        dbFilePath = filePath;
     }
 
     public void initCards() {
-        this.jsonArray = getObjectRemote(dbFile, "equivalence_card_sets");
+        if (dbFilePath.startsWith("http"))
+            this.jsonArray = getObjectRemote("equivalence_card_sets");
+        else
+            this.jsonArray = getObjectFromJSONFile("equivalence_card_sets");
         this.cards = this.getCardsFromDB(this.getNumOfCardsInDB());
     }
 
@@ -93,17 +98,16 @@ public class CardDBHandlerJSON implements CardDBHandler {
     /**
      * Given a json file, read the root object (identified by the second parameter)
      *
-     * @param dbFile   the db file path
      * @param objectId the id identifying the desired object
      * @return
      */
-    public JSONArray getObjectFromJSONFile(String dbFile, String objectId) {
+    public JSONArray getObjectFromJSONFile(String objectId) {
         //System.err.println("opening db file: " + dbFile);
         JSONArray objectSets;
         Scanner scanner = null;
         try {
 
-            scanner = new Scanner(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(dbFile)));
+            scanner = new Scanner(new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(dbFilePath))));
             String jsonStr = scanner.useDelimiter("\\A").next();
 
             JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
@@ -117,10 +121,10 @@ public class CardDBHandlerJSON implements CardDBHandler {
         return objectSets;
     }
 
-    public JSONArray getObjectRemote(String dbFile, String objectId) {
+    public JSONArray getObjectRemote(String objectId) {
         JSONArray objectSets = null;
         try {
-            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL("http://memoristudio.scify.org/resolveData/data_packs/additional_pack_7/data/json_DB/equivalence_cards_sets_absolute.json"), StandardCharsets.UTF_8));
+            JSONObject rootObject = new JSONObject(IOUtils.toString(new URL(dbFilePath), StandardCharsets.UTF_8));
             objectSets = jsonFileHandler.getJSONArrayFromObject(rootObject, objectId);
 
         } catch (IOException e) {

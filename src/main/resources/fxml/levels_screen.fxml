@@ -28,7 +28,7 @@
         </VBox>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%back"
                 fx:id="back" onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
-                onMouseClicked="#exitScreen" onAction="#exitScreen"/>
+                onMouseClicked="#exitScreen"/>
     </VBox>
     <stylesheets>
         <URL value="@/css/style.css"/>

@@ -99,7 +99,7 @@ public class MainScreen extends Application {
         sceneHandler.pushScene(primaryScene);
 
         primaryStage.show();
-        new GameFlavorSelectionScreen(sceneHandler, primaryStage);
+        new LanguageSelectionScreen(sceneHandler, primaryStage);
     }
 
     private void setStageFavicon(Stage primaryStage) {

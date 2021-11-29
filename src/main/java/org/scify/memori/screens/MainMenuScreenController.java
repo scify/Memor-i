@@ -342,4 +342,15 @@ public class MainMenuScreenController implements Initializable {
         audioEngine.playBalancedSound(-1.0, this.miscellaneousSoundsBasePath + "left_headphone.mp3", true);
         audioEngine.playBalancedSound(1.0, this.miscellaneousSoundsBasePath + "right_headphone.mp3", true);
     }
+
+    public void initializeGameFlavorsScreen(Event evt) {
+        if (evt.getClass() == KeyEvent.class) {
+            KeyEvent keyEvt = (KeyEvent) evt;
+            if (keyEvt.getCode() == SPACE) {
+                new GameFlavorSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+            }
+        } else {
+            new GameFlavorSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        }
+    }
 }

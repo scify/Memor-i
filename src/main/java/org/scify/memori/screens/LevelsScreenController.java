@@ -114,7 +114,7 @@ public class LevelsScreenController implements Initializable {
      */
     private void addGameLevelButtons(VBox buttonsContainer) {
         GameLevelService gameLevelService = new GameLevelService();
-        List<MemoriGameLevel> gameLevels = new ArrayList<>();
+        List<MemoriGameLevel> gameLevels;
         gameLevels = gameLevelService.createGameLevels();
         for (MemoriGameLevel currLevel : gameLevels) {
             Button gameLevelBtn = new Button();

@@ -23,36 +23,40 @@
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" fx:id="btnContainer">
         <Button contentDisplay="CENTER" styleClass="btn" text="%first_screen_welcome" fx:id="welcome"
-                onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+                onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%change_language_btn"
                 fx:id="change_language_btn" onKeyPressed="#goToLanguagesScreen" onTouchPressed="#goToLanguagesScreen"
-                onMouseClicked="#goToLanguagesScreen" onAction="#goToLanguagesScreen"/>
+                onMouseClicked="#goToLanguagesScreen"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%headphones_adjustment"
                 fx:id="headphones_adjustment" onKeyPressed="#headphonesAdjustmentEventHandler"
                 onTouchPressed="#headphonesAdjustmentEventHandler" onMouseClicked="#headphonesAdjustmentEventHandler"
-                onAction="#headphonesAdjustmentEventHandler"/>
+        />
+        <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%browse_games"
+                fx:id="browse_games" onKeyPressed="#initializeGameFlavorsScreen"
+                onTouchPressed="#initializeGameFlavorsScreen" onMouseClicked="#initializeGameFlavorsScreen"
+        />
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%tutorial" fx:id="tutorialBtn"
                 onKeyPressed="#initializeTutorialGameEventHandler" onTouchPressed="#initializeTutorialGameEventHandler"
-                onMouseClicked="#initializeTutorialGameEventHandler" onAction="#initializeTutorialGameEventHandler"/>
+                onMouseClicked="#initializeTutorialGameEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%single_player" fx:id="single_player"
                 onKeyPressed="#initializeSinglePlayerGameEventHandler"
                 onTouchPressed="#initializeSinglePlayerGameEventHandler"
                 onMouseClicked="#initializeSinglePlayerGameEventHandler"
-                onAction="#initializeSinglePlayerGameEventHandler"/>
+        />
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_computer" fx:id="versus_computer"
                 onKeyPressed="#initializePvCGameEventHandler" onTouchPressed="#initializePvCGameEventHandler"
-                onMouseClicked="#initializePvCGameEventHandler" onAction="#initializePvCGameEventHandler"/>
+                onMouseClicked="#initializePvCGameEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%versus_player" fx:id="versus_player"
                 onKeyPressed="#initializePvPGameEventHandler" onTouchPressed="#initializePvPGameEventHandler"
-                onMouseClicked="#initializePvPGameEventHandler" onAction="#initializePvPGameEventHandler"/>
+                onMouseClicked="#initializePvPGameEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%my_scores" fx:id="my_scores"
                 onKeyPressed="#myScoresEventHandler" onTouchPressed="#myScoresEventHandler"
-                onMouseClicked="#myScoresEventHandler" onAction="#myScoresEventHandler"/>
+                onMouseClicked="#myScoresEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors"
-                onKeyPressed="#goToSponsorsPageEventHandler" onAction="#goToSponsorsPageEventHandler"/>
+                onKeyPressed="#goToSponsorsPageEventHandler"/>
         <VBox alignment="center" spacing="25" styleClass="padding">
             <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame"
-                    onTouchPressed="#exitGame" onMouseClicked="#exitGame" onAction="#exitGame"/>
+                    onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
         </VBox>
 
     </VBox>
