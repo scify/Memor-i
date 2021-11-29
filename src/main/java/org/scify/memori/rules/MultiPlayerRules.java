@@ -92,8 +92,7 @@ public class MultiPlayerRules extends MemoriRules {
         if (!eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "GAME_VS_CPU_STARTED")) {
             gsCurrentState.getEventQueue().add(new GameEvent("GAME_VS_CPU_STARTED"));
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_DESCRIPTION", null, new Date().getTime(), true));
-            gsCurrentState.getEventQueue().add(new GameEvent("CPU_INTRO_MESSAGE", null, new Date().getTime() + 1000, true));
-            gsCurrentState.getEventQueue().add(new GameEvent("YOUR_TURN", null, new Date().getTime() + 2000, false));
+            gsCurrentState.getEventQueue().add(new GameEvent("CPU_INTRO_MESSAGE", null, new Date().getTime() + 3000, true));
         }
     }
 

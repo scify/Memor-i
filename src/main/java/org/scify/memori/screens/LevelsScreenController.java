@@ -29,7 +29,6 @@ import org.scify.memori.network.ServerResponse;
 import org.scify.memori.tts.TTSFacade;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -178,9 +177,6 @@ public class LevelsScreenController implements Initializable {
         gameLevelBtn.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY)
                 startGameForGameLevel(gameLevelBtn, gameLevel);
-        });
-        gameLevelBtn.setOnAction((event) -> {
-            startGameForGameLevel(gameLevelBtn, gameLevel);
         });
     }
 

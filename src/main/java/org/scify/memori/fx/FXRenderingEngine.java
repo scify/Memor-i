@@ -215,7 +215,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         if (MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch")) {
             backBtn.setOnTouchPressed(this::exitGame);
             backBtn.setOnMouseClicked(this::exitGame);
-            backBtn.setOnAction(this::exitGame);
         } else {
             Platform.runLater(() -> vBox.getChildren().remove(backBtn));
         }
@@ -253,7 +252,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             card.getButton().setOnKeyPressed(this);
             card.getButton().setOnTouchPressed(this);
             card.getButton().setOnMouseClicked(this);
-            card.getButton().setOnAction(this::handleTouchOrMouseEvent);
         }
 
         Platform.runLater(() -> { //set first card as focused
@@ -731,7 +729,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         break;
                     case "YOUR_TURN":
                         if (new Date().getTime() > currentGameEvent.delay) {
-                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "your_turn.mp3", currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;

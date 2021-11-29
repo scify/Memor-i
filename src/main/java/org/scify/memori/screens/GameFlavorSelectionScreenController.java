@@ -51,7 +51,6 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
     private void getGameFlavorsAndInitUIElements() {
         gameFlavorService = GameFlavorService.getInstance();
         gameFlavors = gameFlavorService.getGameFlavors();
-        System.out.println("Before runLater");
         Platform.runLater(this::initUIElements);
     }
 

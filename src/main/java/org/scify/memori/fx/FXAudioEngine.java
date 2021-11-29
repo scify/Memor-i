@@ -137,8 +137,9 @@ public class FXAudioEngine extends AudioEngine {
                 System.err.println("Could not load TTS key. Trying File system for: " + soundFilePath);
                 analyzeAndPlaySound(soundFilePath, isBlocking);
             }
-        } else
+        } else {
             analyzeAndPlaySound(soundFilePath, isBlocking);
+        }
     }
 
     protected void playSoundFromTTS(String soundKey) {
