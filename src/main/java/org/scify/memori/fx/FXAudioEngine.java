@@ -132,9 +132,9 @@ public class FXAudioEngine extends AudioEngine {
         if (ttsEnabled) {
             int end = soundFilePath.indexOf(".");
             try {
-                playSoundFromTTS(soundFilePath.substring(0, end).replaceAll("/", "_"));
+                String pathForTTS = soundFilePath.substring(0, end).replaceAll("/", "_");
+                playSoundFromTTS(pathForTTS);
             } catch (MissingResourceException e) {
-                System.err.println("Could not load TTS key. Trying File system for: " + soundFilePath);
                 analyzeAndPlaySound(soundFilePath, isBlocking);
             }
         } else {
@@ -163,7 +163,6 @@ public class FXAudioEngine extends AudioEngine {
             audioClip.play();
         } catch (Exception e) {
             MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
-            System.err.println("error loading sound for: " + soundFilePath + e);
             return;
         }
         playingAudios.add(audioClip);
