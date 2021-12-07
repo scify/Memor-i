@@ -16,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import org.scify.memori.card.CardDBHandlerJSON;
-import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.game_flavor.GameFlavor;
 import org.scify.memori.game_flavor.GameFlavorService;
@@ -101,7 +100,7 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
         if (event.getClass() == KeyEvent.class) {
             handleKeyEvent((KeyEvent) event);
         } else {
-            loadLevelsScreenForGameFlavor(Integer.parseInt(((Control) event.getSource()).getId()));
+            loadGameTypeScreenForGameFlavor(Integer.parseInt(((Control) event.getSource()).getId()));
         }
     }
 
@@ -111,14 +110,14 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
                 exitScreen();
                 break;
             case ENTER:
-                loadLevelsScreenForGameFlavor(Integer.parseInt(((Control) event.getSource()).getId()));
+                loadGameTypeScreenForGameFlavor(Integer.parseInt(((Control) event.getSource()).getId()));
                 break;
         }
     }
 
-    private void loadLevelsScreenForGameFlavor(int gameFlavorId) {
+    private void loadGameTypeScreenForGameFlavor(int gameFlavorId) {
         GameFlavor gameFlavor = gameFlavorService.getGameFlavor(gameFlavorId);
         CardDBHandlerJSON.setDbFilePath(gameFlavor.equivalenceSetFilePath);
-        new LevelsScreen(sceneHandler, GameType.VS_CPU);
+        new GameTypeSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
     }
 }
