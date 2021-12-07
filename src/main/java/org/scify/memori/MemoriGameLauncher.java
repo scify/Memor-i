@@ -121,7 +121,7 @@ public class MemoriGameLauncher {
     }
 
     private void quitToAllLevelsScreen() {
-        sceneHandler.popToScene(LevelsScreen.scene);
+        sceneHandler.popScene();
     }
 
     private void playNextLevel(MemoriGameLevel gameLevel) {

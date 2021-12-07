@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
@@ -17,7 +16,6 @@ import org.scify.memori.MemoriGameLevel;
 import org.scify.memori.PlayerManager;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
-import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.AudioEngine;
@@ -32,13 +30,14 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static javafx.scene.input.KeyCode.*;
+import static javafx.scene.input.KeyCode.ENTER;
+import static javafx.scene.input.KeyCode.SPACE;
 
-public class LevelsScreenController implements Initializable {
+public class LevelsScreenController extends MemoriScreenController implements Initializable {
 
     private Scene primaryScene;
-    private FXSceneHandler sceneHandler = new FXSceneHandler();
-    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();
+    ;
     private int opponentId;
     private final GameRequestManager gameRequestManager = new GameRequestManager();
     private MemoriGameLauncher gameLauncher;
@@ -64,12 +63,9 @@ public class LevelsScreenController implements Initializable {
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene levelsScreenScene, GameType gameType) {
+        super.setParameters(sceneHandler, levelsScreenScene);
         this.primaryScene = levelsScreenScene;
-        this.sceneHandler = sceneHandler;
         this.gameType = gameType;
-
-        this.sceneHandler.pushScene(levelsScreenScene);
-        FXRenderingEngine.setGamecoverIcon(this.primaryScene, "gameCoverImgContainer");
         VBox gameLevelsContainer = (VBox) this.primaryScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
 
@@ -130,18 +126,11 @@ public class LevelsScreenController implements Initializable {
         }
     }
 
-    @FXML
-    private void exitIfEsc(KeyEvent evt) {
-        if (evt.getCode() == ESCAPE) {
-            exitScreen();
-        }
-    }
-
     /**
      * Pauses all sounds and exits the application
      */
     @FXML
-    private void exitScreen() {
+    protected void exitScreen() {
         if (currentGameRequestId != 0)
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
@@ -149,10 +138,10 @@ public class LevelsScreenController implements Initializable {
             threadSetPlayerOnline.interrupt();
             if (threadGameRequestReply != null)
                 threadGameRequestReply.interrupt();
-            sceneHandler.simplePopScene();
+            super.exitScreen();
             new InvitePlayerScreen(sceneHandler);
         } else {
-            sceneHandler.popScene();
+            super.exitScreen();
         }
 
     }
