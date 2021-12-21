@@ -43,7 +43,6 @@ public class FXHighScoresScreenController extends MemoriScreenController {
      */
     private HighScoresHandlerImpl highScoreHandler;
     private AudioEngine audioEngine;
-    protected FXSceneHandler sceneHandler;
 
     private String miscellaneousSoundsBasePath;
 
@@ -52,17 +51,14 @@ public class FXHighScoresScreenController extends MemoriScreenController {
         this.miscellaneousSoundsBasePath = configuration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
         //initialize the audio engine object
         audioEngine = FXAudioEngine.getInstance();
-        ;
 
         highScoreHandler = new HighScoresHandlerImpl();
-        sceneHandler = sHandler;
-        sceneHandler.pushScene(scoresScene);
 
         FXRenderingEngine.setGamecoverIcon(scoresScene, "gameCoverImgContainer");
 
         VBox gameLevelsContainer = (VBox) scoresScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
-
+        super.setParameters(sHandler, scoresScene);
     }
 
     @FXML
