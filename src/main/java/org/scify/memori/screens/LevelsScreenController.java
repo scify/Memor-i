@@ -172,7 +172,6 @@ public class LevelsScreenController extends MemoriScreenController implements In
     protected void startGameForGameLevel(Button gameLevelBtn, MemoriGameLevel gameLevel) {
         Thread thread;
         gameLauncher = new MemoriGameLauncher(this.sceneHandler);
-        TTSFacade.postGameStatus("started");
         switch (gameType) {
             case SINGLE_PLAYER:
                 audioEngine.pauseCurrentlyPlayingAudios();

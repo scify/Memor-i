@@ -225,7 +225,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         UserAction userAction = new UserAction("escape", "SPACE");
         event.consume();
         addUserAction(userAction);
-        TTSFacade.postGameStatus("finished");
     }
 
     protected void initFXComponents(MemoriGameState currentState) {

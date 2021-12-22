@@ -27,6 +27,7 @@ import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.network.RequestManager;
+import org.scify.memori.tts.TTSFacade;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,6 +56,8 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
 
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
         super.setParameters(sceneHandler, scene);
+        if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true"))
+            TTSFacade.postGameStatus("started");
         attachButtonFocusHandlers();
     }
 
@@ -64,7 +67,7 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
     protected void attachButtonFocusHandlers() {
         super.attachButtonFocusHandlers();
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
+            if (newPropertyValue && MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("false")) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
@@ -120,11 +123,17 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE || keyEvt.getCode() == ESCAPE) {
-                MainScreen.exitApplication();
+                exitApp();
             }
         } else {
-            MainScreen.exitApplication();
+            exitApp();
         }
+    }
+
+    private void exitApp() {
+        if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true"))
+            TTSFacade.postGameStatus("finished");
+        MainScreen.exitApplication();
     }
 
     /**
