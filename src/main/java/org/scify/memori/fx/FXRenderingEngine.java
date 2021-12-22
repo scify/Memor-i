@@ -448,6 +448,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             int idx = new Random().nextInt(endLevelStartingSounds.size());
                             String randomSound = (endLevelStartingSounds.get(idx));
+                            System.out.println(randomSound);
                             fxAudioEngine.pauseAndPlaySound(this.endLevelStartingSoundsBasePath + randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
@@ -831,11 +832,9 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     protected void handleTouchOrMouseEvent(Event event) {
-        MemoriLogger.LOGGER.log(Level.INFO, event.toString());
         int x = GridPane.getRowIndex((Node) event.getSource());
         int y = GridPane.getColumnIndex((Node) event.getSource());
         UserAction userAction = new UserAction("flip", "AT_" + x + "_" + y);
-        MemoriLogger.LOGGER.log(Level.INFO, userAction.toString());
         event.consume();
         addUserAction(userAction);
     }

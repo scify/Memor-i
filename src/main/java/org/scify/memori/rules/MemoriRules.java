@@ -64,7 +64,7 @@ public class MemoriRules extends Observable implements Rules {
         //Iterate through game events. If there is a blocking event, return.
         for (GameEvent currentGameEvent : gsCurrentState.getEventQueue()) {
             if (currentGameEvent.blocking) {
-                System.err.println("BLOCKING");
+                //System.err.println("BLOCKING");
                 return true;
             }
         }
@@ -148,7 +148,6 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void flipTileUI(UserAction uaAction, MemoriGameState gsCurrentState, boolean isCardSoundBlocking) {
-        System.err.println("flipping tile " + isCardSoundBlocking);
         gsCurrentState.getEventQueue().add(new GameEvent("FOCUS", uaAction.getCoords()));
         gsCurrentState.getEventQueue().add(new GameEvent("TURN_ANIMATION", uaAction.getCoords()));
         gsCurrentState.getEventQueue().add(new GameEvent("DOOR_OPEN", uaAction.getCoords(), 0, true));
@@ -219,9 +218,6 @@ public class MemoriRules extends Observable implements Rules {
     }
 
     protected void nextTurn(MemoriGameState gsCurrentState) {
-        for(Player player: gsCurrentState.getPlayers()) {
-            System.err.println("Score for " + player.getName() + ": " + player.getScore());
-        }
         gsCurrentState.incrementTurn();
     }
 
@@ -420,7 +416,6 @@ public class MemoriRules extends Observable implements Rules {
     protected Player getWinnerPlayer(MemoriGameState gsCurrentState) {
         Player playerWithMaxScore = new Player("default");
         for(Player player: gsCurrentState.getPlayers()) {
-            System.err.println("Score for " + player.getName() + ": " + player.getScore());
             if(player.getScore() > playerWithMaxScore.getScore())
                 playerWithMaxScore = player;
         }
