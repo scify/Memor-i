@@ -39,6 +39,7 @@ import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -69,6 +70,8 @@ public class MainScreen extends Application {
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = loader.load();
         configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
+        if(Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
+            configuration.setProperty("INPUT_METHOD", System.getProperty("inputMethod"));
         // set as width and height the screen width and height
         MainOptions.mWidth = graphicsEnvironment.getWidth();
         MainOptions.mHeight = graphicsEnvironment.getHeight();
