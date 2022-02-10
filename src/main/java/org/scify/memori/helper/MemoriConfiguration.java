@@ -2,6 +2,7 @@ package org.scify.memori.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -11,6 +12,7 @@ public class MemoriConfiguration {
 
     private static MemoriConfiguration instance = null;
     private final Properties props;
+    private final String[] acceptedLanguageCodes = {"en", "el", "es", "it"};
 
     private MemoriConfiguration() {
         props = new Properties();
@@ -77,5 +79,13 @@ public class MemoriConfiguration {
 
     public boolean vsPlayerEnabled() {
         return getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true");
+    }
+
+    public void setLang(String langCode) throws Exception {
+        if (!Arrays.asList(acceptedLanguageCodes).contains(langCode))
+            throw new Exception("Language incorrect! Code: " + langCode);
+
+        setProperty("APP_LANG", langCode);
+        setProperty("DATA_PACKAGE_DEFAULT", "generic_pack_" + langCode);
     }
 }

@@ -103,7 +103,15 @@ public class MainScreen extends Application {
         sceneHandler.pushScene(primaryScene);
 
         primaryStage.show();
-        new LanguageSelectionScreen(sceneHandler, primaryStage);
+        try {
+            configuration.setLang(System.getProperty("lang"));
+            if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
+                new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
+            else
+                new InputMethodSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        } catch (Exception e) {
+            new LanguageSelectionScreen(sceneHandler, primaryStage);
+        }
     }
 
     private void setStageFavicon(Stage primaryStage) {

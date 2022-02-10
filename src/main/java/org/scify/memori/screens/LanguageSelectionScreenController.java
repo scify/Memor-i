@@ -27,12 +27,16 @@ public class LanguageSelectionScreenController extends MemoriScreenController {
     private void setLang(Event evt) {
         Node node = (Node) evt.getSource();
         String langCode = (String) node.getUserData();
-        MemoriConfiguration.getInstance().setProperty("APP_LANG", langCode);
-        MemoriConfiguration.getInstance().setProperty("DATA_PACKAGE_DEFAULT", "generic_pack_" + langCode);
-        if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
-            new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
-        else
-            new InputMethodSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        try {
+            MemoriConfiguration.getInstance().setLang(langCode);
+            if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
+                new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
+            else
+                new InputMethodSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
