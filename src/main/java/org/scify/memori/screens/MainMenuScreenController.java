@@ -39,6 +39,7 @@ import static javafx.scene.input.KeyCode.SPACE;
 public class MainMenuScreenController extends GameTypeSelectionScreenController implements Initializable {
 
     public Button versus_player;
+    public Button headphones_adjustment;
     @FXML
     Button tutorialBtn;
 
@@ -47,11 +48,12 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
         super.initialize(location, resources);
         // if the game has vs_player option enabled, show the button
         // else hide it
-        if (configuration.getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.vsPlayerEnabled())
             versus_player.setVisible(true);
-        } else {
+        else
             btnContainer.getChildren().remove(versus_player);
-        }
+        if (configuration.authModeEnabled())
+            btnContainer.getChildren().remove(headphones_adjustment);
     }
 
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
@@ -66,26 +68,28 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
      */
     protected void attachButtonFocusHandlers() {
         super.attachButtonFocusHandlers();
+        MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         primaryScene.lookup("#welcome").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue && MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("false")) {
+            if (newPropertyValue && !configuration.ttsEnabled()) {
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome.mp3", false);
             }
         });
 
-        primaryScene.lookup("#headphones_adjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-            if (newPropertyValue) {
-                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
-            }
-        });
+        if (!configuration.authModeEnabled())
+            primaryScene.lookup("#headphones_adjustment").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+                if (newPropertyValue) {
+                    audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
+                }
+            });
 
-        if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("false"))
+        if (!configuration.ttsEnabled())
             primaryScene.lookup("#tutorialBtn").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "tutorial.mp3", false);
                 }
             });
 
-        if (configuration.getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true")) {
+        if (configuration.vsPlayerEnabled()) {
             primaryScene.lookup("#versus_player").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
                 if (newPropertyValue) {
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "vs_player.mp3", false);

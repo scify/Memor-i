@@ -128,8 +128,7 @@ public class FXAudioEngine extends AudioEngine {
      * @param isBlocking    whether the player should block the calling {@link Thread} while the sound is playing
      */
     public void playSound(String soundFilePath, boolean isBlocking) {
-        boolean ttsEnabled = configuration.getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true");
-        if (ttsEnabled) {
+        if (configuration.ttsEnabled()) {
             int end = soundFilePath.indexOf(".");
             try {
                 String pathForTTS = soundFilePath.substring(0, end).replaceAll("/", "_");

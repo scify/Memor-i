@@ -63,7 +63,19 @@ public class MemoriConfiguration {
     }
 
     public void setProperty(String key, String value) {
-        if (value != null)
+        if (value != null && !value.equals(""))
             this.props.setProperty(key, value);
+    }
+
+    public boolean ttsEnabled() {
+        return getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true");
+    }
+
+    public boolean authModeEnabled() {
+        return this.props.containsKey("AUTH_TOKEN") && this.props.getProperty("AUTH_TOKEN") != null;
+    }
+
+    public boolean vsPlayerEnabled() {
+        return getDataPackProperty("VS_PLAYER_ENABLED").equalsIgnoreCase("true");
     }
 }
