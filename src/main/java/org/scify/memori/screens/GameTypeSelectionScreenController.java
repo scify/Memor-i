@@ -33,8 +33,7 @@ import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AudioEngine;
 
-import java.awt.*;
-import java.net.URI;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -170,7 +169,6 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
 
     @FXML
     protected void goToSponsorsPageEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
@@ -182,13 +180,12 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
     }
 
     protected void openSponsorsPage() {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(new URI("https://memoristudio.scify.org/about#memori-gameK"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String url = "https://memoristudio.scify.org/about#memori-game";
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec("xdg-open " + url);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

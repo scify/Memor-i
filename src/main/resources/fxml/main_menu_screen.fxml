@@ -53,7 +53,7 @@
                 onKeyPressed="#myScoresEventHandler" onTouchPressed="#myScoresEventHandler"
                 onMouseClicked="#myScoresEventHandler"/>
         <Button contentDisplay="CENTER" styleClass="optionButton" text="%sponsor" fx:id="sponsors"
-                onKeyPressed="#goToSponsorsPageEventHandler"/>
+                onKeyPressed="#goToSponsorsPageEventHandler" onTouchPressed="#goToSponsorsPageEventHandler" onMouseClicked="#goToSponsorsPageEventHandler"/>
         <VBox alignment="center" spacing="25" styleClass="padding">
             <Button contentDisplay="CENTER" styleClass="optionButton" text="%exit" fx:id="exit" onKeyPressed="#exitGame"
                     onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
