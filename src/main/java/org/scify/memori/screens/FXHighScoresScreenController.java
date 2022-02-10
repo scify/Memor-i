@@ -59,6 +59,7 @@ public class FXHighScoresScreenController extends MemoriScreenController {
         VBox gameLevelsContainer = (VBox) scoresScene.lookup("#gameLevelsDiv");
         addGameLevelButtons(gameLevelsContainer);
         super.setParameters(sHandler, scoresScene);
+        audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "my_scores_screen_intro.mp3", false);
     }
 
     @FXML
