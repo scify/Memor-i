@@ -43,6 +43,10 @@ public class MemoriConfiguration {
         return null;
     }
 
+    public String getPropertyByName(String propertyName) {
+        return props.getProperty(propertyName);
+    }
+
     /**
      * Given a property key, gets a value from resources/project.properties file
      *

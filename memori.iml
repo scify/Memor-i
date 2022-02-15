@@ -27,5 +27,23 @@
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:linux:11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:13" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:linux:13" level="project" />
+    <orderEntry type="library" name="Maven: org.asynchttpclient:async-http-client:2.12.3" level="project" />
+    <orderEntry type="library" name="Maven: org.asynchttpclient:async-http-client-netty-utils:2.12.3" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-kqueue:osx-x86_64:4.1.60.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.typesafe.netty:netty-reactive-streams:2.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.2" level="project" />
   </component>
 </module>

@@ -1,5 +1,8 @@
 package org.scify.memori.helper;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * Helper class for dealing with strings
  */
@@ -22,5 +25,11 @@ public class StringUtils {
 
     private static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
+    }
+
+    public static String MapToJSON(Map<String, String> map) {
+        return "{" + map.entrySet().stream()
+                .map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"")
+                .collect(Collectors.joining(", ")) + "}";
     }
 }

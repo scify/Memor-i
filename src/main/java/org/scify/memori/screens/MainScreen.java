@@ -35,6 +35,7 @@ import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
+import org.scify.memori.helper.analytics.AnalyticsManager;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
 
@@ -71,7 +72,7 @@ public class MainScreen extends Application {
         Parent root = loader.load();
         configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
         configuration.setProperty("AUTH_TOKEN", System.getProperty("authToken"));
-        if(Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
+        if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
             configuration.setProperty("INPUT_METHOD", System.getProperty("inputMethod"));
         // set as width and height the screen width and height
         MainOptions.mWidth = graphicsEnvironment.getWidth();
@@ -112,6 +113,7 @@ public class MainScreen extends Application {
         } catch (Exception e) {
             new LanguageSelectionScreen(sceneHandler, primaryStage);
         }
+        AnalyticsManager.getInstance().logEvent("app_started");
     }
 
     private void setStageFavicon(Stage primaryStage) {
