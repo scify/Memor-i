@@ -31,10 +31,7 @@ import org.scify.memori.PlayerManager;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
-import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
-import org.scify.memori.helper.ResourceLocator;
-import org.scify.memori.helper.UTF8Control;
+import org.scify.memori.helper.*;
 import org.scify.memori.helper.analytics.AnalyticsManager;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
@@ -59,11 +56,13 @@ public class MainScreen extends Application {
     public MainScreen() {
         MemoriLogger.initLogger();
         configuration = MemoriConfiguration.getInstance();
+        Thread.setDefaultUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
+
         MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
         Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
         //Load fxml file (layout xml) for first screen

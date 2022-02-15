@@ -1,5 +1,6 @@
 package org.scify.memori;
 
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.screens.MainScreen;
 
 /**
@@ -8,6 +9,7 @@ import org.scify.memori.screens.MainScreen;
 public class ApplicationLauncher {
 
     public static void main(String[]args) {
+        Thread.setDefaultUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
         MainScreen.launch(MainScreen.class);
     }
 }

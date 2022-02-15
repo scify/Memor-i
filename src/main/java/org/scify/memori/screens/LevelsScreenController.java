@@ -17,6 +17,7 @@ import org.scify.memori.PlayerManager;
 import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
@@ -176,17 +177,20 @@ public class LevelsScreenController extends MemoriScreenController implements In
             case SINGLE_PLAYER:
                 audioEngine.pauseCurrentlyPlayingAudios();
                 thread = new Thread(() -> gameLauncher.startSinglePlayerGame(gameLevel));
+                thread.setUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
                 thread.start();
                 break;
             case VS_CPU:
                 audioEngine.pauseCurrentlyPlayingAudios();
                 thread = new Thread(() -> gameLauncher.startPVCPUGame(gameLevel));
+                thread.setUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
                 thread.start();
                 break;
             case VS_PLAYER:
                 Platform.runLater(() -> waitForResponseUI());
                 btnClicked = gameLevelBtn;
                 thread = new Thread(() -> sendGameRequest(gameLevel));
+                thread.setUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
                 thread.start();
                 break;
             default:

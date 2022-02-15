@@ -19,6 +19,7 @@ import org.scify.memori.card.CardDBHandlerJSON;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.game_flavor.GameFlavor;
 import org.scify.memori.game_flavor.GameFlavorService;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
         scrollPane.setFitToHeight(true);
         Thread thread = new Thread(this::getGameFlavorsAndInitUIElements);
         thread.setDaemon(true);
+        thread.setUncaughtExceptionHandler(DefaultExceptionHandler.getInstance());
         thread.start();
         super.setParameters(sceneHandler, scene);
     }
