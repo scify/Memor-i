@@ -6,14 +6,15 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.helper.analytics.AnalyticsManager;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.GameRequestManager;
-import org.scify.memori.screens.LevelsScreen;
-import org.scify.memori.screens.MainScreen;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -26,7 +27,8 @@ public class MemoriGameLauncher {
 
     private List<MemoriGameLevel> gameLevels = new ArrayList<>();
     private final FXSceneHandler sceneHandler;
-    private final AudioEngine audioEngine = FXAudioEngine.getInstance();;
+    private final AudioEngine audioEngine = FXAudioEngine.getInstance();
+    ;
     private GameType gameType;
     private GameLevelService gameLevelService;
 
@@ -60,6 +62,12 @@ public class MemoriGameLauncher {
         game.setGameType(gameType);
         game.initialize(gameLevel);
         startGameThread(game, gameLevel);
+        Map<String, String> map = new HashMap<>();
+        String currentGameName = MemoriConfiguration.getInstance().getPropertyByName("CURRENT_GAME");
+        currentGameName = currentGameName != null ? currentGameName : MemoriConfiguration.getInstance().getDataPackProperty("DATA_PACKAGE");
+        map.put("game_name", currentGameName);
+        map.put("game_level", gameLevel.getLevelName());
+        AnalyticsManager.getInstance().logEvent("game_started", map);
     }
 
     public void startGameForLevel(MemoriGameLevel gameLevel, GameType gameType, Map<CategorizedCard, Point2D> cards) {

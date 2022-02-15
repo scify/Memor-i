@@ -19,6 +19,7 @@ import org.scify.memori.card.CardDBHandlerJSON;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.game_flavor.GameFlavor;
 import org.scify.memori.game_flavor.GameFlavorService;
+import org.scify.memori.helper.MemoriConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +118,7 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
 
     private void loadGameTypeScreenForGameFlavor(int gameFlavorId) {
         GameFlavor gameFlavor = gameFlavorService.getGameFlavor(gameFlavorId);
+        MemoriConfiguration.getInstance().setProperty("CURRENT_GAME", gameFlavor.name);
         CardDBHandlerJSON.setDbFilePath(gameFlavor.equivalenceSetFilePath);
         new GameTypeSelectionScreen(sceneHandler, sceneHandler.getMainWindow());
     }

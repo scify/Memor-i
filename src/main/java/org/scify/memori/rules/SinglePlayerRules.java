@@ -1,15 +1,15 @@
 package org.scify.memori.rules;
 
-import org.scify.memori.HighScoresHandlerImpl;
-import org.scify.memori.MainOptions;
-import org.scify.memori.MemoriGameState;
-import org.scify.memori.MemoriTerrain;
+import org.scify.memori.*;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.TimeWatch;
+import org.scify.memori.helper.analytics.AnalyticsManager;
 import org.scify.memori.interfaces.*;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SinglePlayerRules extends MemoriRules {
@@ -23,6 +23,7 @@ public class SinglePlayerRules extends MemoriRules {
      * This variable is used to identify if the watch has been already started or not
      */
     private boolean watchStarted = false;
+    private int numOfErrors;
     /**
      * a {@link HighScoresHandlerImpl} instance to handle the high score as soon as the game has finished
      */
@@ -31,6 +32,7 @@ public class SinglePlayerRules extends MemoriRules {
     public SinglePlayerRules(GameLevel gameLevel) {
         super(gameLevel);
         highScore = new HighScoresHandlerImpl();
+        numOfErrors = 0;
     }
 
     public GameState getNextState(GameState gsCurrent, UserAction uaAction) {
@@ -128,6 +130,7 @@ public class SinglePlayerRules extends MemoriRules {
                     flipBackTileAndAddToOpenCards(currTile, gsCurrentState, memoriTerrain);
                     doorsShuttingUI(gsCurrentState);
                     nextTurn(gsCurrentState);
+                    numOfErrors += 1;
                 } else {
                     memoriTerrain.addTileToOpenTiles(currTile);
                 }
@@ -177,6 +180,14 @@ public class SinglePlayerRules extends MemoriRules {
             levelEndUserActions(gsCurrentState);
             //update high score
             highScore.updateHighScore(watch);
+            Map<String, String> map = new HashMap<>();
+            String currentGameName = MemoriConfiguration.getInstance().getPropertyByName("CURRENT_GAME");
+            currentGameName = currentGameName != null ? currentGameName : MemoriConfiguration.getInstance().getDataPackProperty("DATA_PACKAGE");
+            map.put("game_name", currentGameName);
+            map.put("game_level", ((MemoriGameLevel) currentGameLevel).getLevelName());
+            map.put("game_duration_seconds", String.valueOf(watch.time(TimeUnit.SECONDS)));
+            map.put("num_of_errors", String.valueOf(numOfErrors));
+            AnalyticsManager.getInstance().logEvent("game_finished", map);
         } else {
             super.handleLevelFinishGameEvents(userAction, gsCurrentState);
         }
