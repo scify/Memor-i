@@ -116,7 +116,7 @@ public class MainScreen extends Application {
     }
 
     private void setStageFavicon(Stage primaryStage) {
-        ResourceLocator resourceLocator = new ResourceLocator();
+        ResourceLocator resourceLocator = ResourceLocator.getInstance();
         String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getDataPackProperty("IMAGES_BASE_PATH") + configuration.getDataPackProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         //set the "favicon"
         javafx.scene.image.Image faviconImage = new Image(gameCoverImgPath);
@@ -128,17 +128,13 @@ public class MainScreen extends Application {
     }
 
     public static void exitApplication() {
-        System.out.println("Stage is closing");
+        System.out.println("App is exiting...");
         audioEngine.pauseCurrentlyPlayingAudios();
         // if player has logged in, perform call to set them as non-active
         Player player = PlayerManager.getLocalPlayer();
         PlayerManager playerManager = new PlayerManager();
         if (player != null) {
-            System.err.println(player.getName());
             playerManager.setPlayerAsNotInGame();
-            System.out.println("player set not in game. Closing...");
-        } else {
-            System.out.println("no local player. Closing...");
         }
         Platform.exit();
         System.exit(0);

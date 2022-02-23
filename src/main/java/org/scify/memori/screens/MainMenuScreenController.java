@@ -25,13 +25,11 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.network.RequestManager;
 import org.scify.memori.tts.TTSFacade;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -58,7 +56,7 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
 
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
         super.setParameters(sceneHandler, scene);
-        if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true"))
+        if (MemoriConfiguration.getInstance().ttsEnabled())
             TTSFacade.postGameStatus("started");
         attachButtonFocusHandlers();
     }
@@ -81,6 +79,18 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
                     audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "headphones_adjustment.mp3", false);
                 }
             });
+
+        primaryScene.lookup("#change_language_btn").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "change_language.mp3", false);
+            }
+        });
+
+        primaryScene.lookup("#browse_games").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "find_more_games.mp3", false);
+            }
+        });
 
         if (!configuration.ttsEnabled())
             primaryScene.lookup("#tutorialBtn").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
@@ -123,7 +133,6 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
      */
     @FXML
     protected void exitGame(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE || keyEvt.getCode() == ESCAPE) {
@@ -135,7 +144,7 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
     }
 
     private void exitApp() {
-        if (MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true"))
+        if (MemoriConfiguration.getInstance().ttsEnabled())
             TTSFacade.postGameStatus("finished");
         MainScreen.exitApplication();
     }
@@ -147,7 +156,6 @@ public class MainMenuScreenController extends GameTypeSelectionScreenController 
      */
     @FXML
     protected void initializePvPGameEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {

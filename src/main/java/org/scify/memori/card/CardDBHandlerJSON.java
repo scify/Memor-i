@@ -33,7 +33,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
 
     private CardDBHandlerJSON() {
         jsonFileHandler = new JSONFileHandler();
-        ResourceLocator resourceLocator = new ResourceLocator();
+        ResourceLocator resourceLocator = ResourceLocator.getInstance();
         if (dbFilePath == null)
             dbFilePath = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
         //because we want to perform getResourceAsStream on the dbFile, we need to eliminate the slash "/" that the string starts with:

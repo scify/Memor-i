@@ -81,7 +81,7 @@ public class Card implements Tile {
 
     protected String imagesBasePath;
 
-    protected static ResourceLocator resourceLocator = new ResourceLocator();
+    protected static ResourceLocator resourceLocator;
 
 
     /**
@@ -130,7 +130,7 @@ public class Card implements Tile {
     public Card(String label, String[] images, String[] sounds, String cardDescriptionSound, int cardDescriptionSoundProbability) {
 
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-
+        resourceLocator = ResourceLocator.getInstance();
         this.images = images;
         this.button = new Button();
         this.sounds = sounds;

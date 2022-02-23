@@ -6,13 +6,17 @@ import javafx.scene.input.KeyEvent;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.MemoriConfiguration;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 
 public abstract class MemoriScreenController {
     protected FXSceneHandler sceneHandler;
+    protected MemoriConfiguration memoriConfiguration;
+
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
         this.sceneHandler = sceneHandler;
+        this.memoriConfiguration = MemoriConfiguration.getInstance();
         sceneHandler.pushScene(scene);
         FXRenderingEngine.setGamecoverIcon(scene, "gameCoverImgContainer");
     }

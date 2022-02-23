@@ -42,11 +42,12 @@ public class FXAudioEngine extends AudioEngine {
     private final String numBasePath;
     private final String letterBasePath;
     private final ArrayList<AudioClip> playingAudios = new ArrayList<>();
-    protected static ResourceLocator resourceLocator = new ResourceLocator();
+    protected static ResourceLocator resourceLocator;
     private static AudioEngine instance = null;
     private final MemoriConfiguration configuration;
 
     private FXAudioEngine() {
+        resourceLocator = ResourceLocator.getInstance();
         this.configuration = MemoriConfiguration.getInstance();
         this.soundBasePath = configuration.getDataPackProperty("AUDIOS_BASE_PATH");
         this.numBasePath = configuration.getDataPackProperty("NUMBER_SOUNDS_BASE_PATH");

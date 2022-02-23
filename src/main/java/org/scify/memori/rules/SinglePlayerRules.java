@@ -172,7 +172,7 @@ public class SinglePlayerRules extends MemoriRules {
             //add UI events
             gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_1", null, new Date().getTime() + 5500, true));
 
-            if (!MemoriConfiguration.getInstance().getDataPackProperty("TTS_ENABLED").equalsIgnoreCase("true")) {
+            if (!MemoriConfiguration.getInstance().ttsEnabled()) {
                 addTimeGameEvent(watch, gsCurrentState);
                 gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
             }

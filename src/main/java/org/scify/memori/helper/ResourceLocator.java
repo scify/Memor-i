@@ -12,15 +12,24 @@ public class ResourceLocator {
 
     private String rootDataPath;
     private String rootDataPathDefault;
-    private MemoriConfiguration configuration;
+    private final MemoriConfiguration configuration;
+    private static ResourceLocator instance;
 
-    public ResourceLocator() {
+    private ResourceLocator() {
         configuration = MemoriConfiguration.getInstance();
+        loadRootDataPaths();
+    }
+
+    public static ResourceLocator getInstance() {
+        if(instance == null)
+            instance = new ResourceLocator();
+        return instance;
+    }
+
+    public void loadRootDataPaths() {
         this.rootDataPath = "/" + configuration.getDataPackProperty("DATA_PACKAGE") + "/";
         this.rootDataPathDefault = "/" + configuration.getDataPackProperty("DATA_PACKAGE_DEFAULT") + "/";
     }
-
-
 
     /**
      * Given a path that represents a resource, tries to find if the resource is available in the current data pack

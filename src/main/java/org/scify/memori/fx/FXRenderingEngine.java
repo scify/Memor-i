@@ -889,7 +889,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         if (gameCoverImgContainer == null || !gameCoverImgContainer.isVisible())
             return;
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        ResourceLocator resourceLocator = new ResourceLocator();
+        ResourceLocator resourceLocator = ResourceLocator.getInstance();
 
         String gameCoverImgPath = resourceLocator.getCorrectPathForFile(configuration.getDataPackProperty("IMAGES_BASE_PATH") + configuration.getDataPackProperty("GAME_COVER_IMG_PATH"), "game_cover.png");
         gameCoverImgContainer.setImage(new Image(gameCoverImgPath));

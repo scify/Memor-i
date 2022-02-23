@@ -4,7 +4,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
-import org.scify.memori.helper.MemoriConfiguration;
 
 import java.util.Arrays;
 
@@ -28,7 +27,7 @@ public class LanguageSelectionScreenController extends MemoriScreenController {
         Node node = (Node) evt.getSource();
         String langCode = (String) node.getUserData();
         try {
-            MemoriConfiguration.getInstance().setLang(langCode);
+            memoriConfiguration.setLang(langCode);
             if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
                 new MainMenuScreen(sceneHandler, sceneHandler.getMainWindow());
             else
@@ -36,7 +35,5 @@ public class LanguageSelectionScreenController extends MemoriScreenController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 }

@@ -31,7 +31,7 @@ public class ARIRobotTextToSpeechService implements TextToSpeechService {
             put("it", "it_IT");
         }};
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
-        URL = configuration.getDataPackProperty("TTS_URL");
+        URL = configuration.getPropertyByName("TTS_URL");
     }
 
     @Override
