@@ -2,9 +2,12 @@ package org.scify.memori.helper.analytics;
 
 import org.asynchttpclient.*;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.interfaces.AnalyticsLogger;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class MemoriStudioAnalyticsLogger implements AnalyticsLogger {
 
@@ -18,6 +21,10 @@ public class MemoriStudioAnalyticsLogger implements AnalyticsLogger {
 
     @Override
     public void logEvent(Map<String, String> payload) {
+        String json = "{" + payload.entrySet().stream()
+                .map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"")
+                .collect(Collectors.joining(", ")) + "}";
+        MemoriLogger.LOGGER.log(Level.INFO, "Analytics event: " + json);
         if (SERVER_URL != null)
             executePOSTCall(payload);
     }
