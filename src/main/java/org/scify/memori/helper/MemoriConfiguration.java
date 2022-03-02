@@ -19,7 +19,7 @@ public class MemoriConfiguration {
     private static MemoriConfiguration instance = null;
     private final Properties props;
     private final String[] acceptedLanguageCodes = {"en", "el", "es", "it"};
-    private final String additionalPropertiesFilePath = "/project_additional.properties";
+    private final String additionalPropertiesFilePath = File.separator + "project_additional.properties";
     private InputStream additionalPropertiesFileInputStream;
     private final InputStream defaultPropertiesFileInputStream;
 
@@ -27,7 +27,7 @@ public class MemoriConfiguration {
         props = new Properties();
         //When loading a resource, the "/" means root of the main/resources directory
         additionalPropertiesFileInputStream = getClass().getResourceAsStream(additionalPropertiesFilePath);
-        defaultPropertiesFileInputStream = getClass().getResourceAsStream("/project.properties");
+        defaultPropertiesFileInputStream = getClass().getResourceAsStream(File.separator + "project.properties");
         //if project_additional.properties file is not found, we load the default one
         if (additionalPropertiesFileInputStream == null)
             additionalPropertiesFileInputStream = defaultPropertiesFileInputStream;
@@ -98,7 +98,10 @@ public class MemoriConfiguration {
             if (resourceUrl == null) {
                 return createAdditionalPropertiesFile();
             } else {
-                return new File(Objects.requireNonNull(resourceUrl).toURI());
+                System.out.println("Additional properties file was found String: " + resourceUrl);
+                System.out.println("Additional properties file was found URI: " + resourceUrl.toURI());
+                System.out.println("Additional properties file was found External form: " + resourceUrl.toExternalForm());
+                return new File(resourceUrl.toExternalForm());
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -107,7 +110,7 @@ public class MemoriConfiguration {
     }
 
     protected File createAdditionalPropertiesFile() throws URISyntaxException {
-        URL url = this.getClass().getResource("/");
+        URL url = this.getClass().getResource(File.separator);
         File parentDirectory = new File(new URI(Objects.requireNonNull(url).toString()));
         return new File(parentDirectory, additionalPropertiesFilePath.substring(1));
     }

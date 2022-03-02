@@ -8,6 +8,7 @@ import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.interfaces.CardDBHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
@@ -35,7 +36,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
         jsonFileHandler = new JSONFileHandler();
         ResourceLocator resourceLocator = ResourceLocator.getInstance();
         if (dbFilePath == null)
-            dbFilePath = resourceLocator.getCorrectPathForFile("json_DB", "/equivalence_cards_sets.json");
+            dbFilePath = resourceLocator.getCorrectPathForFile("json_DB", File.separator + "equivalence_cards_sets.json");
         //because we want to perform getResourceAsStream on the dbFile, we need to eliminate the slash "/" that the string starts with:
         if (dbFilePath.charAt(0) == '/') {
             dbFilePath = dbFilePath.substring(1);

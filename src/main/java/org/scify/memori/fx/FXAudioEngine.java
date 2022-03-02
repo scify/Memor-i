@@ -27,6 +27,7 @@ import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.tts.TTSFacade;
 
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -132,7 +133,7 @@ public class FXAudioEngine extends AudioEngine {
         if (configuration.ttsEnabled()) {
             int end = soundFilePath.indexOf(".");
             try {
-                String pathForTTS = soundFilePath.substring(0, end).replaceAll("/", "_");
+                String pathForTTS = soundFilePath.substring(0, end).replaceAll(File.separator, "_");
                 playSoundFromTTS(pathForTTS);
             } catch (MissingResourceException e) {
                 analyzeAndPlaySound(soundFilePath, isBlocking);
