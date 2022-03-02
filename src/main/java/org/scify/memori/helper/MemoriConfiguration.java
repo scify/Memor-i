@@ -1,5 +1,7 @@
 package org.scify.memori.helper;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,22 +22,30 @@ public class MemoriConfiguration {
     private final Properties props;
     private final String[] acceptedLanguageCodes = {"en", "el", "es", "it"};
     private final String additionalPropertiesFilePath = File.separator + "project_additional.properties";
-    private InputStream additionalPropertiesFileInputStream;
-    private final InputStream defaultPropertiesFileInputStream;
+    private final File additionalPropertiesFile;
 
-    private MemoriConfiguration() {
+    private MemoriConfiguration() throws IOException {
         props = new Properties();
         //When loading a resource, the "/" means root of the main/resources directory
-        additionalPropertiesFileInputStream = getClass().getResourceAsStream(additionalPropertiesFilePath);
-        defaultPropertiesFileInputStream = getClass().getResourceAsStream(File.separator + "project.properties");
+        InputStream additionalPropertiesFileInputStream = getClass().getResourceAsStream(additionalPropertiesFilePath);
+        InputStream defaultPropertiesFileInputStream = getClass().getResourceAsStream(File.separator + "project.properties");
+        Properties propAdditional = new Properties();
+        props.load(defaultPropertiesFileInputStream);
         //if project_additional.properties file is not found, we load the default one
-        if (additionalPropertiesFileInputStream == null)
-            additionalPropertiesFileInputStream = defaultPropertiesFileInputStream;
+        if (additionalPropertiesFileInputStream != null)
+            propAdditional.load(additionalPropertiesFileInputStream);
+        props.putAll(propAdditional);
+        additionalPropertiesFile = getOrCreateAdditionalPropertiesFile();
     }
 
     public static MemoriConfiguration getInstance() {
-        if (instance == null)
-            instance = new MemoriConfiguration();
+        if (instance == null) {
+            try {
+                instance = new MemoriConfiguration();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return instance;
     }
 
@@ -68,10 +78,7 @@ public class MemoriConfiguration {
      * @return the property value
      */
     public String getDataPackProperty(String propertyKey) {
-        String propertyValue = this.getPropertyByName(additionalPropertiesFileInputStream, propertyKey);
-        if (propertyValue == null)
-            propertyValue = this.getPropertyByName(defaultPropertiesFileInputStream, propertyKey);
-        return propertyValue;
+        return getPropertyByName(propertyKey);
     }
 
     /**
@@ -82,8 +89,7 @@ public class MemoriConfiguration {
      */
     public void setDataPackProperty(String propertyKey, String newPropertyValue) {
         try {
-            Objects.requireNonNull(additionalPropertiesFileInputStream).close();
-            FileOutputStream out = new FileOutputStream(getOrCreateAdditionalPropertiesFile());
+            FileOutputStream out = new FileOutputStream(additionalPropertiesFile);
             props.setProperty(propertyKey, newPropertyValue);
             props.store(out, null);
             out.close();
@@ -94,19 +100,18 @@ public class MemoriConfiguration {
 
     protected File getOrCreateAdditionalPropertiesFile() {
         try {
-            URL resourceUrl = getClass().getResource(additionalPropertiesFilePath);
-            if (resourceUrl == null) {
+            InputStream inputStream = getClass().getResourceAsStream(additionalPropertiesFilePath);
+            if (inputStream == null || inputStream.available() < 1) {
                 return createAdditionalPropertiesFile();
             } else {
-                System.out.println("Additional properties file was found String: " + resourceUrl);
-                System.out.println("Additional properties file was found URI: " + resourceUrl.toURI());
-                System.out.println("Additional properties file was found External form: " + resourceUrl.toExternalForm());
-                return new File(resourceUrl.toExternalForm());
+                File file = new File(Objects.requireNonNull(getClass().getResource(additionalPropertiesFilePath)).getFile());
+                FileUtils.copyInputStreamToFile(inputStream, file);
+                return file;
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     protected File createAdditionalPropertiesFile() throws URISyntaxException {
