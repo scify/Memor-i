@@ -56,7 +56,6 @@
 .focusedCard {
     -fx-background-color: yellow;
     -fx-rotate: 7px;
-
 }
 
 .cardButton:focused {
@@ -170,6 +169,12 @@ StackPane {
     -fx-background-color: transparent;
     -fx-text-fill: yellow;
     -fx-font-weight: bold;
+}
+
+.btn-img:focused {
+    -fx-text-fill: #004C86;
+    -fx-border-color: purple;
+    -fx-background-color: yellow;
 }
 
 .btn:hover {

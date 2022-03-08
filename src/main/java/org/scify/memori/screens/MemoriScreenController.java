@@ -7,18 +7,25 @@ import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.MemoriConfiguration;
+import org.scify.memori.interfaces.AudioEngine;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
 
 public abstract class MemoriScreenController {
     protected FXSceneHandler sceneHandler;
     protected MemoriConfiguration memoriConfiguration;
+    protected Scene primaryScene;
+    protected AudioEngine audioEngine;
+    protected String miscellaneousSoundsBasePath;
 
     public void setParameters(FXSceneHandler sceneHandler, Scene scene) {
         this.sceneHandler = sceneHandler;
         this.memoriConfiguration = MemoriConfiguration.getInstance();
         sceneHandler.pushScene(scene);
         FXRenderingEngine.setGamecoverIcon(scene, "gameCoverImgContainer");
+        this.primaryScene = scene;
+        this.audioEngine = FXAudioEngine.getInstance();
+        this.miscellaneousSoundsBasePath = memoriConfiguration.getDataPackProperty("MISCELLANEOUS_SOUNDS");
     }
 
     @FXML

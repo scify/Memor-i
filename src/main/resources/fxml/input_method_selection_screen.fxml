@@ -10,29 +10,33 @@
            fx:controller="org.scify.memori.screens.InputMethodSelectionScreenController">
     <VBox alignment="BASELINE_CENTER" styleClass="inputSelectMethodContainer">
         <Label textAlignment="CENTER" styleClass="sponsorLabel" text="%select_input_method"/>
-
         <HBox alignment="center" styleClass="inputSelectMethodButtonsContainer">
-            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="%keyboard" userData="keyboard"
+            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language,btn-img" text="%keyboard"
+                    userData="keyboard"
                     onKeyPressed="#onSetInputMethod" onTouchPressed="#onSetInputMethod"
-                    onMouseClicked="#onSetInputMethod">
+                    onMouseClicked="#onSetInputMethod"
+                    fx:id="keyboardBtn">
                 <graphic>
                     <ImageView fitWidth="350.0" preserveRatio="true">
                         <Image url="@../img/keyboard.png"/>
                     </ImageView>
                 </graphic>
             </Button>
-            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="%mouse_touch" userData="mouse_touch"
+            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language,btn-img" text="%mouse_touch"
+                    userData="mouse_touch"
                     onKeyPressed="#onSetInputMethod" onTouchPressed="#onSetInputMethod"
-                    onMouseClicked="#onSetInputMethod">
+                    onMouseClicked="#onSetInputMethod"
+                    fx:id="mouseBtn">
                 <graphic>
                     <ImageView fitWidth="350.0" preserveRatio="true">
                         <Image url="@../img/mouse_touch.png"/>
                     </ImageView>
                 </graphic>
             </Button>
-            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language" text="%back" userData="mouse_touch"
+            <Button contentDisplay="BOTTOM" styleClass="btn,btn-border,btn-language,btn-img" text="%back"
                     onKeyPressed="#exitScreen" onTouchPressed="#exitScreen"
-                    onMouseClicked="#exitScreen">
+                    onMouseClicked="#exitScreen"
+                    fx:id="goBackBtn">
                 <graphic>
                     <ImageView fitWidth="200.0" preserveRatio="true">
                         <Image url="@../img/back.png"/>
@@ -47,7 +51,8 @@
             </ImageView>
         </HBox>
         <HBox alignment="BOTTOM_LEFT">
-            <ImageView styleClass="logoImage" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="logoImage" styleClass="logoImage" fitWidth="100.0" pickOnBounds="true"
+                       preserveRatio="true">
                 <image>
                     <Image url="@../img/Powered_by_SciFY.png"/>
                 </image>
