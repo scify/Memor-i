@@ -23,7 +23,7 @@ public class ARIRobotTextToSpeechService implements TextToSpeechService {
 
     private ARIRobotTextToSpeechService() {
         requestManager = new RequestManager();
-        languages = new HashMap<>() {{
+        languages = new HashMap<String, String>() {{
             put("en", "en_GB");
             put("el", "el_GR");
             put("es", "es_ES");

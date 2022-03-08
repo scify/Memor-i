@@ -36,7 +36,7 @@ public class MemoriStudioAnalyticsLogger implements AnalyticsLogger {
         }
         request.addHeader("Content-Type", "application/json;charset=UTF-8")
                 .addHeader("Accept", "application/json")
-                .execute(new AsyncCompletionHandler<>() {
+                .execute(new AsyncCompletionHandler<Object>() {
                     @Override
                     public Object onCompleted(Response response) {
                         return response;

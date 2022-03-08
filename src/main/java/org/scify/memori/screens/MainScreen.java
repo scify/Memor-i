@@ -69,8 +69,10 @@ public class MainScreen extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
                 ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
         Parent root = loader.load();
-        configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
-        configuration.setProperty("AUTH_TOKEN", System.getProperty("authToken"));
+        if (System.getProperty("ttsUrl") != null)
+            configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
+        if (System.getProperty("authToken") != null)
+            configuration.setProperty("AUTH_TOKEN", System.getProperty("authToken"));
         if (Arrays.asList(new String[]{"keyboard", "mouse_touch"}).contains(System.getProperty("inputMethod")))
             configuration.setProperty("INPUT_METHOD", System.getProperty("inputMethod"));
         // set as width and height the screen width and height
