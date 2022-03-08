@@ -65,7 +65,7 @@ public class FXHighScoresScreenController extends MemoriScreenController {
     @FXML
     private void exitIfEsc(KeyEvent evt) {
         if (evt.getCode() == ESCAPE) {
-            exitScreen();
+            exitScreen(evt);
             evt.consume();
         }
     }

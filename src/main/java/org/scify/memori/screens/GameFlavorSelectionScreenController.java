@@ -110,7 +110,7 @@ public class GameFlavorSelectionScreenController extends MemoriScreenController 
     private void handleKeyEvent(KeyEvent event) {
         switch (event.getCode()) {
             case ESCAPE:
-                exitScreen();
+                exitScreen(event);
                 break;
             case ENTER:
                 loadGameTypeScreenForGameFlavor(Integer.parseInt(((Control) event.getSource()).getId()));

@@ -2,6 +2,7 @@ package org.scify.memori.screens;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -131,7 +132,7 @@ public class LevelsScreenController extends MemoriScreenController implements In
      * Pauses all sounds and exits the application
      */
     @FXML
-    protected void exitScreen() {
+    protected void exitScreen(Event event) {
         if (currentGameRequestId != 0)
             cancelGameRequest();
         audioEngine.pauseCurrentlyPlayingAudios();
@@ -139,10 +140,10 @@ public class LevelsScreenController extends MemoriScreenController implements In
             threadSetPlayerOnline.interrupt();
             if (threadGameRequestReply != null)
                 threadGameRequestReply.interrupt();
-            super.exitScreen();
+            super.exitScreen(event);
             new InvitePlayerScreen(sceneHandler);
         } else {
-            super.exitScreen();
+            super.exitScreen(event);
         }
 
     }

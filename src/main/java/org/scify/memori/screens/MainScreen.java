@@ -140,5 +140,6 @@ public class MainScreen extends Application {
         }
         Platform.exit();
         System.exit(0);
+        Platform.setImplicitExit(true);
     }
 }

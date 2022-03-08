@@ -1,8 +1,10 @@
 package org.scify.memori.screens;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
@@ -10,6 +12,7 @@ import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.AudioEngine;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
+import static javafx.scene.input.KeyCode.SPACE;
 
 public abstract class MemoriScreenController {
     protected FXSceneHandler sceneHandler;
@@ -39,6 +42,14 @@ public abstract class MemoriScreenController {
      * Pauses all sounds and exits the application
      */
     @FXML
+    protected void exitScreen(Event event) {
+        if (event.getClass() == KeyEvent.class) {
+            if (((KeyEvent) event).getCode() == SPACE)
+                exitScreen();
+        } else if (event.getClass() == MouseEvent.class)
+            exitScreen();
+    }
+
     protected void exitScreen() {
         FXAudioEngine.getInstance().pauseCurrentlyPlayingAudios();
         sceneHandler.popScene();
