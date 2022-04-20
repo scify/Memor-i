@@ -44,7 +44,7 @@ public class ARIRobotTextToSpeechService implements TextToSpeechService {
 
     @Override
     public void postGameStatus(String status) {
-        String payload = "{\"game_status\": \"" + status + "\"}";
+        String payload = "{\"game_state\": \"" + status + "\"}";
         String res = this.requestManager.doPost(URL + "memori_state", payload);
         MemoriLogger.LOGGER.log(Level.INFO, "ROBOT API STATUS RESULT: " + res);
     }
