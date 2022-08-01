@@ -104,7 +104,6 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
      */
     @FXML
     protected void initializeTutorialGameEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {

@@ -61,13 +61,13 @@ public class MemoriGameLauncher {
         FXMemoriGame game = createNewGame(gameLevel, gameType);
         game.setGameType(gameType);
         game.initialize(gameLevel);
-        startGameThread(game, gameLevel);
         Map<String, String> map = new HashMap<>();
         String currentGameName = MemoriConfiguration.getInstance().getPropertyByName("CURRENT_GAME");
         currentGameName = currentGameName != null ? currentGameName : MemoriConfiguration.getInstance().getDataPackProperty("DATA_PACKAGE");
         map.put("game_name", currentGameName);
         map.put("game_level", gameLevel.getLevelName());
         AnalyticsManager.getInstance().logEvent("game_started", map);
+        startGameThread(game, gameLevel);
     }
 
     public void startGameForLevel(MemoriGameLevel gameLevel, GameType gameType, Map<CategorizedCard, Point2D> cards) {

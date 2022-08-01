@@ -36,6 +36,8 @@ public class AnalyticsManager {
     private Map<String, String> getParams(Map<String, String> params, String eventName) {
         MemoriConfiguration configuration = MemoriConfiguration.getInstance();
         Map<String, String> newParams = new HashMap<>();
+        if (params.containsKey("game_name"))
+            newParams.put("game_name", params.get("game_name"));
         newParams.put("name", eventName);
         newParams.put("source", "Memor-i Desktop " + configuration.getDataPackProperty("APP_VERSION"));
         params.put("JAVA_VERSION", System.getProperty("java.version"));

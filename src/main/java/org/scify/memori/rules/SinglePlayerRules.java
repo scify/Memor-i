@@ -177,9 +177,7 @@ public class SinglePlayerRules extends MemoriRules {
                 gsCurrentState.getEventQueue().add(new GameEvent("LEVEL_SUCCESS_STEP_2", null, new Date().getTime() + 7500, true));
             }
 
-            levelEndUserActions(gsCurrentState);
-            //update high score
-            highScore.updateHighScore(watch);
+
             Map<String, String> map = new HashMap<>();
             String currentGameName = MemoriConfiguration.getInstance().getPropertyByName("CURRENT_GAME");
             currentGameName = currentGameName != null ? currentGameName : MemoriConfiguration.getInstance().getDataPackProperty("DATA_PACKAGE");
@@ -188,6 +186,9 @@ public class SinglePlayerRules extends MemoriRules {
             map.put("game_duration_seconds", String.valueOf(watch.time(TimeUnit.SECONDS)));
             map.put("num_of_errors", String.valueOf(numOfErrors));
             AnalyticsManager.getInstance().logEvent("game_finished", map);
+            levelEndUserActions(gsCurrentState);
+            //update high score
+            highScore.updateHighScore(watch);
         } else {
             super.handleLevelFinishGameEvents(userAction, gsCurrentState);
         }
