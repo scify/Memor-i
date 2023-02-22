@@ -30,6 +30,42 @@ Java home: /usr/lib/jvm/java-8-oracle/jre
 
 ```
 
+#### Choosing the correct Java version
+
+This project is built using Java 1.8.
+
+If you have multiple versions of Java installed, you need to select the correct one by running:
+
+```bash
+sudo update-alternatives --config java
+```
+
+and then (if applicable):
+
+```bash
+sudo update-alternatives --config javac
+```
+
+Many programs, such as Java servers, use the JAVA_HOME environment variable to determine the Java installation location.
+
+So, you need to get the correct Java path, and add it to `~/.bashrc`:
+
+```text
+# ~/.bashrc contents:
+
+# export JAVA_HOME=/usr/lib/jvm/jdk-11/
+
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_333/
+
+export PATH=$JAVA_HOME/bin:$PATH
+```
+
+After updating the `~/.bashrc` file, run the `source` command to activate the changes:
+
+```bash
+source ~/.bashrc
+```
+
 ### Installing
 
 By looking at pom.xml you will see some plugins this project uses. 
