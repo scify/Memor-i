@@ -20,19 +20,26 @@ To see currently open tasks, discussed ideas and submitted bugs
 
 After cloning the code repository, Java and Apache Maven are required to be able to compile it.
 Ensure that Java and Maven version installed on your machine by running:
-```
+
+```bash
 mvn -v
+```
 
+And the result will output the Maven-related information:
+
+```text
 Apache Maven 3.0.5
-Maven home: /usr/share/maven
-Java version: 1.8.0_101, vendor: Oracle Corporation
-Java home: /usr/lib/jvm/java-8-oracle/jre
 
+Maven home: /usr/share/maven
+
+Java version: 1.8.0_101, vendor: Oracle Corporation
+
+Java home: /usr/lib/jvm/java-8-oracle/jre
 ```
 
 #### Choosing the correct Java version
 
-This project is built using Java 1.8.
+This project is built using Java `1.8`.
 
 If you have multiple versions of Java installed, you need to select the correct one by running:
 
@@ -91,10 +98,18 @@ java -jar -Djdk.gtk.version=2 memori-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 These tasks can also be accomplished more easily just by running 
-```
+
+```bash
 ./build_project.sh
 ```
+
 which is a UNIX executable file located at the root of the project.
+
+Note: if not executable, you need to make the file executable, by running:
+
+```bash
+chmod +x build_project.sh
+```
 
 ## Built With
 
