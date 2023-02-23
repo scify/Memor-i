@@ -18,8 +18,8 @@ public class MemoriConfiguration {
     private MemoriConfiguration() throws IOException {
         props = new Properties();
         // When loading a resource, the "/" means root of the main/resources directory
-        String additionalPropertiesFilePath = File.separator + "project_additional.properties";
-        String defaultPropertiesFilePath = File.separator + "project.properties";
+        String additionalPropertiesFilePath = "/project_additional.properties";
+        String defaultPropertiesFilePath = "/project.properties";
         InputStream additionalPropertiesFileInputStream = getClass().getResourceAsStream(additionalPropertiesFilePath);
         InputStream defaultPropertiesFileInputStream = getClass().getResourceAsStream(defaultPropertiesFilePath);
         Properties propAdditional = new Properties();

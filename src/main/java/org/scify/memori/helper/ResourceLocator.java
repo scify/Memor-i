@@ -27,8 +27,8 @@ public class ResourceLocator {
     }
 
     public void loadRootDataPaths() {
-        this.rootDataPath = File.separator + configuration.getDataPackProperty("DATA_PACKAGE") + File.separator;
-        this.rootDataPathDefault = File.separator + configuration.getDataPackProperty("DATA_PACKAGE_DEFAULT") + File.separator;
+        this.rootDataPath = "/" + configuration.getDataPackProperty("DATA_PACKAGE") + "/";
+        this.rootDataPathDefault = "/" + configuration.getDataPackProperty("DATA_PACKAGE_DEFAULT") + "/";
     }
 
     /**
