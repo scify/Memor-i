@@ -1,5 +1,4 @@
-.idea/workspace.xml
-.idea/libraries
+.idea/
 target/
 high_scores.properties
 out
@@ -15,3 +14,4 @@ additional_pack
 .idea/inspectionProfiles/
 memori-1.0-SNAPSHOT-jar-with-dependencies.jar
 memori.zip
+*.jar
