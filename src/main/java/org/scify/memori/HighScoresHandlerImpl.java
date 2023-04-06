@@ -51,7 +51,7 @@ public class HighScoresHandlerImpl implements HighScoresHandler{
         } else {
             userDir = System.getProperty("user.dir");
         }
-        highScoresFile = userDir + File.separator + "high_scores.properties";
+        highScoresFile = userDir + "/high_scores.properties";
     }
 
     public void updateHighScore(TimeWatch watch) {

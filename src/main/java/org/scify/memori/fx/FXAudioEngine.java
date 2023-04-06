@@ -133,7 +133,7 @@ public class FXAudioEngine extends AudioEngine {
         if (configuration.ttsEnabled()) {
             int end = soundFilePath.indexOf(".");
             try {
-                String pathForTTS = soundFilePath.substring(0, end).replaceAll(File.separator, "_");
+                String pathForTTS = soundFilePath.substring(0, end).replaceAll("/", "_");
                 playSoundFromTTS(pathForTTS);
             } catch (MissingResourceException e) {
                 analyzeAndPlaySound(soundFilePath, isBlocking);

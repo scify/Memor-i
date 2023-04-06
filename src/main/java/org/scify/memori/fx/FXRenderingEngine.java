@@ -647,7 +647,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             int idx = new Random().nextInt(cpuIntroMessages.size());
                             String randomSound = (cpuIntroMessages.get(idx));
-                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "game_starting_sounds" + File.separator + randomSound, currentGameEvent.blocking);
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "game_starting_sounds/" + randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -655,7 +655,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             int idx = new Random().nextInt(playerWonRoundMessages.size());
                             String randomSound = (playerWonRoundMessages.get(idx));
-                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "player_won_round" + File.separator + randomSound, currentGameEvent.blocking);
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "player_won_round/" + randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
@@ -663,7 +663,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                         if (new Date().getTime() > currentGameEvent.delay) {
                             int idx = new Random().nextInt(playerLostRoundMessages.size());
                             String randomSound = (playerLostRoundMessages.get(idx));
-                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "cpu_won_round" + File.separator + randomSound, currentGameEvent.blocking);
+                            fxAudioEngine.playSound(this.multiPlayerSoundsBasePath + "cpu_won_round/" + randomSound, currentGameEvent.blocking);
                             listIterator.remove();
                         }
                         break;
