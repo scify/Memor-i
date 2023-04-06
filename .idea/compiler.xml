@@ -9,8 +9,5 @@
         <module name="memori" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="memori" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
