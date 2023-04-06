@@ -38,17 +38,13 @@ import org.scify.memori.MemoriGameState;
 import org.scify.memori.MemoriTerrain;
 import org.scify.memori.card.Card;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.*;
-import org.scify.memori.tts.TTSFacade;
 
 import java.awt.geom.Point2D;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.*;
 

@@ -138,7 +138,7 @@ public class RegisterLoginFormScreenController {
                 PlayerManager.setPlayerId(newPlayerId);
                 PlayerManager.setLocalPlayer(new Player(userNameStr, newPlayerId));
                 audioEngine.pauseCurrentlyPlayingAudios();
-                InvitePlayerScreen invitePlayerScreen = new InvitePlayerScreen(sceneHandler);
+                new InvitePlayerScreen(sceneHandler);
                 break;
             case ServerResponse.RESPONSE_ERROR:
                 // Player with username exists

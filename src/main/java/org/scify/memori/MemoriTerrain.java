@@ -20,7 +20,6 @@ package org.scify.memori;
 import org.scify.memori.card.Card;
 import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
-import org.scify.memori.interfaces.GameLevel;
 import org.scify.memori.interfaces.Terrain;
 import org.scify.memori.interfaces.Tile;
 

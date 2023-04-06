@@ -21,15 +21,12 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.tts.TTSFacade;
 
-import java.io.File;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Responsible for handling Audio events

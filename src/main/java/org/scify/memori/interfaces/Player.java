@@ -18,10 +18,6 @@
 package org.scify.memori.interfaces;
 
 import com.google.gson.annotations.Expose;
-import org.scify.memori.helper.PropertyHandlerImpl;
-
-import java.io.File;
-import java.util.UUID;
 
 public class Player {
     @Expose
