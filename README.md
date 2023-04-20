@@ -2,7 +2,7 @@
 # Memor-i
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/scify/Memor-i/master/src/main/resources/img/memori.png" width="400">
+<img src="https://raw.githubusercontent.com/scify/Memor-i/master/src/main/resources/img/memori.png" width="400" alt="Gameplay">
 </p>
 <br>
 
@@ -16,7 +16,7 @@ Check out our [YouTube video](https://www.youtube.com/watch?v=M2DqT5e975w)
 Please take a look at the [project roadmap](http://jira.scify.org/secure/RapidBoard.jspa?rapidView=99&projectKey=MEM&view=detail&selectedIssue=MEM-35")
 To see currently open tasks, discussed ideas and submitted bugs
 
-### Prerequisities
+### Prerequisites
 
 After cloning the code repository, Java and Apache Maven are required to be able to compile it.
 Ensure that Java and Maven version installed on your machine by running:
@@ -147,15 +147,15 @@ limitations under the License.
 
 ### Memor-i Player VS Player Sponsor
 <br>
-Η έκδοση Memori PvP του έργου Memori υλοποιείται με χρηματοδότηση από το <a href="http://www.latsis-foundation.org/">Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση.</a>
+Η έκδοση Memor-i PvP του έργου Memor-i υλοποιείται με χρηματοδότηση από το <a href="http://www.latsis-foundation.org/">Κοινωφελές Ίδρυμα Ιωάννη Σ. Λάτση.</a>
 <br><br><br>
 <table>
 <tr>
 <td>
-<a href="http://www.scify.gr/site/en/"><img src="http://www.scify.gr/site/images/scify/scify_logo_108.png"></a>
+<a href="https://www.scify.gr/site/en/"><img src="https://www.scify.gr/site/images/scify/scify_logo_108.png" alt="SciFY logo"></a>
 </td>
 <td>
-<a href="http://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img height="100px" src="https://praksis.gr/cms/files/2019/12/LATSIS_FOUNDATION_LOGO_GR.jpg" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
+<a href="https://www.latsis-foundation.org/" title="Ίδρυμα Λάτση" rel="home"><img height="100px" src="https://praksis.gr/cms/files/2019/12/LATSIS_FOUNDATION_LOGO_GR.jpg" alt="Ίδρυμα Λάτση" title="Ίδρυμα Λάτση"></a>
 </td>
 </tr>
 </table>
@@ -164,4 +164,4 @@ limitations under the License.
 ## Acknowledgments
 
 * [Maven plugin for parsing JSON files](https://mvnrepository.com/artifact/org.json/json)
-* <div>Icons made by <a href="http://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+* <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
