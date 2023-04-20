@@ -100,7 +100,6 @@ public class MemoriTerrain implements Terrain {
         MemoriCardService cardDelegator = new MemoriCardService();
         //read the cards from the JSON file
         int numOfCards = (terrainWidth * terrainHeight);
-        System.out.println("num of cards needed: " + numOfCards);
         cardsList = cardDelegator.getMemoriCards(numOfCards);
         // TODO for each card, set width
         return cardsList;

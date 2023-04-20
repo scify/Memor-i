@@ -24,7 +24,7 @@ public class PropertyHandlerImpl implements PropertyHandler {
             props.load(in);
             return props.getProperty(String.valueOf(propertyName));
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return null;
     }
@@ -48,7 +48,7 @@ public class PropertyHandlerImpl implements PropertyHandler {
             props.store(out, null);
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
     }
 }

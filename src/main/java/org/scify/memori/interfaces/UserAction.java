@@ -18,6 +18,8 @@
 package org.scify.memori.interfaces;
 
 import com.google.gson.annotations.Expose;
+import org.scify.memori.helper.MemoriConfiguration;
+
 import java.awt.geom.Point2D;
 
 public class UserAction {
@@ -29,6 +31,9 @@ public class UserAction {
     private String direction;
 
     @Expose protected long timestamp;
+
+    protected boolean isKeyboardEvent;
+
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
@@ -67,5 +72,11 @@ public class UserAction {
         return actionType;
     }
 
+    public boolean isKeyboardEvent() {
+        return isKeyboardEvent;
+    }
 
+    public void setIsKeyboardEvent(boolean keyboardEvent) {
+        isKeyboardEvent = keyboardEvent;
+    }
 }

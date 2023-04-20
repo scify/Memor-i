@@ -2,6 +2,7 @@ package org.scify.memori.rules;
 
 import org.scify.memori.*;
 import org.scify.memori.enums.GameType;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.interfaces.*;
 import org.scify.memori.network.GameRequestManager;
 
@@ -38,7 +39,7 @@ public class MultiPlayerRules extends MemoriRules {
         try {
             handleMultiPlayerGameStartingGameEvents(gsCurrentState);
         } catch (Exception e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         if(isOpponentPlaying(gsCurrentState) && !isLastRound(gsCurrent) && !gameInterrupted) {
             handleOpponentNextMove(gsCurrentState);
@@ -262,7 +263,7 @@ public class MultiPlayerRules extends MemoriRules {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
             gameInterrupted = true;
             GameRequestManager gameRequestManager = new GameRequestManager();
             Thread thread = new Thread(() -> gameRequestManager.cancelGame());
@@ -281,7 +282,7 @@ public class MultiPlayerRules extends MemoriRules {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         handleUserActionMultiPlayerGameEvents(opponentMoveFactory.getUserFlip(), gsCurrentState, 1000);
     }

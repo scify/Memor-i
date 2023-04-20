@@ -37,6 +37,7 @@ import org.scify.memori.MemoriGameLevel;
 import org.scify.memori.MemoriGameState;
 import org.scify.memori.MemoriTerrain;
 import org.scify.memori.card.Card;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
@@ -137,7 +138,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
             root = loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
             return;
         }
         this.initialiseGameSoundLists();
@@ -195,7 +196,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                 setUpFXComponents();
                 initFXComponents(currentState);
             } catch (IOException e) {
-                e.printStackTrace();
+                DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
             }
             firstDraw = false;
         } else {
@@ -240,7 +241,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
                     System.out.println("FAILED x: " + point.getX());
                     System.out.println("FAILED y: " + point.getY());
                     System.out.println("FAILED: " + card.getButton().getId());
-                    e.printStackTrace();
+                    DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
                 }
             });
             //Set up the event handler for the current card
@@ -823,7 +824,10 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
             userAction = new UserAction("escape", getMovementDirection(event));
             event.consume();
         }
-        addUserAction(userAction);
+        if (userAction != null) {
+            userAction.setIsKeyboardEvent(true);
+            addUserAction(userAction);
+        }
     }
 
     protected void handleTouchOrMouseEvent(Event event) {

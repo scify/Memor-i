@@ -24,7 +24,7 @@ public class MemoriStudioAnalyticsLogger implements AnalyticsLogger {
         String json = "{" + payload.entrySet().stream()
                 .map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"")
                 .collect(Collectors.joining(", ")) + "}";
-        MemoriLogger.LOGGER.log(Level.INFO, "Analytics event: " + json);
+        // MemoriLogger.LOGGER.log(Level.INFO, "Analytics event: " + json);
         if (SERVER_URL != null)
             executePOSTCall(payload);
     }

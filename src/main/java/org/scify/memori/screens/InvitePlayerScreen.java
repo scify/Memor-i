@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
 
@@ -29,7 +30,7 @@ public class InvitePlayerScreen {
         try {
             root = loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
 
         Scene gameLevelsScene = new Scene(root, mWidth, mHeight);

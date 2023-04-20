@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 
@@ -42,7 +43,7 @@ public class RequestManager {
             post.setEntity(new UrlEncodedFormEntity(postParams));
             return performPOSTCall(post);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return null;
     }
@@ -73,7 +74,7 @@ public class RequestManager {
 
             return getString(response);
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return null;
     }
@@ -108,7 +109,7 @@ public class RequestManager {
 
             return getString(response);
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return null;
     }

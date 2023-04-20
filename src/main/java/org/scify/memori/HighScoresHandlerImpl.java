@@ -17,8 +17,10 @@
 
 package org.scify.memori;
 
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.PropertyHandlerImpl;
 import org.scify.memori.helper.TimeWatch;
+import org.scify.memori.helper.Utils;
 import org.scify.memori.interfaces.HighScoresHandler;
 import org.scify.memori.interfaces.PropertyHandler;
 
@@ -46,7 +48,7 @@ public class HighScoresHandlerImpl implements HighScoresHandler{
         propertyHandler = new PropertyHandlerImpl();
 
         String userDir;
-        if ((System.getProperty("os.name")).toUpperCase().contains("WINDOWS")) {
+        if (Utils.isWindows()) {
             userDir = System.getenv("AppData");
         } else {
             userDir = System.getProperty("user.dir");
@@ -91,9 +93,8 @@ public class HighScoresHandlerImpl implements HighScoresHandler{
             scoreDate = dateFormat.parse(time);
             reference = dateFormat.parse("00:00:00");
         } catch (ParseException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
-        long seconds = (scoreDate.getTime() - reference.getTime()) / 1000L;
-        return seconds;
+        return (scoreDate.getTime() - reference.getTime()) / 1000L;
     }
 }

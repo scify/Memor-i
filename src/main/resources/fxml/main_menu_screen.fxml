@@ -23,7 +23,7 @@
     </HBox>
     <VBox alignment="center" styleClass="optionButtonContainer" fx:id="btnContainer">
         <Button contentDisplay="CENTER" styleClass="btn" text="%first_screen_welcome" fx:id="welcome"
-                onKeyPressed="#exitGame" onTouchPressed="#exitGame" onMouseClicked="#exitGame"/>
+                onKeyPressed="#exitIfEsc" onTouchPressed="#exitIfEsc" onMouseClicked="#exitIfEsc"/>
         <Button contentDisplay="CENTER" styleClass="optionButton, largeButton" text="%change_language_btn"
                 fx:id="change_language_btn" onKeyPressed="#goToLanguagesScreen" onTouchPressed="#goToLanguagesScreen"
                 onMouseClicked="#goToLanguagesScreen"/>

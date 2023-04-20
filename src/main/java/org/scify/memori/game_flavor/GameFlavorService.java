@@ -3,6 +3,7 @@ package org.scify.memori.game_flavor;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class GameFlavorService {
                 gameFlavors.add(gameFlavor);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
 
         return gameFlavors;

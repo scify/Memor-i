@@ -22,6 +22,7 @@ import org.scify.memori.card.CategorizedCard;
 import org.scify.memori.card.MemoriCardService;
 import org.scify.memori.enums.GameEndState;
 import org.scify.memori.enums.GameType;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.interfaces.*;
 import org.scify.memori.network.GameRequestManager;
 import org.scify.memori.network.ServerOperationResponse;
@@ -142,7 +143,7 @@ public abstract class MemoriGame implements Game<GameEndState> {
         try {
             Thread.sleep(20L); // Allow repainting
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return gsCurrentState;
     }

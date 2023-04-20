@@ -75,9 +75,8 @@ public class GameMovementManager {
                 LinkedTreeMap movement = (LinkedTreeMap) parameters.get("game_movement_json");
                 Object timestampObj = movement.get("timestamp");
                 String timestampStr = timestampObj.toString();
-                Long timestamp = Double.valueOf(Double.parseDouble(timestampStr)).longValue();
-                UserAction action = new UserAction(movement.get("actionType").toString(), movement.get("direction").toString(), timestamp);
-                return action;
+                long timestamp = Double.valueOf(Double.parseDouble(timestampStr)).longValue();
+                return new UserAction(movement.get("actionType").toString(), movement.get("direction").toString(), timestamp);
             case ServerResponse.RESPONSE_ERROR:
                 // error
                 return null;

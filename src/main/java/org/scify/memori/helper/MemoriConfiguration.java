@@ -34,7 +34,7 @@ public class MemoriConfiguration {
             try {
                 instance = new MemoriConfiguration();
             } catch (IOException e) {
-                e.printStackTrace();
+                DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
             }
         }
         return instance;
@@ -53,7 +53,7 @@ public class MemoriConfiguration {
             props.load(propertyFileStream);
             return props.getProperty(String.valueOf(propertyName));
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         return null;
     }
@@ -114,5 +114,9 @@ public class MemoriConfiguration {
         String currentDefaultDataPackNoLang = StringUtils.substringBeforeLast(currentDefaultDataPack, "_");
         setDataPackProperty("DATA_PACKAGE_DEFAULT", currentDefaultDataPackNoLang + "_" + langCode);
         ResourceLocator.getInstance().loadRootDataPaths();
+    }
+
+    public static boolean inputMethodIsKeyboard() {
+        return !MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch");
     }
 }

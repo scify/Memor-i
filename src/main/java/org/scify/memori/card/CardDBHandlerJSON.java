@@ -3,6 +3,7 @@ package org.scify.memori.card;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.JSONFileHandler;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.ResourceLocator;
@@ -40,7 +41,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
         if (dbFilePath.charAt(0) == '/') {
             dbFilePath = dbFilePath.substring(1);
         }
-        MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFilePath);
+        // MemoriLogger.LOGGER.log(Level.INFO, "Loaded: " + dbFilePath);
     }
 
     public static void setDbFilePath(String filePath) {
@@ -128,7 +129,7 @@ public class CardDBHandlerJSON implements CardDBHandler {
             objectSets = jsonFileHandler.getJSONArrayFromObject(rootObject, objectId);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
 
         return assignHashCodesToCardsSets(objectSets);

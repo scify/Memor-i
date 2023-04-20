@@ -20,6 +20,7 @@ package org.scify.memori.fx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.ResourceLocator;
 import org.scify.memori.helper.UTF8Control;
@@ -114,9 +115,8 @@ public class FXAudioEngine extends AudioEngine {
                 try {
                     Thread.sleep(100L);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
                 }
-
             }
     }
 
@@ -182,7 +182,7 @@ public class FXAudioEngine extends AudioEngine {
             try {
                 Thread.sleep(100L);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
             }
             //System.out.println("Sound still playing");
         }

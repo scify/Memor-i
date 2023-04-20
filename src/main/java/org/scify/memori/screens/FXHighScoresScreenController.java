@@ -60,6 +60,12 @@ public class FXHighScoresScreenController extends MemoriScreenController {
         addGameLevelButtons(gameLevelsContainer);
         super.setParameters(sHandler, scoresScene);
         audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "my_scores_screen_intro.mp3", false);
+
+        scoresScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue && !memoriConfiguration.ttsEnabled()) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "go_back.mp3", false);
+            }
+        });
     }
 
     @FXML

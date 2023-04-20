@@ -84,12 +84,12 @@ public class MemoriRules extends Observable implements Rules {
         if(eventsQueueContainsEvent(gsCurrentState.getEventQueue(), "READY_TO_FINISH")) {
             if(uaAction != null) {
                 //listen for user action indicating game over
-                if(uaAction.getActionType().equals("enter")) {
+                if(uaAction.getActionType().equals("enter") && uaAction.isKeyboardEvent()) {
                     //the game should finish and load a next level
                     gsCurrentState.replayLevel = true;
                     gsCurrentState.setGameFinished(true);
                 }
-                if(uaAction.getActionType().equals("flip")) {
+                if(uaAction.getActionType().equals("flip") && uaAction.isKeyboardEvent()) {
                     //the game should finish and load a next level
                     gsCurrentState.setLoadNextLevel(true);
                     gsCurrentState.setGameFinished(true);

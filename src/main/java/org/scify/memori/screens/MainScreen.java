@@ -77,7 +77,6 @@ public class MainScreen extends Application {
                     ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
 
             Parent root = loader.load();
-            MemoriLogger.LOGGER.log(Level.INFO, "Root: " + root);
             if (System.getProperty("ttsUrl") != null)
                 configuration.setProperty("TTS_URL", System.getProperty("ttsUrl"));
             if (System.getProperty("authToken") != null)

@@ -1,5 +1,6 @@
 package org.scify.memori.helper;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -12,18 +13,30 @@ public class MemoriLogger {
 
     public static void initLogger() {
         try {
+            boolean append = true;
             // initialise a file and a console handler
-            Handler fileHandler = new FileHandler("./memori.log");
+            String logFilePath = Utils.isWindows() ? System.getenv("APPDATA") : System.getProperty("user.home") + ".local/share";
+            logFilePath += "/Memor-i";
+            String logFileName = "memori.log";
+            File file = new File(logFilePath, logFileName);
+            if (!file.exists()) {
+                file = new File(logFilePath + "/" + logFileName);
+                File fileLck = new File(logFilePath + "/" + logFileName + ".lck");
+                file.getParentFile().mkdirs(); // Will create parent directories if not exists
+                file.createNewFile();
+                fileLck.getParentFile().mkdirs(); // Will create parent directories if not exists
+                fileLck.createNewFile();
+            }
+            Handler fileHandler = new FileHandler(logFilePath + "/" + logFileName, append);
             Handler consoleHandler = new ConsoleHandler();
-
-            //LOGGER.addHandler(consoleHandler);
+            LOGGER.addHandler(consoleHandler);
             LOGGER.addHandler(fileHandler);
             consoleHandler.setLevel(Level.ALL);
             fileHandler.setLevel(Level.ALL);
             LOGGER.config("Configuration done.");
 
-        } catch (IOException ioe) {
-            LOGGER.log(Level.SEVERE, "Error occurred while initializing Logger:" + ioe.getMessage(), ioe.getMessage());
+        } catch (IOException e) {
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
     }
 

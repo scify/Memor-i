@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.UTF8Control;
 
@@ -48,7 +49,7 @@ public class GameTypeSelectionScreen {
         try {
             root = loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
 
         assert root != null;

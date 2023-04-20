@@ -6,6 +6,7 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXMemoriGame;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.analytics.AnalyticsManager;
@@ -13,7 +14,6 @@ import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.network.GameRequestManager;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,22 +25,20 @@ import java.util.logging.Level;
 
 public class MemoriGameLauncher {
 
-    private List<MemoriGameLevel> gameLevels = new ArrayList<>();
+    private final List<MemoriGameLevel> gameLevels;
     private final FXSceneHandler sceneHandler;
-    private final AudioEngine audioEngine = FXAudioEngine.getInstance();
-    ;
+    private final AudioEngine audioEngine;
+
     private GameType gameType;
-    private GameLevelService gameLevelService;
 
     public MemoriGameLauncher(FXSceneHandler sceneHandler) {
-        gameLevelService = new GameLevelService();
-        gameLevels = new ArrayList<>();
+        audioEngine = FXAudioEngine.getInstance();
+        GameLevelService gameLevelService = new GameLevelService();
+        gameLevels = gameLevelService.createGameLevels();
         this.sceneHandler = sceneHandler;
     }
 
     public void startTutorialGame() {
-        gameLevels = new ArrayList<>();
-        gameLevels = gameLevelService.createGameLevels();
         MemoriGameLevel gameLevel = gameLevels.get(0);
         startGameForLevel(gameLevel, GameType.TUTORIAL);
     }
@@ -115,7 +113,7 @@ public class MemoriGameLauncher {
             GameRequestManager gameRequestManager = new GameRequestManager();
             Thread cancelThread = new Thread(() -> gameRequestManager.cancelGame());
             cancelThread.start();
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
     }
 

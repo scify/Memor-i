@@ -31,7 +31,6 @@ public class PlayerManager {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("player_id", String.valueOf(getPlayerId())));
         String response = requestManager.doPost(url, urlParameters);
-//        System.out.println("player/setOnline");
         return response;
     }
 

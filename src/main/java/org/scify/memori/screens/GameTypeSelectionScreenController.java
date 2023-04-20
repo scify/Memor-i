@@ -17,6 +17,7 @@
 
 package org.scify.memori.screens;
 
+import io.sentry.Sentry;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,11 +30,16 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.helper.MemoriLogger;
+import org.scify.memori.helper.Utils;
 import org.scify.memori.interfaces.AudioEngine;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -127,7 +133,6 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
      */
     @FXML
     protected void initializeSinglePlayerGameEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
@@ -150,7 +155,6 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
      */
     @FXML
     protected void initializePvCGameEventHandler(Event evt) {
-        MemoriLogger.LOGGER.log(Level.INFO, evt.toString());
         if (evt.getClass() == KeyEvent.class) {
             KeyEvent keyEvt = (KeyEvent) evt;
             if (keyEvt.getCode() == SPACE) {
@@ -180,11 +184,21 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
 
     protected void openSponsorsPage() {
         String url = "https://memoristudio.scify.org/about#memori-game";
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            runtime.exec("xdg-open " + url);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(Utils.isWindows()) {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (IOException | URISyntaxException e) {
+                    DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
+                }
+            }
+        } else {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + url);
+            } catch (IOException e) {
+                DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
+            }
         }
     }
 }

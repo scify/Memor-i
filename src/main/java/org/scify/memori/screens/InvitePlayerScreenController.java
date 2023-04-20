@@ -17,6 +17,7 @@ import org.scify.memori.enums.GameType;
 import org.scify.memori.fx.FXAudioEngine;
 import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
+import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.interfaces.Player;
@@ -301,7 +302,7 @@ public class InvitePlayerScreenController  implements Initializable {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
         }
         ServerOperationResponse serverResponse;
         GameRequestManager gameRequestManager = new GameRequestManager();
@@ -421,7 +422,7 @@ public class InvitePlayerScreenController  implements Initializable {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
                 shouldContinue = false;
                 opponentCanceledGame();
                 // re-check for requests

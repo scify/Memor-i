@@ -75,6 +75,11 @@ public class LevelsScreenController extends MemoriScreenController implements In
                 audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "levels_screen_welcome.mp3", false);
             }
         });
+        primaryScene.lookup("#back").focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+            if (newPropertyValue && !memoriConfiguration.ttsEnabled()) {
+                audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "go_back.mp3", false);
+            }
+        });
         if (gameType.equals(GameType.VS_PLAYER))
             setPlayerOnlineThread();
     }
@@ -274,7 +279,7 @@ public class LevelsScreenController extends MemoriScreenController implements In
                 try {
                     Thread.sleep(GameRequestManager.SHUFFLE_CARDS_INTERVAL);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    DefaultExceptionHandler.getInstance().uncaughtException(Thread.currentThread(), e);
                     Thread.currentThread().interrupt();
                     shouldContinue = false;
                 }
