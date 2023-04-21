@@ -72,7 +72,6 @@ public class MainScreen extends Application {
             MemoriLogger.LOGGER.log(Level.INFO, "Java version: " + System.getProperty("java.version"));
             Locale locale = new Locale(configuration.getDataPackProperty("APP_LANG"));
             MemoriLogger.LOGGER.log(Level.INFO, "Locale: " + locale.getLanguage());
-            // Load fxml file (layout xml) for first screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/first_screen.fxml"),
                     ResourceBundle.getBundle("languages.strings", locale, new UTF8Control()));
 
