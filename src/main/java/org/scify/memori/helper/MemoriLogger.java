@@ -15,7 +15,7 @@ public class MemoriLogger {
         try {
             boolean append = true;
             // initialise a file and a console handler
-            String logFilePath = Utils.isWindows() ? System.getenv("APPDATA") : System.getProperty("user.home") + ".local/share";
+            String logFilePath = Utils.isWindows() ? System.getenv("APPDATA") : (System.getProperty("user.home") + "/.local/share");
             logFilePath += "/Memor-i";
             String logFileName = "memori.log";
             File file = new File(logFilePath, logFileName);
