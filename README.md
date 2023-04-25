@@ -28,20 +28,22 @@ mvn -v
 And the result will output the Maven-related information:
 
 ```text
-Apache Maven 3.0.5
+Apache Maven 3.6.3
 
 Maven home: /usr/share/maven
 
-Java version: 1.8.0_101, vendor: Oracle Corporation
+Java version: 17.0.6, vendor: Oracle Corporation, runtime: /usr/lib/jvm/java-17-oracle
 
-Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+
+OS name: "linux", version: "5.19.0-40-generic", arch: "amd64", family: "unix"
 ```
 
 #### Choosing the correct Java version
 
-This project is built using Java `1.8`.
+This project is built using Java LTS version `17`. But it has been tested also with the LTS version `1.8`.
 
-If you have multiple versions of Java installed, you need to select the correct one by running:
+If you have multiple versions of Java installed, you can select the correct one by running:
 
 ```bash
 sudo update-alternatives --config java
@@ -55,14 +57,16 @@ sudo update-alternatives --config javac
 
 Many programs, such as Java servers, use the JAVA_HOME environment variable to determine the Java installation location.
 
-So, you need to get the correct Java path, and add it to `~/.bashrc`:
+So, you need to uncomment the correct Java path, and add it to `~/.bashrc`:
 
 ```text
 # ~/.bashrc contents:
 
 # export JAVA_HOME=/usr/lib/jvm/jdk-11/
 
-export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_333/
+# export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_333/
+
+export JAVA_HOME=/usr/lib/jvm/java-17-oracle/
 
 export PATH=$JAVA_HOME/bin:$PATH
 ```
@@ -113,9 +117,8 @@ chmod +x build_project.sh
 
 ## Built With
 
-* Java - 1.8
-* Maven - 3.0.5
-* IntelliJ - 16
+* Java - `17`
+* Maven - `3.6.3`
 
 ## Authors
 
