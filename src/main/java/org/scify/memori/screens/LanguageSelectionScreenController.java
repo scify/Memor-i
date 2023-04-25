@@ -54,6 +54,7 @@ public class LanguageSelectionScreenController extends MemoriScreenController {
             }
         });
         Platform.runLater(() -> logoImage.requestFocus());
+        Platform.runLater(() -> audioEngine.pauseAndPlaySound(this.miscellaneousSoundsBasePath + "welcome_language_selection.mp3", false));
     }
 
     @FXML

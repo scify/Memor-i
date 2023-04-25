@@ -20,14 +20,12 @@ package org.scify.memori.fx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import org.scify.memori.helper.DefaultExceptionHandler;
-import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.ResourceLocator;
-import org.scify.memori.helper.UTF8Control;
+import org.scify.memori.helper.*;
 import org.scify.memori.interfaces.AudioEngine;
 import org.scify.memori.tts.TTSFacade;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Responsible for handling Audio events
@@ -160,7 +158,7 @@ public class FXAudioEngine extends AudioEngine {
             audioClip = new AudioClip(pathToOpen);
             audioClip.play();
         } catch (Exception e) {
-            // MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
+            MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             return;
         }
         playingAudios.add(audioClip);
