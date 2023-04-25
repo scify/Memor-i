@@ -152,7 +152,6 @@ public abstract class MemoriGame implements Game<GameEndState> {
     public void finalize() {
         if(gameType.equals(GameType.VS_PLAYER))
             markOnlineGameAsFinished();
-        System.err.println("FINALIZE");
     }
 
     private void sendShuffledDeckToServer(MemoriGameState initialGameState) {

@@ -209,7 +209,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         vBox = (VBox) root.lookup("#vBox");
         gridPane = ((GridPane) vBox.lookup("#gameGrid"));
         backBtn = (Button) vBox.lookup("#backBtn");
-        if (MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch")) {
+        if (!MemoriConfiguration.inputMethodIsKeyboard()) {
             backBtn.setOnTouchPressed(this::exitGame);
             backBtn.setOnMouseClicked(this::exitGame);
         } else {
@@ -767,7 +767,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         node.getStyleClass().addAll("focusedCard");
         Button btn = (Button) node;
         //DEBUG print button id
-        System.out.println(btn.getId());
+        // System.out.println(btn.getId());
     }
 
     /**
@@ -862,7 +862,6 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
     }
 
     private String getMovementDirection(KeyEvent evt) {
-        System.err.println(evt.getCode().toString());
         return evt.getCode().toString();
     }
 

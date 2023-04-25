@@ -29,9 +29,6 @@ public class CPUMoveFactory implements Observer, MoveFactory {
             Point2D tilePosition = candidateTile.getKey();
             Tile currTile = candidateTile.getValue();
             if(!currTile.getFlipped() && !currTile.getWon() && !candidateTileCombinationVisited(tilePosition)) {
-                System.err.println("candidate tile found at position: " + tilePosition.getX() + " " + tilePosition.getY());
-                System.err.println("flipped: " + currTile.getFlipped() + " won: " + currTile.getWon());
-                System.err.println("tile info: " + currTile.getTileType());
                 UserAction nextMovementInXAxis = navigateToTileInXAxis((int)tilePosition.getY(), currentPlayerPosition);
                 while(nextMovementInXAxis != null) {
                     movements.add(nextMovementInXAxis);

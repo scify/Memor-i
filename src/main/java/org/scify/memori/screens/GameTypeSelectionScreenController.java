@@ -72,7 +72,7 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
         } else {
             btnContainer.getChildren().remove(versus_computer);
         }
-        if (configuration.getDataPackProperty("INPUT_METHOD").equals("mouse_touch"))
+        if (!MemoriConfiguration.inputMethodIsKeyboard())
             tutorialBtn.setVisible(false);
     }
 
