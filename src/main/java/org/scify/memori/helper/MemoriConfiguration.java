@@ -2,6 +2,7 @@ package org.scify.memori.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -83,7 +84,7 @@ public class MemoriConfiguration {
     }
 
     public void setProperty(String key, String value) {
-        if (value != null && !value.equals(""))
+        if (value != null && !value.isEmpty())
             this.props.setProperty(key, value);
     }
 
@@ -103,20 +104,24 @@ public class MemoriConfiguration {
         if (!Arrays.asList(acceptedLanguageCodes).contains(langCode))
             throw new Exception("Language incorrect! Code: " + langCode);
         setDataPackProperty("APP_LANG", langCode);
-        if (langCode.equals("en") || langCode.equals("el"))
-            updateDefaultDataPackageForLang(langCode);
-        else
-            updateDefaultDataPackageForLang("en");
+        updateDataPackageForLang(langCode);
     }
 
-    protected void updateDefaultDataPackageForLang(String langCode) {
+    protected void updateDataPackageForLang(String langCode) {
+        String currentDataPack = getDataPackProperty("DATA_PACKAGE");
+        String currentDataPackNoLang = StringUtils.substringBeforeLast(currentDataPack, "_");
+        String currentDataPackNew = currentDataPackNoLang + "_" + langCode;
+        URL url = MemoriConfiguration.class.getResource("/" + currentDataPackNew);
+        if (url != null)
+            setDataPackProperty("DATA_PACKAGE", currentDataPackNew);
+
         String currentDefaultDataPack = getDataPackProperty("DATA_PACKAGE_DEFAULT");
         String currentDefaultDataPackNoLang = StringUtils.substringBeforeLast(currentDefaultDataPack, "_");
         setDataPackProperty("DATA_PACKAGE_DEFAULT", currentDefaultDataPackNoLang + "_" + langCode);
         ResourceLocator.getInstance().loadRootDataPaths();
     }
 
-    public static boolean inputMethodIsKeyboard() {
-        return !MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch");
+    public static boolean inputMethodIsMouseOrTouch() {
+        return MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch");
     }
 }

@@ -1,12 +1,12 @@
 
-# Memor-i
+# Memor-i | Memory Game for the visually impaired
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/scify/Memor-i/master/src/main/resources/img/memori.png" width="400" alt="Gameplay">
 </p>
 <br>
 
-A Memory card game especially tailored to meet the needs of blind people.
+A Memory card game especially tailored to meet the needs of visually impaired people.
 Check out our [YouTube video](https://www.youtube.com/watch?v=M2DqT5e975w)
 
 ![Memor-i gameplay](https://raw.githubusercontent.com/scify/Memor-i/master/src/main/resources/img/memori_gameplay.gif)

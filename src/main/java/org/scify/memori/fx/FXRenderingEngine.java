@@ -209,7 +209,7 @@ public class FXRenderingEngine implements RenderingEngine<MemoriGameState>, UI, 
         vBox = (VBox) root.lookup("#vBox");
         gridPane = ((GridPane) vBox.lookup("#gameGrid"));
         backBtn = (Button) vBox.lookup("#backBtn");
-        if (!MemoriConfiguration.inputMethodIsKeyboard()) {
+        if (MemoriConfiguration.inputMethodIsMouseOrTouch()) {
             backBtn.setOnTouchPressed(this::exitGame);
             backBtn.setOnMouseClicked(this::exitGame);
         } else {

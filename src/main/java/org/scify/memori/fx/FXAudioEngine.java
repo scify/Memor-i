@@ -156,9 +156,10 @@ public class FXAudioEngine extends AudioEngine {
         try {
             String pathToOpen = Objects.requireNonNull(FXAudioEngine.class.getResource(fileResourcePath)).toExternalForm();
             audioClip = new AudioClip(pathToOpen);
+            MemoriLogger.LOGGER.log(Level.INFO, "loading sound for: " + soundFilePath + ". Queried path is: " + fileResourcePath);
             audioClip.play();
         } catch (Exception e) {
-            // MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
+            MemoriLogger.LOGGER.log(Level.SEVERE, "error loading sound for: " + soundFilePath + ". Queried path was: " + fileResourcePath);
             return;
         }
         playingAudios.add(audioClip);
