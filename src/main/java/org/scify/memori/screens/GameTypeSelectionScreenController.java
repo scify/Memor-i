@@ -17,7 +17,6 @@
 
 package org.scify.memori.screens;
 
-import io.sentry.Sentry;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,7 +31,6 @@ import org.scify.memori.fx.FXRenderingEngine;
 import org.scify.memori.fx.FXSceneHandler;
 import org.scify.memori.helper.DefaultExceptionHandler;
 import org.scify.memori.helper.MemoriConfiguration;
-import org.scify.memori.helper.MemoriLogger;
 import org.scify.memori.helper.Utils;
 import org.scify.memori.interfaces.AudioEngine;
 
@@ -42,7 +40,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.SPACE;
 
@@ -72,7 +69,7 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
         } else {
             btnContainer.getChildren().remove(versus_computer);
         }
-        if (!MemoriConfiguration.inputMethodIsKeyboard())
+        if (MemoriConfiguration.inputMethodIsMouseOrTouch())
             tutorialBtn.setVisible(false);
     }
 
@@ -84,7 +81,7 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
     }
 
     /**
-     * Attaches focus handlers to fixed buttons (tutorial, exit, etc)
+     * Attaches focus handlers to fixed buttons (tutorial, exit, etc.)
      */
     protected void attachButtonFocusHandlers() {
 
@@ -184,7 +181,7 @@ public class GameTypeSelectionScreenController extends MemoriScreenController im
 
     protected void openSponsorsPage() {
         String url = "https://memoristudio.scify.org/about#memori-game";
-        if(Utils.isWindows()) {
+        if (Utils.isWindows()) {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 try {
                     Desktop.getDesktop().browse(new URI(url));

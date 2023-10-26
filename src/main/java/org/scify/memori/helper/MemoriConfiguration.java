@@ -1,7 +1,5 @@
 package org.scify.memori.helper;
 
-import org.scify.memori.fx.FXAudioEngine;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -86,7 +84,7 @@ public class MemoriConfiguration {
     }
 
     public void setProperty(String key, String value) {
-        if (value != null && !value.equals(""))
+        if (value != null && !value.isEmpty())
             this.props.setProperty(key, value);
     }
 
@@ -106,10 +104,7 @@ public class MemoriConfiguration {
         if (!Arrays.asList(acceptedLanguageCodes).contains(langCode))
             throw new Exception("Language incorrect! Code: " + langCode);
         setDataPackProperty("APP_LANG", langCode);
-        if (langCode.equals("en") || langCode.equals("el") || langCode.equals("es"))
-            updateDataPackageForLang(langCode);
-        else
-            updateDataPackageForLang("en");
+        updateDataPackageForLang(langCode);
     }
 
     protected void updateDataPackageForLang(String langCode) {
@@ -126,7 +121,7 @@ public class MemoriConfiguration {
         ResourceLocator.getInstance().loadRootDataPaths();
     }
 
-    public static boolean inputMethodIsKeyboard() {
-        return !MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch");
+    public static boolean inputMethodIsMouseOrTouch() {
+        return MemoriConfiguration.getInstance().getDataPackProperty("INPUT_METHOD").equals("mouse_touch");
     }
 }
